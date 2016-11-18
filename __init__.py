@@ -5,14 +5,19 @@
     ~~~~~~~~~~
 
 """
+import sys
 import json
 import base64
 from datetime import datetime
-from urllib.parse import quote_plus
 
 from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA
 from Crypto.PublicKey import RSA
+
+if sys.version_info[0] == 3:
+    from urllib.parse import quote_plus
+else:
+    from urllib import quote_plus
 
 
 class AliPay():
