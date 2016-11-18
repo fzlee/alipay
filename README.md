@@ -1,0 +1,48 @@
+##   支付宝移动支付
+支付宝没有提供Python SDK。生成预付订单需要使用SHA1withRSA签名，签名的生成比较麻烦容易出错。这里提供了一个简单的库，希望能够简化一些Python开发的流程。
+
+关于支付宝移动支付的详细介绍参看[这篇教程](https://ifconfiger.com/page/app-alipay-with-python). 如果你不希望深入了解技术实现的细节，你可以直接参看下面的使用教程。
+
+#### 使用教程
+```Python
+    alipay = AliPay(
+        appid=appid,
+        notify_url=ALIPAY_NOTIFY_URL,
+        private_key_path=PRIVATE_KEY_PATH,
+        alipay_public_key_path=ALIPAY_PUBLIC_KEY_PATH
+    )
+	# 签名生成Order String
+	order_string = alipay.create_trade(out_trade_no="201611121314"， total_amount="0.01", subject="测试订单")
+	
+	# 验证alipay的异步通知，data来自支付宝回调POST 给你的data，字典格式.
+	data = {
+          "subject": "测试订单",
+          "gmt_payment": "2016-11-16 11:42:19",
+          "charset": "utf-8",
+          "seller_id": "xxxx",
+          "trade_status": "TRADE_SUCCESS",
+          "buyer_id": "xxxx",
+          "auth_app_id": "xxxx",
+          "buyer_pay_amount": "0.01",
+          "version": "1.0",
+          "gmt_create": "2016-11-16 11:42:18",
+          "trade_no": "xxxx",
+          "fund_bill_list": "[{\"amount\":\"0.01\",\"fundChannel\":\"ALIPAYACCOUNT\"}]",
+          "app_id": "xxxx",
+          "notify_time": "2016-11-16 11:42:19",
+          "point_amount": "0.00",
+          "total_amount": "0.01",
+          "notify_type": "trade_status_sync",
+          "out_trade_no": "xxxx",
+          "buyer_logon_id": "xxxx",
+          "notify_id": "xxxx",
+          "seller_email": "xxxx",
+          "receipt_amount": "0.01",
+          "invoice_amount": "0.01",
+          "sign": "xxx"
+        }
+    signature = data.pop("sign")
+	success = alipay.verify_notify(data, signature)
+	if success and (data["trade_status"] == "TRADE_SUCCESS" or data["trade_status"] == "TRADE_FINISHED" ):
+		print("trade succeed")
+```
