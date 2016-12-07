@@ -1,19 +1,56 @@
-##   支付宝移动支付
+##  支付宝Python SDK
+
 支付宝没有提供Python SDK。生成预付订单需要使用SHA1withRSA签名，签名的生成比较麻烦容易出错。这里提供了一个简单的库，希望能够简化一些Python开发的流程。
+
+目前我们支持如下三种支付方式，且签名类型必须为RSA
+* [App支付](https://doc.open.alipay.com/docs/doc.htm?treeId=193&articleId=105051&docType=1)
+* [手机网站支付](https://doc.open.alipay.com/docs/doc.htm?treeId=193&articleId=105288&docType=1)
+* [即时到帐](https://doc.open.alipay.com/doc2/detail?treeId=62&articleId=103566&docType=1)
 
 关于支付宝移动支付的详细介绍参看[这篇教程](https://ifconfiger.com/page/app-alipay-with-python). 如果你不希望深入了解技术实现的细节，你可以直接参看下面的使用教程。
 
-#### 使用教程
+## 使用教程
+####初始化
 ```Python
+    # 手机网站或者app支付
     alipay = AliPay(
-        appid=appid,
-        notify_url=ALIPAY_NOTIFY_URL,
-        private_key_path=PRIVATE_KEY_PATH,
-        alipay_public_key_path=ALIPAY_PUBLIC_KEY_PATH
+      notify_url="", 
+      appid="",
+      app_private_key_path="", 
+      app_alipay_public_key_path=""
     )
-	# 签名生成Order String
-	order_string = alipay.create_trade(out_trade_no="201611121314"， total_amount="0.01", subject="测试订单")
 	
+	# 即时到帐
+	alipay = AliPay(
+      notify_url="", 
+      partner="",
+      partner_private_key_path="", 
+      partner_alipay_public_key_path=""
+    )
+	
+	# 如果你希望 alipay能够同时处理三种支付方式, 那就传入所有的参数
+	alipay = AliPay(
+      notify_url="", 
+	  appid="",
+      app_private_key_path="",
+      app_alipay_public_key_path="",
+      partner="",
+      partner_private_key_path="", 
+      partner_alipay_public_key_path=""
+    )
+```
+	
+#### 生成订单
+```Python
+	# App支付，将order_string返回给app即可
+	order_string = alipay.create_app_trade(out_trade_no="20161112", total_amount="0.01", subject="测试订单")
+	# 手机网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
+	order_string = alipay.create_wap_trade(out_trade_no="20161112", total_amount="0.01", subject="测试订单", return_url="")
+	# 即时到帐，需要跳转到https://mapi.alipay.com/gateway.do? + order_string
+	order_string = alipay.create_wep_trade(out_trade_no="20161112", total_amount="0.01", subject="测试订单", return_url="")
+```
+#### 通知验证
+```Python
 	# 验证alipay的异步通知，data来自支付宝回调POST 给你的data，字典格式.
 	data = {
           "subject": "测试订单",
@@ -41,8 +78,12 @@
           "invoice_amount": "0.01",
           "sign": "xxx"
         }
+	data.pop("sign_type", "")
     signature = data.pop("sign")
-	success = alipay.verify_notify(data, signature)
+	# 验证app支付，手机网站支付
+	success = alipay.verify_app_notify(data, signature)
+	# 验证即时到帐
+	success = alipay.verify_web_notify(data, signature)
 	if success and (data["trade_status"] == "TRADE_SUCCESS" or data["trade_status"] == "TRADE_FINISHED" ):
 		print("trade succeed")
 ```
