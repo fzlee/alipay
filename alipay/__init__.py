@@ -172,6 +172,9 @@ class AliPay():
     def verify_app_notify(self, data, signature):
         return self.verify_notify(data, signature, self.__app_alipay_public_key_path)
 
+    def verify_wap_notify(self, data, signature):
+        return self.verify_app_notify(data, signature)
+
     def verify_web_notify(self, data, signature):
         return self.verify_notify(data, signature, self.__web_alipay_public_key_path)
 

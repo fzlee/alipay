@@ -86,8 +86,10 @@ pip install python-alipay-sdk
         }
 	data.pop("sign_type", "")
     signature = data.pop("sign")
-	# 验证app支付，手机网站支付
+	# 验证app支付
 	success = alipay.verify_app_notify(data, signature)
+    # 验证手机网站支付
+	success = alipay.verify_wap_notify(data, signature)
 	# 验证即时到帐
 	success = alipay.verify_web_notify(data, signature)
 	if success and (data["trade_status"] == "TRADE_SUCCESS" or data["trade_status"] == "TRADE_FINISHED" ):
