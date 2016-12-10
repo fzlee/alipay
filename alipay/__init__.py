@@ -8,11 +8,11 @@
 import json
 import base64
 from datetime import datetime
-from urllib.parse import quote_plus
-
 from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA
 from Crypto.PublicKey import RSA
+
+from .compat import quote_plus
 
 
 class AliPay():
@@ -88,7 +88,7 @@ class AliPay():
         signer = PKCS1_v1_5.new(key)
         signature = signer.sign(SHA.new(unsigned_string.encode("utf8")))
         # base64 编码，转换为unicode表示并移除回车
-        sign = base64.encodebytes(signature).decode("utf8").replace("\n", "")
+        sign = base64.encodestring(signature).decode("utf8").replace("\n", "")
         return sign
 
     def create_app_trade(self, out_trade_no, total_amount, subject):
