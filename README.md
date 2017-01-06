@@ -98,6 +98,15 @@ pip install python-alipay-sdk
 		print("trade succeed")
 ```
 
+#### 退款
+```
+try:
+    alipay.refund(out_trade_no="xxx", refund_amount="xxx")
+except AliPayException:
+    return False
+return True
+```
+
 ## 测试
 ```
 python -m unittest discover
