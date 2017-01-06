@@ -6,6 +6,7 @@
 * [App支付](https://doc.open.alipay.com/docs/doc.htm?treeId=193&articleId=105051&docType=1)
 * [手机网站支付](https://doc.open.alipay.com/docs/doc.htm?treeId=193&articleId=105288&docType=1)
 * [即时到帐](https://doc.open.alipay.com/doc2/detail?treeId=62&articleId=103566&docType=1)
+
 其他支持的功能：
 * [退款](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759)
 
