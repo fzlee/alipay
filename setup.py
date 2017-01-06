@@ -10,7 +10,7 @@ from setuptools import setup
 
 setup(
     name="python-alipay-sdk",
-    version="0.3",
+    version="0.4",
     author="fzlee",
     author_email="fzleee@gmail.com",
     description="Python SDK for AliPay, RSA is the only sign method we support",

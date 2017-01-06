@@ -97,3 +97,14 @@ pip install python-alipay-sdk
 	if success and (data["trade_status"] == "TRADE_SUCCESS" or data["trade_status"] == "TRADE_FINISHED" ):
 		print("trade succeed")
 ```
+
+## 测试
+```
+python -m unittest discover
+```
+
+## Change log
+### 0.4
+* 添加了退款功能
+* 添加了测试
+* 修复Python 2下中文编码问题
