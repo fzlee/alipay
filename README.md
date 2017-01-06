@@ -102,7 +102,7 @@ pip install python-alipay-sdk
 ```
 
 #### 退款
-```
+```Python
 try:
     alipay.refund(out_trade_no="xxx", refund_amount="xxx")
 except AliPayException:
