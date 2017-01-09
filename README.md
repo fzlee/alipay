@@ -115,7 +115,7 @@ return True
 python -m unittest discover
 ```
 
-## Change log
+## Changelog
 ### 0.4
 * 添加了退款功能
 * 添加了测试
