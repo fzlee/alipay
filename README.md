@@ -10,7 +10,7 @@
 其他支持的功能：
 * [退款](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759)
 
-关于支付宝移动支付的详细介绍参看[这篇教程](https://ifconfiger.com/page/app-alipay-with-python). 如果你不希望深入了解技术实现的细节，你可以直接参看下面的使用教程。
+关于支付宝移动支付的详细介绍参看[这篇教程](https://ifconfiger.com/page/python-alipay-sdk). 如果你不希望深入了解技术实现的细节，你可以直接参看下面的使用教程。
 
 ## 使用教程
 #### 安装
