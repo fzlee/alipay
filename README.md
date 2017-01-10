@@ -103,9 +103,13 @@ pip install python-alipay-sdk
 ```
 
 #### 退款
+
+refund 需要传入的参数参见[官方文档](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759)的**请求参数**
+
 ```Python
+
 try:
-    alipay.refund(out_trade_no="xxx", refund_amount="xxx")
+    alipay.refund(out_trade_no="xxx", refund_amount="xxx", ...)
 except AliPayException as e:
     raise e
 return True
