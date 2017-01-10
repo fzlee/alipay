@@ -56,9 +56,9 @@ pip install python-alipay-sdk
 	# App支付，将order_string返回给app即可
 	order_string = alipay.create_app_trade(out_trade_no="20161112", total_amount="0.01", subject="测试订单")
 	# 手机网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
-	order_string = alipay.create_wap_trade(out_trade_no="20161112", total_amount="0.01", subject="测试订单", return_url="")
+	order_string = alipay.create_wap_trade(out_trade_no="20161112", total_amount="0.01", subject="测试订单", return_url="https://example.com")
 	# 即时到帐，需要跳转到https://mapi.alipay.com/gateway.do? + order_string
-	order_string = alipay.create_web_trade(out_trade_no="20161112", total_amount="0.01", subject="测试订单", return_url="")
+	order_string = alipay.create_web_trade(out_trade_no="20161112", total_amount="0.01", subject="测试订单", return_url="https://example.com")
 ```
 #### 通知验证
 ```Python
