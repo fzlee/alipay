@@ -36,7 +36,7 @@ pip install python-alipay-sdk
       partner="",
       web_notify_url="", 
       web_private_key_path="", 
-      web_alipay_public_key_path=""
+      web_alipay_public_key_path=""  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥
     )
 	
 	# 如果你希望 alipay能够同时处理三种支付方式, 那就传入所有的参数
@@ -48,7 +48,7 @@ pip install python-alipay-sdk
       partner="", 
       web_notify_url="",
       web_private_key_path="", 
-      web_alipay_public_key_path="" # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥
+      web_alipay_public_key_path="" 
     )
 ```
 	
