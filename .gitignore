@@ -100,6 +100,5 @@ settings/__init__.py
 settings/local_test.py
 static/
 media/
-certs/
 configs/*.py
 
