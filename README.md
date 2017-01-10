@@ -25,29 +25,30 @@ pip install python-alipay-sdk
     
     # 手机网站或者app支付
     alipay = AliPay(
-      notify_url="", 
       appid="",
+      app_notify_url="", 
       app_private_key_path="", 
-      app_alipay_public_key_path=""
+      app_alipay_public_key_path=""  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥
     )
 	
 	# 即时到帐
 	alipay = AliPay(
-      notify_url="", 
       partner="",
-      partner_private_key_path="", 
-      partner_alipay_public_key_path=""
+      web_notify_url="", 
+      web_private_key_path="", 
+      web_alipay_public_key_path=""
     )
 	
 	# 如果你希望 alipay能够同时处理三种支付方式, 那就传入所有的参数
 	alipay = AliPay(
-      notify_url="", 
 	  appid="",
+      app_notify_url="", 
       app_private_key_path="",
       app_alipay_public_key_path="",
-      partner="",
-      partner_private_key_path="", 
-      partner_alipay_public_key_path=""
+      partner="", 
+      web_notify_url="",
+      web_private_key_path="", 
+      web_alipay_public_key_path="" # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥
     )
 ```
 	
@@ -89,7 +90,7 @@ pip install python-alipay-sdk
           "invoice_amount": "0.01",
           "sign": "xxx"
         }
-	data.pop("sign_type", "")
+	data.pop("sign_type", "") #  sign_type 不参与签名
     signature = data.pop("sign")
 	# 验证app支付
 	success = alipay.verify_app_notify(data, signature)
@@ -105,8 +106,8 @@ pip install python-alipay-sdk
 ```Python
 try:
     alipay.refund(out_trade_no="xxx", refund_amount="xxx")
-except AliPayException:
-    return False
+except AliPayException as e:
+    raise e
 return True
 ```
 

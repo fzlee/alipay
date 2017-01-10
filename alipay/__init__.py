@@ -38,11 +38,11 @@ class AliPay():
         """
         # app, wap支付:
         alipay = AliPay(
-          notify_url="", appid="", app_private_key_path="", app_alipay_public_key_path=""
+          app_notify_url="", appid="", app_private_key_path="", app_alipay_public_key_path=""
         )
         # web支付:
         alipay = AliPay(
-          notify_url="", partner="", partner_private_key_path="", partner_alipay_public_key_path=""
+          web_notify_url="", partner="", partner_private_key_path="", partner_alipay_public_key_path=""
         )
         # 如果你想要同时支持三种支付方式，将所有参数传入
         """
