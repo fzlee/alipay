@@ -8,7 +8,7 @@
 import json
 from datetime import datetime
 from Crypto.Signature import PKCS1_v1_5
-from Crypto.Hash import SHA
+from Crypto.Hash import SHA, SHA256
 from Crypto.PublicKey import RSA
 
 from .compat import quote_plus, urlopen, decodebytes, encodebytes
@@ -26,6 +26,10 @@ class AliPay():
     def partner(self):
         return self.__partner
 
+    @property
+    def sign_type(self):
+        return self.__sign_type
+
     def __init__(self,
                  appid=None,
                  app_notify_url=None,
@@ -34,7 +38,8 @@ class AliPay():
                  partner=None,
                  web_notify_url=None,
                  web_private_key_path=None,
-                 web_alipay_public_key_path=None):
+                 web_alipay_public_key_path=None,
+                 sign_type="RSA2"):
         """
         # app, wap支付:
         alipay = AliPay(
@@ -54,6 +59,9 @@ class AliPay():
         self.__web_notify_url = web_notify_url
         self.__web_private_key_path = web_private_key_path
         self.__web_alipay_public_key_path = web_alipay_public_key_path
+        if sign_type not in ("RSA", "RSA2"):
+            raise Exception("Unsupported sign type {}".format(sign_type))
+        self.__sign_type = sign_type
 
     def __ordered_data(self, data):
         complex_keys = []
@@ -101,7 +109,10 @@ class AliPay():
         with open(private_key_path) as fp:
             key = RSA.importKey(fp.read())
             signer = PKCS1_v1_5.new(key)
-            signature = signer.sign(SHA.new(unsigned_string.encode("utf8")))
+            if self.__sign_type == "RSA":
+                signature = signer.sign(SHA.new(unsigned_string.encode("utf8")))
+            else:
+                signature = signer.sign(SHA256.new(unsigned_string.encode("utf8")))
             # base64 编码，转换为unicode表示并移除回车
             sign = encodebytes(signature).decode("utf8").replace("\n", "")
             return sign
@@ -120,7 +131,7 @@ class AliPay():
             "app_id": self.__appid,
             "method": "alipay.trade.app.pay",
             "charset": "utf-8",
-            "sign_type": "RSA",
+            "sign_type": self.__sign_type,
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "version": "1.0",
             "notify_url": self.__app_notify_url,
@@ -142,7 +153,7 @@ class AliPay():
             "format": "JSON",
             "return_url": return_url,
             "charset": "utf-8",
-            "sign_type": "RSA",
+            "sign_type": self.__sign_type,
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "version": "1.0",
             "notify_url": self.__app_notify_url,
@@ -171,7 +182,8 @@ class AliPay():
             "seller_id": self.__partner
         }
         # 注意web支付类型，sign_type 不参与签名
-        return self.create_trade(data, self.__web_private_key_path) + "&sign_type=RSA"
+        return self.create_trade(data, self.__web_private_key_path) +\
+            "&sign_type=" + self.__sign_type
 
     def create_trade(self, data, private_key_path):
         sign = self.sign_data_with_private_key(data, private_key_path)
@@ -196,7 +208,10 @@ class AliPay():
         with open(publickey_path) as fp:
             key = RSA.importKey(fp.read())
             signer = PKCS1_v1_5.new(key)
-            digest = SHA.new()
+            if self.__sign_type == "RSA":
+                digest = SHA.new()
+            else:
+                digest = SHA256.new()
             digest.update(raw_content.encode("utf8"))
             if signer.verify(digest, decodebytes(signature.encode("utf8"))):
                 return True
@@ -237,7 +252,7 @@ class AliPay():
             "method": "alipay.trade.refund",
             "format": "JSON",
             "charset": "utf-8",
-            "sign_type": "RSA",
+            "sign_type": self.__sign_type,
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "version": "1.0",
             "biz_content": kwargs

@@ -1,5 +1,14 @@
-##  支付宝Python SDK
+## Changelog
 
+### 2017-01-13(version 0.5)
+* 默认使用SHA256withRSA签名算法, 如果你想用SHA1withRSA算法，创建alipay的时候传入sign_type = "RSA"
+
+### 2017-01-06(version 0.4)
+* 添加了退款功能
+* 添加了测试
+* 修复Python 2下中文编码问题
+
+##  支付宝Python SDK
 支付宝没有提供Python SDK。生成预付订单需要使用SHA1withRSA签名，签名的生成比较麻烦容易出错。这里提供了一个简单的库，希望能够简化一些Python开发的流程。
 
 目前我们支持如下三种支付方式，且签名类型必须为RSA
@@ -28,7 +37,8 @@ pip install python-alipay-sdk
       appid="",
       app_notify_url="", 
       app_private_key_path="", 
-      app_alipay_public_key_path=""  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥
+      app_alipay_public_key_path=""  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
+      sign_type="RSA" # RSA 或者 RSA2
     )
 	
 	# 即时到帐
@@ -119,9 +129,3 @@ return True
 ```
 python -m unittest discover
 ```
-
-## Changelog
-### 0.4
-* 添加了退款功能
-* 添加了测试
-* 修复Python 2下中文编码问题
