@@ -1,5 +1,8 @@
 ## Changelog
 
+### 2017-01-17
+* 修复网页扫码支付的退款bug(感谢varwey)
+
 ### 2017-01-13(version 0.5)
 * 默认使用SHA256withRSA签名算法, 如果你想用SHA1withRSA算法，创建alipay的时候传入sign_type = "RSA"
 
@@ -129,3 +132,6 @@ return True
 ```
 python -m unittest discover
 ```
+
+## 感谢（排名不分先后）
+* varwey
