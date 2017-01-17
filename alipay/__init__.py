@@ -248,7 +248,7 @@ class AliPay():
         }
         """
         data = {
-            "app_id": self.__appid,
+            "app_id": appid,
             "method": "alipay.trade.refund",
             "format": "JSON",
             "charset": "utf-8",
