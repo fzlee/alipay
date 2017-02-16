@@ -1,3 +1,5 @@
+## python-alipay-sdk
+[![codecov](https://codecov.io/gh/fzlee/alipay/branch/master/graph/badge.svg)](https://codecov.io/gh/fzlee/alipay)
 ## Changelog
 
 ### 2017-01-17(version 0.5.1)
