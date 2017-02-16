@@ -6,6 +6,13 @@
 
 """
 from setuptools import setup
+import unittest
+
+
+def alipay_test_suite():
+    test_loader = unittest.TestLoader()
+    test_suite = test_loader.discover('tests')
+    return test_suite
 
 
 setup(
@@ -27,5 +34,6 @@ setup(
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
     ],
-    install_requires=["pycrypto"]
+    install_requires=["pycrypto"],
+    test_suite="setup.alipay_test_suite"
 )

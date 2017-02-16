@@ -11,8 +11,8 @@ import subprocess
 
 from alipay import AliPay
 from alipay.exceptions import AliPayException
-from . import helper
-from .compat import mock
+from tests import helper
+from tests.compat import mock
 
 valid_response = json.dumps({
     u"alipay_trade_refund_response": {
