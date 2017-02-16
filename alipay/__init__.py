@@ -218,6 +218,10 @@ class AliPay():
             return False
 
     def verify_notify(self, data, signature, alipay_public_key_path):
+        if "sign_type" in data:
+            sign_type = data.pop("sign_type")
+            if sign_type != self.__sign_type:
+                raise AliPayException("Unknown sign type: {}".format(sign_type))
         # 排序后的字符串
         unsigned_items = self.__ordered_data(data)
         message = "&".join("{}={}".format(k, v) for k, v in unsigned_items)
