@@ -152,7 +152,7 @@ if  result["code"] == "10000":
 ```
 
 #### 预创建/查询/取消当面付
-```
+```Python
 alipay = Alipay(appid="", ...)
 
 # create an order
