@@ -93,12 +93,6 @@ ENV/
 # OSX stuff
 .DS_Store
 
-# django migrations
-migrations/
-# django setting module
-settings/__init__.py
-settings/local_test.py
-static/
-media/
-configs/*.py
 
+# local project folder
+localtest/

@@ -39,7 +39,8 @@ class AliPay():
                  web_notify_url=None,
                  web_private_key_path=None,
                  web_alipay_public_key_path=None,
-                 sign_type="RSA2"):
+                 sign_type="RSA2",
+                 debug=False):
         """
         # app, wap支付:
         alipay = AliPay(
@@ -47,7 +48,7 @@ class AliPay():
         )
         # web支付:
         alipay = AliPay(
-          web_notify_url="", partner="", partner_private_key_path="", partner_alipay_public_key_path=""
+          web_notify_url=, partner=, partner_private_key_path=, partner_alipay_public_key_path=
         )
         # 如果你想要同时支持三种支付方式，将所有参数传入
         """
@@ -60,8 +61,13 @@ class AliPay():
         self.__web_private_key_path = web_private_key_path
         self.__web_alipay_public_key_path = web_alipay_public_key_path
         if sign_type not in ("RSA", "RSA2"):
-            raise Exception("Unsupported sign type {}".format(sign_type))
+            raise AliPayException(None, "Unsupported sign type {}".format(sign_type))
         self.__sign_type = sign_type
+
+        if debug is True:
+            self.__gateway = "https://openapi.alipaydev.com/gateway.do"
+        else:
+            self.__gateway = "https://openapi.alipay.com/gateway.do"
 
     def __ordered_data(self, data):
         complex_keys = []
@@ -124,9 +130,16 @@ class AliPay():
         unsigned_string = "&".join("{}={}".format(k, v) for k, v in unsigned_items)
         return self._sign(unsigned_string, private_key_path)
 
-    def create_app_trade(self, out_trade_no, total_amount, subject):
+    def create_app_trade(self, out_trade_no, total_amount, subject, **kwargs):
         self.__check_internal_configuration("app")
 
+        biz_content = {
+            "subject": subject,
+            "out_trade_no": out_trade_no,
+            "total_amount": total_amount,
+            "product_code": "QUICK_MSECURITY_PAY"
+        }
+        biz_content.update(kwargs)
         data = {
             "app_id": self.__appid,
             "method": "alipay.trade.app.pay",
@@ -135,18 +148,20 @@ class AliPay():
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "version": "1.0",
             "notify_url": self.__app_notify_url,
-            "biz_content": {
-                "subject": subject,
-                "out_trade_no": out_trade_no,
-                "total_amount": total_amount,
-                "product_code": "QUICK_MSECURITY_PAY"
-            }
+            "biz_content": biz_content
         }
-        return self.create_trade(data, self.__app_private_key_path)
+        return self.sign_trade(data, self.__app_private_key_path)
 
-    def create_wap_trade(self, out_trade_no, total_amount, subject, return_url):
+    def create_wap_trade(self, out_trade_no, total_amount, subject, return_url, **kwargs):
         self.__check_internal_configuration("wap")
 
+        biz_content = {
+            "subject": subject,
+            "out_trade_no": out_trade_no,
+            "total_amount": total_amount,
+            "product_code": "QUICK_MSECURITY_PAY"
+        }
+        biz_content.update(kwargs)
         data = {
             "app_id": self.__appid,
             "method": "alipay.trade.wap.pay",
@@ -158,15 +173,11 @@ class AliPay():
             "version": "1.0",
             "notify_url": self.__app_notify_url,
             "biz_content": {
-                "subject": subject,
-                "out_trade_no": out_trade_no,
-                "total_amount": total_amount,
-                "product_code": "QUICK_MSECURITY_PAY"
             }
         }
-        return self.create_trade(data, self.__app_private_key_path)
+        return self.sign_trade(data, self.__app_private_key_path)
 
-    def create_web_trade(self, out_trade_no, total_amount, subject, return_url):
+    def create_web_trade(self, out_trade_no, total_amount, subject, return_url, **kwargs):
         self.__check_internal_configuration("web")
 
         data = {
@@ -181,11 +192,13 @@ class AliPay():
             "total_fee": str(total_amount),
             "seller_id": self.__partner
         }
+        data.update(kwargs)
+
         # 注意web支付类型，sign_type 不参与签名
-        return self.create_trade(data, self.__web_private_key_path) +\
+        return self.sign_trade(data, self.__web_private_key_path) +\
             "&sign_type=" + self.__sign_type
 
-    def create_trade(self, data, private_key_path):
+    def sign_trade(self, data, private_key_path):
         sign = self.sign_data_with_private_key(data, private_key_path)
         ordered_items = self.__ordered_data(data)
         quoted_string = "&".join("{}={}".format(k, quote_plus(v)) for k, v in ordered_items)
@@ -221,7 +234,7 @@ class AliPay():
         if "sign_type" in data:
             sign_type = data.pop("sign_type")
             if sign_type != self.__sign_type:
-                raise AliPayException("Unknown sign type: {}".format(sign_type))
+                raise AliPayException(None, "Unknown sign type: {}".format(sign_type))
         # 排序后的字符串
         unsigned_items = self.__ordered_data(data)
         message = "&".join("{}={}".format(k, v) for k, v in unsigned_items)
@@ -270,10 +283,155 @@ class AliPay():
         signed_string = quoted_string + "&sign=" + quote_plus(sign)
 
         url = self.__REFUND_GATEWAY + "?" + signed_string
-        r = urlopen(url)
+        r = urlopen(url, timeout=15)
         result = r.read().decode("utf-8")
         result = json.loads(result)["alipay_trade_refund_response"]
         if result["code"] != "10000":
             raise AliPayException(result["code"], result["sub_msg"])
 
         return result
+
+    def create_face_to_face_trade(self, out_trade_no, scene, auth_code, subject, **kwargs):
+        """
+        Pleasse refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=850
+
+        failed response = {
+            "alipay_trade_pay_response": {
+                "code": "40004",
+                "msg": "Business Failed",
+                "sub_code": "ACQ.INVALID_PARAMETER",
+                "sub_msg": "",
+                "buyer_pay_amount": "0.00",
+                "invoice_amount": "0.00",
+                "point_amount": "0.00",
+                "receipt_amount": "0.00"
+            },
+            "sign": ""
+        }
+        succeeded response = {
+           "trade_no": "",
+           "code": "10000",
+           "invoice_amount": "20.00",
+           "open_id": "",
+           "fund_bill_list": [
+             {
+               "amount": "20.00",
+               "fund_channel": "ALIPAYACCOUNT"
+             }
+           ],
+           "buyer_logon_id": "xxxx@sandbox.com",
+           "receipt_amount": "20.00",
+           "out_trade_no": "out_trade_no14",
+           "buyer_pay_amount": "20.00",
+           "buyer_user_id": "2088102169481075",
+           "msg": "Success",
+           "point_amount": "0.00",
+           "gmt_payment": "2017-03-21 11:55:40",
+           "total_amount": "20.00"
+        }
+        """
+        self.__check_internal_configuration("app")
+        assert scene in ("bar_code", "wave_code"), 'scene not in ("bar_code", "wave_code")'
+
+        biz_content = {
+            "out_trade_no": out_trade_no,
+            "scene": scene,
+            "auth_code": auth_code,
+            "subject": subject
+        }
+        biz_content.update(**kwargs)
+        data = {
+            "app_id": self.__appid,
+            "method": "alipay.trade.pay",
+            "format": "JSON",
+            "charset": "utf-8",
+            "sign_type": self.__sign_type,
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "version": "1.0",
+            "biz_content": biz_content
+        }
+
+        url = self.__gateway + "?" + self.sign_trade(data, self.__app_private_key_path)
+        response = urlopen(url, timeout=15)
+        result = json.loads(response.read())
+
+        # 10000: 支付成功; 40004:支付失败; 10003:等待用户付款; 20000: 支付异常
+        if result["alipay_trade_pay_response"]["code"] in ("40004", "20000"):
+            result = result["alipay_trade_pay_response"]
+            raise AliPayException(result["code"], result["sub_msg"])
+        return result
+
+    def query_face_to_face_trade(self, **kwargs):
+        """
+        Please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=757
+
+        response = {
+          "alipay_trade_query_response": {
+            "trade_no": "2017032121001004070200176844",
+            "code": "10000",
+            "invoice_amount": "20.00",
+            "open_id": "20880072506750308812798160715407",
+            "fund_bill_list": [
+              {
+                "amount": "20.00",
+                "fund_channel": "ALIPAYACCOUNT"
+              }
+            ],
+            "buyer_logon_id": "csq***@sandbox.com",
+            "send_pay_date": "2017-03-21 13:29:17",
+            "receipt_amount": "20.00",
+            "out_trade_no": "out_trade_no15",
+            "buyer_pay_amount": "20.00",
+            "buyer_user_id": "2088102169481075",
+            "msg": "Success",
+            "point_amount": "0.00",
+            "trade_status": "TRADE_SUCCESS",
+            "total_amount": "20.00"
+          },
+          "sign": ""
+        }
+        """
+        biz_content = {}
+        biz_content.update(**kwargs)
+        data = {
+            "app_id": self.__appid,
+            "method": "alipay.trade.query",
+            "format": "JSON",
+            "charset": "utf-8",
+            "sign_type": self.__sign_type,
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "version": "1.0",
+            "biz_content": biz_content
+        }
+
+        url = self.__gateway + "?" + self.sign_trade(data, self.__app_private_key_path)
+        response = urlopen(url, timeout=15)
+        return json.loads(response.read())["alipay_trade_query_response"]
+
+    def cancel_face_to_face_trade(self, **kwargs):
+        """
+        Please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=866
+
+        response = {
+          "msg": "Success",
+          "out_trade_no": "out_trade_no15",
+          "code": "10000",
+          "retry_flag": "N"
+        }
+        """
+        biz_content = {}
+        biz_content.update(**kwargs)
+        data = {
+            "app_id": self.__appid,
+            "method": "alipay.trade.cancel",
+            "format": "JSON",
+            "charset": "utf-8",
+            "sign_type": self.__sign_type,
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "version": "1.0",
+            "biz_content": biz_content
+        }
+
+        url = self.__gateway + "?" + self.sign_trade(data, self.__app_private_key_path)
+        response = urlopen(url, timeout=15)
+        return json.loads(response.read())["alipay_trade_cancel_response"]
