@@ -133,12 +133,25 @@ except AliPayException as e:
 return True
 ```
 
-#### 创建/取消/查询当面付
+#### 创建当面付
 
 以下是一个当面付的基本例子
 ```Python
-# Example for creating face to face trace
+alipay = Alipay(appid="", ...)
 
+result = alipay.create_face_to_face_trade(
+    "out_trade_no", "bar_code/wave_code", "auth_code", "subject",
+    discountable_amount=10,
+    total_amount=20,
+    # you may input more parameters here, refer to alipay official doc for details
+    )
+
+if  result["code"] == "10000":
+    print("Order is paid")
+```
+
+#### 预创建/查询/取消当面付
+```
 alipay = Alipay(appid="", ...)
 
 # create an order
@@ -157,12 +170,13 @@ elif result1["code"] == "10003":
     # check every 3s to see if the order is paid
         time.sleep(3)
         result2 = alipay.query_face_to_face_trade(out_trade_no=out_trade_no)
-        if result2[""]:
+        if result2["code"] == "10000":
             print("Order is paid")
             break
 
     # order is not paid in 30s , cancel this order
     alipay.cancel_face_to_face_trade(out_trade_no=out_trade_no)
+
 ```
 
 ## 测试

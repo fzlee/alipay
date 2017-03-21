@@ -308,27 +308,31 @@ class AliPay():
             },
             "sign": ""
         }
-        succeeded response = {
-           "trade_no": "",
-           "code": "10000",
-           "invoice_amount": "20.00",
-           "open_id": "",
-           "fund_bill_list": [
-             {
-               "amount": "20.00",
-               "fund_channel": "ALIPAYACCOUNT"
-             }
-           ],
-           "buyer_logon_id": "xxxx@sandbox.com",
-           "receipt_amount": "20.00",
-           "out_trade_no": "out_trade_no14",
-           "buyer_pay_amount": "20.00",
-           "buyer_user_id": "2088102169481075",
-           "msg": "Success",
-           "point_amount": "0.00",
-           "gmt_payment": "2017-03-21 11:55:40",
-           "total_amount": "20.00"
-        }
+        succeeded response =
+            {
+              "alipay_trade_pay_response": {
+                "trade_no": "2017032121001004070200176846",
+                "code": "10000",
+                "invoice_amount": "20.00",
+                "open_id": "20880072506750308812798160715407",
+                "fund_bill_list": [
+                  {
+                    "amount": "20.00",
+                    "fund_channel": "ALIPAYACCOUNT"
+                  }
+                ],
+                "buyer_logon_id": "csq***@sandbox.com",
+                "receipt_amount": "20.00",
+                "out_trade_no": "out_trade_no18",
+                "buyer_pay_amount": "20.00",
+                "buyer_user_id": "2088102169481075",
+                "msg": "Success",
+                "point_amount": "0.00",
+                "gmt_payment": "2017-03-21 15:07:29",
+                "total_amount": "20.00"
+              },
+              "sign": ""
+            }
         """
         self.__check_internal_configuration("app")
         assert scene in ("bar_code", "wave_code"), 'scene not in ("bar_code", "wave_code")'
@@ -413,10 +417,12 @@ class AliPay():
         Please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=866
 
         response = {
-          "msg": "Success",
-          "out_trade_no": "out_trade_no15",
-          "code": "10000",
-          "retry_flag": "N"
+        "alipay_trade_cancel_response": {
+            "msg": "Success",
+            "out_trade_no": "out_trade_no15",
+            "code": "10000",
+            "retry_flag": "N"
+          }
         }
         """
         biz_content = {}
@@ -435,3 +441,56 @@ class AliPay():
         url = self.__gateway + "?" + self.sign_trade(data, self.__app_private_key_path)
         response = urlopen(url, timeout=15)
         return json.loads(response.read())["alipay_trade_cancel_response"]
+
+    def precreate_face_to_face_trade(self, out_trade_no, total_amount, subject, **kwargs):
+        """
+        Pleasse refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=850
+        success response  = {
+          "alipay_trade_precreate_response": {
+            "msg": "Success",
+            "out_trade_no": "out_trade_no17",
+            "code": "10000",
+            "qr_code": "https://qr.alipay.com/bax03431ljhokirwl38f00a7"
+          },
+          "sign": ""
+        }
+
+        failed response = {
+          "alipay_trade_precreate_response": {
+            "msg": "Business Failed",
+            "sub_code": "ACQ.TOTAL_FEE_EXCEED",
+            "code": "40004",
+            "sub_msg": "订单金额超过限额"
+          },
+          "sign": ""
+        }
+
+        """
+        self.__check_internal_configuration("app")
+
+        biz_content = {
+            "out_trade_no": out_trade_no,
+            "total_amount": total_amount,
+            "subject": subject
+        }
+        biz_content.update(**kwargs)
+        data = {
+            "app_id": self.__appid,
+            "method": "alipay.trade.precreate",
+            "format": "JSON",
+            "charset": "utf-8",
+            "sign_type": self.__sign_type,
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "version": "1.0",
+            "biz_content": biz_content
+        }
+
+        url = self.__gateway + "?" + self.sign_trade(data, self.__app_private_key_path)
+        response = urlopen(url, timeout=15)
+        result = json.loads(response.read())
+
+        # 10000: 支付成功; 40004:支付失败; 10003:等待用户付款; 20000: 支付异常
+        if result["alipay_trade_precreate_response"]["code"] in ("40004", "20000"):
+            result = result["alipay_trade_precreate_response"]
+            raise AliPayException(result["code"], result["sub_msg"])
+        return result

@@ -139,18 +139,29 @@ except AliPayException as e:
 return True
 ```
 
-#### create/query/cancel face to face trade
+#### create face to face trade
 
 ```Python
-# Example for creating face to face trace
-
 alipay = Alipay(appid="", ...)
 
-# create an order
-result1 = alipay.create_face_to_face_trade(
+result = alipay.create_face_to_face_trade(
     "out_trade_no", "bar_code/wave_code", "auth_code", "subject",
     discountable_amount=10,
     total_amount=20,
+    # you may input more parameters here, refer to alipay official doc for details
+    )
+
+if  result["code"] == "10000":
+    print("Order is paid")
+```
+
+#### create precreate/query/cancel face to face trade
+```Python
+alipay = Alipay(appid="", ...)
+
+# create an order
+result1 = alipay.precreate_face_to_face_trade(
+    "out_trade_no", 100, "test subject"
     # you may input more parameters here, refer to alipay official doc for details
     )
 
@@ -162,7 +173,7 @@ elif result1["code"] == "10003":
     # check every 3s to see if the order is paid
         time.sleep(3)
         result2 = alipay.query_face_to_face_trade(out_trade_no=out_trade_no)
-        if result2[""]:
+        if result2["code"] == "10000":
             print("Order is paid")
             break
 

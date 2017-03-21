@@ -28,6 +28,78 @@ invalid_response = json.dumps({
 }).encode("utf-8")
 
 
+create_face_to_faapp_orderce_trade_response = json.dumps({
+   "alipay_trade_pay_response": {
+     "trade_no": "2017032121001004070200176846",
+     "code": "10000",
+     "invoice_amount": "20.00",
+     "open_id": "20880072506750308812798160715407",
+     "fund_bill_list": [
+       {
+         "amount": "20.00",
+         "fund_channel": "ALIPAYACCOUNT"
+       }
+     ],
+     "buyer_logon_id": "csq***@sandbox.com",
+     "receipt_amount": "20.00",
+     "out_trade_no": "out_trade_no18",
+     "buyer_pay_amount": "20.00",
+     "buyer_user_id": "2088102169481075",
+     "msg": "Success",
+     "point_amount": "0.00",
+     "gmt_payment": "2017-03-21 15:07:29",
+     "total_amount": "20.00"
+   },
+   "sign": ""
+}).encode("utf-8")
+
+query_face_to_faapp_orderce_trade_response = json.dumps({
+  "alipay_trade_query_response": {
+    "trade_no": "2017032121001004070200176844",
+    "code": "10000",
+    "invoice_amount": "20.00",
+    "open_id": "20880072506750308812798160715407",
+    "fund_bill_list": [
+      {
+        "amount": "20.00",
+        "fund_channel": "ALIPAYACCOUNT"
+      }
+    ],
+    "buyer_logon_id": "csq***@sandbox.com",
+    "send_pay_date": "2017-03-21 13:29:17",
+    "receipt_amount": "20.00",
+    "out_trade_no": "out_trade_no15",
+    "buyer_pay_amount": "20.00",
+    "buyer_user_id": "2088102169481075",
+    "msg": "Success",
+    "point_amount": "0.00",
+    "trade_status": "TRADE_SUCCESS",
+    "total_amount": "20.00"
+  },
+  "sign": ""
+})
+
+cancel_face_to_faapp_orderce_trade_response = json.dumps({
+   "alipay_trade_cancel_response": {
+       "msg": "Success",
+       "out_trade_no": "out_trade_no15",
+       "code": "10000",
+       "retry_flag": "N"
+     }
+})
+
+precreate_face_to_faapp_orderce_trade_response = json.dumps({
+     "alipay_trade_precreate_response": {
+       "msg": "Success",
+       "out_trade_no": "out_trade_no17",
+       "code": "10000",
+       "qr_code": "https://qr.alipay.com/bax03431ljhokirwl38f00a7"
+     },
+     "sign": ""
+   }
+)
+
+
 class AliPayTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -186,3 +258,56 @@ class AliPayTestCase(unittest.TestCase):
         self.assertTrue(alipay._verify(raw_content, signature, self.__web_public_key_path))
         # 签名失败
         self.assertFalse(alipay._verify(raw_content[:-1], signature, self.__web_public_key_path))
+
+    @mock.patch("alipay.urlopen")
+    def test_create_face_to_face_trade(self, mock_urlopen):
+        response = mock.Mock()
+        response.read.return_value = create_face_to_faapp_orderce_trade_response
+        mock_urlopen.return_value = response
+
+        alipay = self.get_app_client("RSA")
+        alipay.create_face_to_face_trade(
+            "out_trade_no",
+            "wave_code",
+            "auth_code",
+            "subject"
+        )
+
+        self.assertTrue(mock_urlopen.called)
+
+    @mock.patch("alipay.urlopen")
+    def test_query_face_to_face_trade(self, mock_urlopen):
+        response = mock.Mock()
+        response.read.return_value = query_face_to_faapp_orderce_trade_response
+        mock_urlopen.return_value = response
+
+        alipay = self.get_app_client("RSA")
+        alipay.query_face_to_face_trade(
+            out_trade_no="out_trade_no",
+        )
+        self.assertTrue(mock_urlopen.called)
+
+    @mock.patch("alipay.urlopen")
+    def test_cancel_face_to_face_trade(self, mock_urlopen):
+        response = mock.Mock()
+        response.read.return_value = cancel_face_to_faapp_orderce_trade_response
+        mock_urlopen.return_value = response
+
+        alipay = self.get_app_client("RSA")
+        alipay.cancel_face_to_face_trade(
+            out_trade_no="out_trade_no",
+        )
+        self.assertTrue(mock_urlopen.called)
+
+    @mock.patch("alipay.urlopen")
+    def test_precreate_face_to_face_trade(self, mock_urlopen):
+        response = mock.Mock()
+        response.read.return_value = precreate_face_to_faapp_orderce_trade_response
+        mock_urlopen.return_value = response
+
+        alipay = self.get_app_client("RSA")
+        alipay.precreate_face_to_face_trade(
+            "out_trade_no", 12, "test subject"
+        )
+        self.assertTrue(mock_urlopen.called)
+
