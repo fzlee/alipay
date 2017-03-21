@@ -28,6 +28,7 @@ So far, the following functions are supported:
 * [create face to face trade](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=850)
 * [query face to face trade](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=757)
 * [cancel face to face trade](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=866)
+* [precreate face to face trade](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=862)
 
 Taking a look at [this guide](https://ifconfiger.com/page/python-alipay-sdk) if you are interested at the details on signing your order requests.
 Or you may just follow this manual if you are not.

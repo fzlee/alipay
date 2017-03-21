@@ -23,9 +23,10 @@
 * [App支付](https://doc.open.alipay.com/docs/doc.htm?treeId=193&articleId=105051&docType=1)
 * [手机网站支付](https://doc.open.alipay.com/docs/doc.htm?treeId=193&articleId=105288&docType=1)
 * [即时到帐](https://doc.open.alipay.com/doc2/detail?treeId=62&articleId=103566&docType=1)
-* [创建当面付](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=850)
+* [创建当面付/条码支付](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=850)
 * [查询当面付](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=757)
 * [取消当面付](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=866)
+* [预创建支付/扫码支付](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=862)
 * [退款](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759)
 
 关于支付宝移动支付的详细介绍参看[这篇教程](https://ifconfiger.com/page/python-alipay-sdk). 如果你不希望深入了解技术实现的细节，你可以直接参看下面的使用教程。
