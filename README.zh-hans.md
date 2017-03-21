@@ -71,7 +71,7 @@ pip install python-alipay-sdk
       web_alipay_public_key_path="" 
     )
 ```
-    
+
 #### 生成订单
 ```Python
     # App支付，将order_string返回给app即可
@@ -156,10 +156,8 @@ if  result["code"] == "10000":
 alipay = Alipay(appid="", ...)
 
 # create an order
-result1 = alipay.create_face_to_face_trade(
-    "out_trade_no", "bar_code/wave_code", "auth_code", "subject",
-    discountable_amount=10,
-    total_amount=20,
+result1 = alipay.precreate_face_to_face_trade(
+    "out_trade_no", 100, "test subject"
     # you may input more parameters here, refer to alipay official doc for details
     )
 
