@@ -4,7 +4,7 @@
 ## Changelog
 
 ### 2017-03-21(version 0.6)
-* precreate/create/cancel/query face to face query
+* precreate/create/cancel/query face to face trade
 
 ### 2017-01-17(version 0.5.1)
 * Refund bug fix( many thanks to varwey)

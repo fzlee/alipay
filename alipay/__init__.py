@@ -289,7 +289,7 @@ class AliPay():
         if result["code"] != "10000":
             raise AliPayException(result["code"], result["sub_msg"])
 
-        return result["alipay_trade_refund_response"]
+        return result
 
     def create_face_to_face_trade(self, out_trade_no, scene, auth_code, subject, **kwargs):
         """
