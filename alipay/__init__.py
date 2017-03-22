@@ -285,11 +285,7 @@ class AliPay():
         url = self.__REFUND_GATEWAY + "?" + signed_string
         r = urlopen(url, timeout=15)
         result = r.read().decode("utf-8")
-        result = json.loads(result)["alipay_trade_refund_response"]
-        if result["code"] != "10000":
-            raise AliPayException(result["code"], result["sub_msg"])
-
-        return result
+        return json.loads(result)["alipay_trade_refund_response"]
 
     def create_face_to_face_trade(self, out_trade_no, scene, auth_code, subject, **kwargs):
         """
@@ -358,11 +354,6 @@ class AliPay():
         url = self.__gateway + "?" + self.sign_trade(data, self.__app_private_key_path)
         response = urlopen(url, timeout=15)
         result = json.loads(response.read())
-
-        # 10000: 支付成功; 40004:支付失败; 10003:等待用户付款; 20000: 支付异常
-        if result["alipay_trade_pay_response"]["code"] in ("40004", "20000"):
-            result = result["alipay_trade_pay_response"]
-            raise AliPayException(result["code"], result["sub_msg"])
         return result["alipay_trade_pay_response"]
 
     def query_face_to_face_trade(self, **kwargs):

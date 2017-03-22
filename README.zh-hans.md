@@ -159,23 +159,23 @@ alipay = AliPay(appid="", ...)
 result1 = alipay.precreate_face_to_face_trade(
     "out_trade_no", 100, "test subject"
     # you may input more parameters here, refer to alipay official doc for details
-    )
+)
 
-if result1["code"] == "10000":
-    print("Order is paid")
-elif result1["code"] == "10003":
-    print("Pending paid by user")
-    for i in range(10):
-    # check every 3s to see if the order is paid
-        time.sleep(3)
-        result2 = alipay.query_face_to_face_trade(out_trade_no=out_trade_no)
-        if result2["code"] == "10000":
-            print("Order is paid")
-            break
+# check order status
+paid = False
+for i in range(10):
+    # check every 3s, and 10 times in all
+    print("now sleep 3s")
+    time.sleep(3)
+    result = alipay.query_face_to_face_trade(out_trade_no="out_trade_no24")
+    if result.get("trade_status", "") == "TRADE_SUCCESS":
+        paid = True
+        break
+    print("not paid...")
 
-    # order is not paid in 30s , cancel this order
+# order is not paid in 30s , cancel this order
+if paid is False:
     alipay.cancel_face_to_face_trade(out_trade_no=out_trade_no)
-
 ```
 
 ## 测试

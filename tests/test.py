@@ -196,25 +196,6 @@ class AliPayTestCase(unittest.TestCase):
         alipay.refund_app_order(**data)
         self.assertTrue(mock_urlopen.called)
 
-    @mock.patch("alipay.urlopen")
-    def test_refund_2(self, mock_urlopen):
-        """ 能够处理错误的状况
-        """
-        # 配置urlopen返回值
-        response = mock.Mock()
-        response.read.return_value = invalid_response
-        mock_urlopen.return_value = response
-
-        alipay = self.get_app_client("RSA")
-        data = {
-            "out_trade_no": "test_ouit_trade_no",
-            "refund_amount": 0.01,
-            "refund_reason": "中文测试"
-        }
-        with self.assertRaises(AliPayException):
-            alipay.refund_app_order(**data)
-        self.assertTrue(mock_urlopen.called)
-
     def test_sign_data_with_private_key_sha1(self):
         """openssl 以及aliapy分别对数据进行签名，得到同样的结果
         """
