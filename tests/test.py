@@ -10,7 +10,6 @@ import json
 import subprocess
 
 from alipay import AliPay
-from alipay.exceptions import AliPayException
 from tests import helper
 from tests.compat import mock
 
@@ -291,4 +290,3 @@ class AliPayTestCase(unittest.TestCase):
             "out_trade_no", 12, "test subject"
         )
         self.assertTrue(mock_urlopen.called)
-

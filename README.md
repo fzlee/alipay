@@ -1,5 +1,5 @@
 ## python-alipay-sdk
-[![codecov](https://codecov.io/gh/fzlee/alipay/branch/master/graph/badge.svg)](https://codecov.io/gh/fzlee/alipay)
+[![codecov](https://codecov.io/gh/fzlee/alipay/branch/master/graph/badge.svg)](https://codecov.io/gh/fzlee/alipay)![travis-ci](https://travis-ci.org/fzlee/alipay.svg?branch=master)
 ## [中文文档](https://github.com/fzlee/alipay/blob/master/README.zh-hans.md)
 ## Changelog
 
