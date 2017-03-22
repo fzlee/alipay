@@ -353,7 +353,7 @@ class AliPay():
 
         url = self.__gateway + "?" + self.sign_trade(data, self.__app_private_key_path)
         response = urlopen(url, timeout=15)
-        result = json.loads(response.read())
+        result = json.loads(response.read().decode("utf-8"))
         return result["alipay_trade_pay_response"]
 
     def query_face_to_face_trade(self, **kwargs):
@@ -401,7 +401,7 @@ class AliPay():
 
         url = self.__gateway + "?" + self.sign_trade(data, self.__app_private_key_path)
         response = urlopen(url, timeout=15)
-        return json.loads(response.read())["alipay_trade_query_response"]
+        return json.loads(response.read().decode("utf-8"))["alipay_trade_query_response"]
 
     def cancel_face_to_face_trade(self, **kwargs):
         """
@@ -431,7 +431,7 @@ class AliPay():
 
         url = self.__gateway + "?" + self.sign_trade(data, self.__app_private_key_path)
         response = urlopen(url, timeout=15)
-        return json.loads(response.read())["alipay_trade_cancel_response"]
+        return json.loads(response.read().decode("utf-8"))["alipay_trade_cancel_response"]
 
     def precreate_face_to_face_trade(self, out_trade_no, total_amount, subject, **kwargs):
         """
@@ -478,10 +478,5 @@ class AliPay():
 
         url = self.__gateway + "?" + self.sign_trade(data, self.__app_private_key_path)
         response = urlopen(url, timeout=15)
-        result = json.loads(response.read())
-
-        # 10000: 支付成功; 40004:支付失败; 10003:等待用户付款; 20000: 支付异常
-        if result["alipay_trade_precreate_response"]["code"] in ("40004", "20000"):
-            result = result["alipay_trade_precreate_response"]
-            raise AliPayException(result["code"], result["sub_msg"])
+        result = json.loads(response.read().decode("utf-8"))
         return result["alipay_trade_precreate_response"]

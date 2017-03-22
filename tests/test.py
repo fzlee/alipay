@@ -76,7 +76,7 @@ query_face_to_faapp_orderce_trade_response = json.dumps({
     "total_amount": "20.00"
   },
   "sign": ""
-})
+}).encode("utf-8")
 
 cancel_face_to_faapp_orderce_trade_response = json.dumps({
    "alipay_trade_cancel_response": {
@@ -85,7 +85,7 @@ cancel_face_to_faapp_orderce_trade_response = json.dumps({
        "code": "10000",
        "retry_flag": "N"
      }
-})
+}).encode("utf-8")
 
 precreate_face_to_faapp_orderce_trade_response = json.dumps({
      "alipay_trade_precreate_response": {
@@ -96,7 +96,7 @@ precreate_face_to_faapp_orderce_trade_response = json.dumps({
      },
      "sign": ""
    }
-)
+).encode("utf-8")
 
 
 class AliPayTestCase(unittest.TestCase):
