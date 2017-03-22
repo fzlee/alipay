@@ -17,7 +17,7 @@
 * Code for testing
 * Fixed coding and decoding issues in Python 2 
 
-##  Alipay Python SDK
+##  AliPay Python SDK
 I can't find any official python alipay sdks so far, and it really pains a lot dealing with those sign methods. Hoping this libarary could do some help :).
 
 So far, the following functions are supported:
@@ -143,7 +143,7 @@ return True
 #### Creating face to face trade
 
 ```Python
-alipay = Alipay(appid="", ...)
+alipay = AliPay(appid="", ...)
 
 result = alipay.create_face_to_face_trade(
     "out_trade_no", "bar_code/wave_code", "auth_code", "subject",
@@ -189,7 +189,7 @@ python -m unittest discover
 
 Or you may do test manually in this way, `debug=True` will direct your request to sandbox environment:
 ```
-alipay = Alipay(..., debug=True)
+alipay = AliPay(..., debug=True)
 ```
 
 ## Thanks to

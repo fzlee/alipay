@@ -138,7 +138,7 @@ return True
 
 以下是一个当面付的基本例子
 ```Python
-alipay = Alipay(appid="", ...)
+alipay = AliPay(appid="", ...)
 
 result = alipay.create_face_to_face_trade(
     "out_trade_no", "bar_code/wave_code", "auth_code", "subject",
@@ -185,7 +185,7 @@ python -m unittest discover
 
 或者你可以传入debug=True, 进行手动测试
 ```Python
-alipay = Alipay(..., debug=True)
+alipay = AliPay(..., debug=True)
 ```
 
 ## 感谢（排名不分先后）
