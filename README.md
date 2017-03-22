@@ -21,14 +21,14 @@
 I can't find any official python alipay sdks so far, and it really pains a lot dealing with those sign methods. Hoping this libarary could do some help :).
 
 So far, the following functions are supported:
-* [paid by Android/iOS](https://doc.open.alipay.com/docs/doc.htm?treeId=193&articleId=105051&docType=1)
-* [paid by WAP](https://doc.open.alipay.com/docs/doc.htm?treeId=193&articleId=105288&docType=1)
-* [paid by Web](https://doc.open.alipay.com/doc2/detail?treeId=62&articleId=103566&docType=1)
+* [Paid by Android/iOS](https://doc.open.alipay.com/docs/doc.htm?treeId=193&articleId=105051&docType=1)
+* [Paid by WAP](https://doc.open.alipay.com/docs/doc.htm?treeId=193&articleId=105288&docType=1)
+* [Paid by Web](https://doc.open.alipay.com/doc2/detail?treeId=62&articleId=103566&docType=1)
 * [Refund](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759)
-* [create face to face trade](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=850)
-* [query face to face trade](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=757)
-* [cancel face to face trade](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=866)
-* [precreate face to face trade](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=862)
+* [Create face to face trade](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=850)
+* [Query face to face trade](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=757)
+* [Cancel face to face trade](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=866)
+* [Precreate face to face trade](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=862)
 
 Taking a look at [this guide](https://ifconfiger.com/page/python-alipay-sdk) if you are interested at the details on signing your order requests.
 Or you may just follow this manual if you are not.
@@ -140,7 +140,7 @@ except AliPayException as e:
 return True
 ```
 
-#### create face to face trade
+#### Creating face to face trade
 
 ```Python
 alipay = Alipay(appid="", ...)
@@ -156,9 +156,9 @@ if  result["code"] == "10000":
     print("Order is paid")
 ```
 
-#### create precreate/query/cancel face to face trade
+#### Precreate/Query/Cancel face to face trade
 ```Python
-alipay = Alipay(appid="", ...)
+alipay = AliPay(appid="", ...)
 
 # create an order
 result1 = alipay.precreate_face_to_face_trade(
@@ -166,7 +166,7 @@ result1 = alipay.precreate_face_to_face_trade(
     # you may input more parameters here, refer to alipay official doc for details
     )
 
-if result1["code"] = "10000":
+if result1["code"] == "10000":
     print("Order is paid")
 elif result1["code"] == "10003":
     print("Pending paid by user")

@@ -153,7 +153,7 @@ if  result["code"] == "10000":
 
 #### 预创建/查询/取消当面付
 ```Python
-alipay = Alipay(appid="", ...)
+alipay = AliPay(appid="", ...)
 
 # create an order
 result1 = alipay.precreate_face_to_face_trade(
@@ -161,7 +161,7 @@ result1 = alipay.precreate_face_to_face_trade(
     # you may input more parameters here, refer to alipay official doc for details
     )
 
-if result1["code"] = "10000":
+if result1["code"] == "10000":
     print("Order is paid")
 elif result1["code"] == "10003":
     print("Pending paid by user")

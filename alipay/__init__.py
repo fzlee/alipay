@@ -289,7 +289,7 @@ class AliPay():
         if result["code"] != "10000":
             raise AliPayException(result["code"], result["sub_msg"])
 
-        return result
+        return result["alipay_trade_refund_response"]
 
     def create_face_to_face_trade(self, out_trade_no, scene, auth_code, subject, **kwargs):
         """
@@ -363,7 +363,7 @@ class AliPay():
         if result["alipay_trade_pay_response"]["code"] in ("40004", "20000"):
             result = result["alipay_trade_pay_response"]
             raise AliPayException(result["code"], result["sub_msg"])
-        return result
+        return result["alipay_trade_pay_response"]
 
     def query_face_to_face_trade(self, **kwargs):
         """
@@ -493,4 +493,4 @@ class AliPay():
         if result["alipay_trade_precreate_response"]["code"] in ("40004", "20000"):
             result = result["alipay_trade_precreate_response"]
             raise AliPayException(result["code"], result["sub_msg"])
-        return result
+        return result["alipay_trade_precreate_response"]
