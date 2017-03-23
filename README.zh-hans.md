@@ -4,6 +4,7 @@
 
 ### 2017-03-21 (version 0.6)
 * 创建/取消/查询 当面付订单
+* 对于非10000的code，直接返回消息体而不是抛出异常
 
 ### 2017-01-17(version 0.5.1)
 * 修复网页扫码支付的退款bug(感谢varwey)
@@ -127,11 +128,12 @@ refund 需要传入的参数参见[官方文档](https://doc.open.alipay.com/doc
 
 ```Python
 # 即时到账退款
-try:
-    alipay.refund_web_order(out_trade_no="xxx", refund_amount="xxx", ...)
-except AliPayException as e:
-    raise e
-return True
+result = alipay.refund_web_order(out_trade_no="xxx", refund_amount="xxx", ...)
+result = alipay.refund_app_order(out_trade_no="xxx", refund_amount="xxx", ...)
+result = alipay.refund_wap_order(out_trade_no="xxx", refund_amount="xxx", ...)
+
+if result["code"] == "10000":
+    print("success")
 ```
 
 #### 创建当面付

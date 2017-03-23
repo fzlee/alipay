@@ -5,6 +5,7 @@
 
 ### 2017-03-21(version 0.6)
 * precreate/create/cancel/query face to face trade
+* return response body instead of raising exception even if code is not 10000 
 
 ### 2017-01-17(version 0.5.1)
 * Refund bug fix( many thanks to varwey)
@@ -131,13 +132,12 @@ If you want to know what parameters are accepted, take a look into the [official
 
 ```Python
 # Example for refund
-try:
-    alipay.refund_web_order(out_trade_no="xxx", refund_amount="xxx", ...)
-    alipay.refund_app_order(out_trade_no="xxx", refund_amount="xxx", ...)
-    alipay.refund_wap_order(out_trade_no="xxx", refund_amount="xxx", ...)
-except AliPayException as e:
-    raise e
-return True
+result = alipay.refund_web_order(out_trade_no="xxx", refund_amount="xxx", ...)
+result = alipay.refund_app_order(out_trade_no="xxx", refund_amount="xxx", ...)
+result = alipay.refund_wap_order(out_trade_no="xxx", refund_amount="xxx", ...)
+
+if result["code"] == "10000":
+    print("success")
 ```
 
 #### Creating face to face trade
