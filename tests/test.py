@@ -125,7 +125,7 @@ class AliPayTestCase(unittest.TestCase):
             sign_type=sign_type
         )
 
-    @mock.patch.object(AliPay, "refund")
+    @mock.patch.object(AliPay, "_refund")
     def test_refund_wap_order(self, mock_refund):
         """
         wap退款功能测试，调用了refund函数
@@ -142,7 +142,7 @@ class AliPayTestCase(unittest.TestCase):
             **data
         )
 
-    @mock.patch.object(AliPay, "refund")
+    @mock.patch.object(AliPay, "_refund")
     def test_refund_app_order(self, mock_refund):
         """
         app退款功能测试，调用了refund函数
@@ -159,7 +159,7 @@ class AliPayTestCase(unittest.TestCase):
             **data
         )
 
-    @mock.patch.object(AliPay, "refund")
+    @mock.patch.object(AliPay, "_refund")
     def test_refund_web_order(self, mock_refund):
         """
         web退款功能测试，调用了refund函数

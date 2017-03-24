@@ -44,11 +44,19 @@ class AliPay():
         """
         # app, wap支付:
         alipay = AliPay(
-          app_notify_url="", appid="", app_private_key_path="", app_alipay_public_key_path=""
+          appid="",
+          app_private_key_path="",
+          app_alipay_public_key_path="",
+          app_notify_url="",
+          sign_type="RSA2"
         )
         # web支付:
         alipay = AliPay(
-          web_notify_url=, partner=, partner_private_key_path=, partner_alipay_public_key_path=
+          partner=,
+          partner_private_key_path=,
+          partner_alipay_public_key_path=
+          web_notify_url=,
+          sign_type="RSA2"
         )
         # 如果你想要同时支持三种支付方式，将所有参数传入
         """
@@ -241,15 +249,30 @@ class AliPay():
         return self._verify(message, signature, alipay_public_key_path)
 
     def refund_web_order(self, **kwargs):
-        return self.refund(self.__partner, self.__web_private_key_path, **kwargs)
+        """
+        refund_web_order(out_trade_no="", refund_amount=1.0, out_request_no="部分退款用", **kwargs)
+
+        please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759
+        """
+        return self._refund(self.__partner, self.__web_private_key_path, **kwargs)
 
     def refund_app_order(self, **kwargs):
-        return self.refund(self.__appid, self.__app_private_key_path, **kwargs)
+        """
+        refund_app_order(out_trade_no="", refund_amount=1.0, out_request_no="部分退款用", **kwargs)
+
+        please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759
+        """
+        return self._refund(self.__appid, self.__app_private_key_path, **kwargs)
 
     def refund_wap_order(self, **kwargs):
+        """
+        refund_wap_order(out_trade_no="", refund_amount=1.0, out_request_no="部分退款用", **kwargs)
+
+        please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759
+        """
         return self.refund_app_order(**kwargs)
 
-    def refund(self, appid, private_key_path, **kwargs):
+    def _refund(self, appid, private_key_path, **kwargs):
         """
         Please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759
 
@@ -358,6 +381,8 @@ class AliPay():
 
     def query_face_to_face_trade(self, **kwargs):
         """
+        query_face_to_face_trade(out_trade_no="")
+
         Please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=757
 
         response = {
@@ -405,6 +430,8 @@ class AliPay():
 
     def cancel_face_to_face_trade(self, **kwargs):
         """
+        cancel_face_to_face_trade(out_trade_no="")
+
         Please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=866
 
         response = {
@@ -436,6 +463,7 @@ class AliPay():
     def precreate_face_to_face_trade(self, out_trade_no, total_amount, subject, **kwargs):
         """
         Pleasse refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=850
+
         success response  = {
           "alipay_trade_precreate_response": {
             "msg": "Success",
