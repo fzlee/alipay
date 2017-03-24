@@ -11,3 +11,4 @@ script: python setup.py test
 
 after_success:
   coverage run setup.py test
+  codecov
