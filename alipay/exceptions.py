@@ -12,11 +12,12 @@ class AliPayException(Exception):
         self.__code = code
         self.__message = message
 
-    def __str__(self):
-        return unicode(self).encode('utf-8')
-
     def __repr__(self):
         return u"AliPayException<code:{}, message:{}>".format(self.__code, self.__message)
 
     def __unicode__(self):
         return u"AliPayException<code:{}, message:{}>".format(self.__code, self.__message)
+
+
+class AliPayValidationError(Exception):
+    pass

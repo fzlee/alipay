@@ -27,78 +27,6 @@ invalid_response = json.dumps({
 }).encode("utf-8")
 
 
-create_face_to_faapp_orderce_trade_response = json.dumps({
-   "alipay_trade_pay_response": {
-     "trade_no": "2017032121001004070200176846",
-     "code": "10000",
-     "invoice_amount": "20.00",
-     "open_id": "20880072506750308812798160715407",
-     "fund_bill_list": [
-       {
-         "amount": "20.00",
-         "fund_channel": "ALIPAYACCOUNT"
-       }
-     ],
-     "buyer_logon_id": "csq***@sandbox.com",
-     "receipt_amount": "20.00",
-     "out_trade_no": "out_trade_no18",
-     "buyer_pay_amount": "20.00",
-     "buyer_user_id": "2088102169481075",
-     "msg": "Success",
-     "point_amount": "0.00",
-     "gmt_payment": "2017-03-21 15:07:29",
-     "total_amount": "20.00"
-   },
-   "sign": ""
-}).encode("utf-8")
-
-query_face_to_faapp_orderce_trade_response = json.dumps({
-  "alipay_trade_query_response": {
-    "trade_no": "2017032121001004070200176844",
-    "code": "10000",
-    "invoice_amount": "20.00",
-    "open_id": "20880072506750308812798160715407",
-    "fund_bill_list": [
-      {
-        "amount": "20.00",
-        "fund_channel": "ALIPAYACCOUNT"
-      }
-    ],
-    "buyer_logon_id": "csq***@sandbox.com",
-    "send_pay_date": "2017-03-21 13:29:17",
-    "receipt_amount": "20.00",
-    "out_trade_no": "out_trade_no15",
-    "buyer_pay_amount": "20.00",
-    "buyer_user_id": "2088102169481075",
-    "msg": "Success",
-    "point_amount": "0.00",
-    "trade_status": "TRADE_SUCCESS",
-    "total_amount": "20.00"
-  },
-  "sign": ""
-}).encode("utf-8")
-
-cancel_face_to_faapp_orderce_trade_response = json.dumps({
-   "alipay_trade_cancel_response": {
-       "msg": "Success",
-       "out_trade_no": "out_trade_no15",
-       "code": "10000",
-       "retry_flag": "N"
-     }
-}).encode("utf-8")
-
-precreate_face_to_faapp_orderce_trade_response = json.dumps({
-     "alipay_trade_precreate_response": {
-       "msg": "Success",
-       "out_trade_no": "out_trade_no17",
-       "code": "10000",
-       "qr_code": "https://qr.alipay.com/bax03431ljhokirwl38f00a7"
-     },
-     "sign": ""
-   }
-).encode("utf-8")
-
-
 class AliPayTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -106,6 +34,30 @@ class AliPayTestCase(unittest.TestCase):
         self.__ali_private_key_path, self.__ali_public_key_path = helper.get_ali_certs()
         self.__app_private_key_path, self.__app_public_key_path = helper.get_app_certs()
         self.__web_private_key_path, self.__web_public_key_path = helper.get_web_certs()
+
+    def _prepare_sync_response(self, alipay, response_type):
+        """sign data with private key so we can validate with our public key later"""
+        data = {
+            "name": "Lily",
+            "age": "12"
+        }
+        response = {
+            response_type: data,
+            "sign": alipay._sign(json.dumps(data), self.__app_private_key_path)
+        }
+        return json.dumps(response).encode("utf-8")
+
+    def _prepare_precreate_face_to_face_response(self, alipay):
+        return self._prepare_sync_response(alipay, "alipay_trade_precreate_response")
+
+    def _prepare_query_face_to_face_response(self, alipay):
+        return self._prepare_sync_response(alipay, "alipay_trade_query_response")
+
+    def _prepare_cancel_face_to_face_response(self, alipay):
+        return self._prepare_sync_response(alipay, "alipay_trade_cancel_response")
+
+    def _prepare_create_face_to_face_response(self, alipay):
+        return self._prepare_sync_response(alipay, "alipay_trade_pay_response")
 
     def get_app_client(self, sign_type):
         return AliPay(
@@ -241,11 +193,12 @@ class AliPayTestCase(unittest.TestCase):
 
     @mock.patch("alipay.urlopen")
     def test_create_face_to_face_trade(self, mock_urlopen):
+        alipay = self.get_app_client("RSA")
+
         response = mock.Mock()
-        response.read.return_value = create_face_to_faapp_orderce_trade_response
+        response.read.return_value = self._prepare_create_face_to_face_response(alipay)
         mock_urlopen.return_value = response
 
-        alipay = self.get_app_client("RSA")
         alipay.create_face_to_face_trade(
             "out_trade_no",
             "wave_code",
@@ -257,11 +210,11 @@ class AliPayTestCase(unittest.TestCase):
 
     @mock.patch("alipay.urlopen")
     def test_query_face_to_face_trade(self, mock_urlopen):
+        alipay = self.get_app_client("RSA2")
         response = mock.Mock()
-        response.read.return_value = query_face_to_faapp_orderce_trade_response
+        response.read.return_value = self._prepare_query_face_to_face_response(alipay)
         mock_urlopen.return_value = response
 
-        alipay = self.get_app_client("RSA")
         alipay.query_face_to_face_trade(
             out_trade_no="out_trade_no",
         )
@@ -269,11 +222,11 @@ class AliPayTestCase(unittest.TestCase):
 
     @mock.patch("alipay.urlopen")
     def test_cancel_face_to_face_trade(self, mock_urlopen):
+        alipay = self.get_app_client("RSA2")
         response = mock.Mock()
-        response.read.return_value = cancel_face_to_faapp_orderce_trade_response
+        response.read.return_value = self._prepare_cancel_face_to_face_response(alipay)
         mock_urlopen.return_value = response
 
-        alipay = self.get_app_client("RSA")
         alipay.cancel_face_to_face_trade(
             out_trade_no="out_trade_no",
         )
@@ -281,12 +234,29 @@ class AliPayTestCase(unittest.TestCase):
 
     @mock.patch("alipay.urlopen")
     def test_precreate_face_to_face_trade(self, mock_urlopen):
+        alipay = self.get_app_client("RSA2")
         response = mock.Mock()
-        response.read.return_value = precreate_face_to_faapp_orderce_trade_response
+        response.read.return_value = self._prepare_precreate_face_to_face_response(alipay)
         mock_urlopen.return_value = response
 
-        alipay = self.get_app_client("RSA")
         alipay.precreate_face_to_face_trade(
             "out_trade_no", 12, "test subject"
         )
         self.assertTrue(mock_urlopen.called)
+
+    def test__get_string_to_be_signed(self):
+        alipay = self.get_app_client("RSA2")
+
+        # 简单测试
+        s = """{"response_type":{"key1":"name"}}"""
+        expected = """{"key1":"name"}"""
+        returned = alipay._AliPay__get_string_to_be_signed(s, "response_type")
+        self.assertEqual(expected, returned)
+        # 嵌套测试
+        s = """{"response_type":{"key1":{"key2": ""}}}"""
+        expected = """{"key1":{"key2": ""}}"""
+        returned = alipay._AliPay__get_string_to_be_signed(s, "response_type")
+        self.assertEqual(expected, returned)
+        # 不合法测试, 不报错就好
+        s = """{"response_type":{"key1":{"key2": {{"""
+        alipay._AliPay__get_string_to_be_signed(s, "response_type")
