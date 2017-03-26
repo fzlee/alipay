@@ -10,6 +10,7 @@ import json
 import subprocess
 
 from alipay import AliPay
+from alipay.exceptions import AliPayValidationError
 from tests import helper
 from tests.compat import mock
 
@@ -243,6 +244,21 @@ class AliPayTestCase(unittest.TestCase):
             "out_trade_no", 12, "test subject"
         )
         self.assertTrue(mock_urlopen.called)
+
+    @mock.patch("alipay.urlopen")
+    def test_precreate_face_to_face_trade_with_exception(self, mock_urlopen):
+        alipay = self.get_app_client("RSA2")
+        response = mock.Mock()
+        return_value = self._prepare_precreate_face_to_face_response(alipay)
+        # 让签名失效
+        return_value = return_value.replace(b"name", b"name2")
+        response.read.return_value = return_value
+        mock_urlopen.return_value = response
+
+        with self.assertRaises(AliPayValidationError):
+            alipay.precreate_face_to_face_trade(
+                "out_trade_no", 12, "test subject"
+            )
 
     def test__get_string_to_be_signed(self):
         alipay = self.get_app_client("RSA2")
