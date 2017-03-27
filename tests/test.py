@@ -273,6 +273,14 @@ class AliPayTestCase(unittest.TestCase):
         expected = """{"key1":{"key2": ""}}"""
         returned = alipay._AliPay__get_string_to_be_signed(s, "response_type")
         self.assertEqual(expected, returned)
+        # 嵌套测试
+        s = """{"response_type":{"key1":{"key2": {"key3": ""}}}}"""
+        expected = """{"key1":{"key2": {"key3": ""}}}"""
+        returned = alipay._AliPay__get_string_to_be_signed(s, "response_type")
+        self.assertEqual(expected, returned)
         # 不合法测试, 不报错就好
         s = """{"response_type":{"key1":{"key2": {{"""
+        alipay._AliPay__get_string_to_be_signed(s, "response_type")
+        # 不合法测试, 不报错就好
+        s = """{"response_type":"key1":"key2":"""
         alipay._AliPay__get_string_to_be_signed(s, "response_type")
