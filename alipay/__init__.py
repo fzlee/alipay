@@ -250,7 +250,8 @@ class AliPay():
 
     def refund_web_order(self, **kwargs):
         """
-        refund_web_order(out_trade_no="", refund_amount=1.0, out_request_no="部分退款用", **kwargs)
+        eg:
+            refund_web_order(out_trade_no="", refund_amount=1.0, out_request_no="部分退款用", **kwargs)
 
         please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759
         """
@@ -258,7 +259,8 @@ class AliPay():
 
     def refund_app_order(self, **kwargs):
         """
-        refund_app_order(out_trade_no="", refund_amount=1.0, out_request_no="部分退款用", **kwargs)
+        eg:
+            refund_app_order(out_trade_no="", refund_amount=1.0, out_request_no="部分退款用", **kwargs)
 
         please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759
         """
@@ -266,7 +268,8 @@ class AliPay():
 
     def refund_wap_order(self, **kwargs):
         """
-        refund_wap_order(out_trade_no="", refund_amount=1.0, out_request_no="部分退款用", **kwargs)
+        eg:
+            refund_wap_order(out_trade_no="", refund_amount=1.0, out_request_no="部分退款用", **kwargs)
 
         please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759
         """
@@ -312,6 +315,15 @@ class AliPay():
 
     def create_face_to_face_trade(self, out_trade_no, scene, auth_code, subject, **kwargs):
         """
+        eg:
+            self.create_face_to_face_trade(
+                out_trade_no,
+                "bar_code/wave_code",
+                auth_code,
+                subject,
+                total_amount=12,
+                discountable_amount=10
+            )
         Pleasse refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=850
 
         failed response = {
@@ -380,7 +392,8 @@ class AliPay():
 
     def query_face_to_face_trade(self, **kwargs):
         """
-        query_face_to_face_trade(out_trade_no="")
+        eg:
+            query_face_to_face_trade(out_trade_no="")
 
         Please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=757
 
@@ -429,7 +442,8 @@ class AliPay():
 
     def cancel_face_to_face_trade(self, **kwargs):
         """
-        cancel_face_to_face_trade(out_trade_no="")
+        eg:
+            cancel_face_to_face_trade(out_trade_no="")
 
         Please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=866
 
