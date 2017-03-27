@@ -3,6 +3,10 @@
 ## [中文文档](https://github.com/fzlee/alipay/blob/master/README.zh-hans.md)
 ## Changelog
 
+### 2017-03-27(version 0.6.4)
+* validation for sync response
+* several bug fix
+
 ### 2017-03-21(version 0.6)
 * precreate/create/cancel/query face to face trade
 * return response body instead of raising exception even if code is not 10000 

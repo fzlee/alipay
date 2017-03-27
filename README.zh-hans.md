@@ -1,6 +1,9 @@
 ## python-alipay-sdk
 [![PyPI version](https://badge.fury.io/py/python-alipay-sdk.svg)](https://badge.fury.io/py/python-alipay-sdk)[![codecov](https://codecov.io/gh/fzlee/alipay/branch/master/graph/badge.svg)](https://codecov.io/gh/fzlee/alipay)![travis-ci](https://travis-ci.org/fzlee/alipay.svg?branch=master)
 ## Changelog
+### 2017-03-27(version 0.6.4)
+* 对于同步请求的数据也进行验签
+* 几处小的bug修复
 
 ### 2017-03-21 (version 0.6)
 * 创建/取消/查询 当面付订单
