@@ -12,7 +12,7 @@ from Crypto.Hash import SHA, SHA256
 from Crypto.PublicKey import RSA
 
 from .compat import quote_plus, urlopen, decodebytes, encodebytes
-from .exceptions import AliPayException
+from .exceptions import AliPayException, AliPayValidationError
 
 
 class AliPay():
@@ -131,7 +131,7 @@ class AliPay():
             sign = encodebytes(signature).decode("utf8").replace("\n", "")
             return sign
 
-    def sign_data_with_private_key(self, data, private_key_path):
+    def _sign_data_with_private_key(self, data, private_key_path):
         data.pop("sign", None)
         # 排序后的字符串
         unsigned_items = self.__ordered_data(data)
@@ -158,7 +158,7 @@ class AliPay():
             "notify_url": self.__app_notify_url,
             "biz_content": biz_content
         }
-        return self.sign_trade(data, self.__app_private_key_path)
+        return self._sign_data(data, self.__app_private_key_path)
 
     def create_wap_trade(self, out_trade_no, total_amount, subject, return_url, **kwargs):
         self.__check_internal_configuration("wap")
@@ -183,7 +183,7 @@ class AliPay():
             "biz_content": {
             }
         }
-        return self.sign_trade(data, self.__app_private_key_path)
+        return self._sign_data(data, self.__app_private_key_path)
 
     def create_web_trade(self, out_trade_no, total_amount, subject, return_url, **kwargs):
         self.__check_internal_configuration("web")
@@ -203,11 +203,11 @@ class AliPay():
         data.update(kwargs)
 
         # 注意web支付类型，sign_type 不参与签名
-        return self.sign_trade(data, self.__web_private_key_path) +\
+        return self._sign_data(data, self.__web_private_key_path) +\
             "&sign_type=" + self.__sign_type
 
-    def sign_trade(self, data, private_key_path):
-        sign = self.sign_data_with_private_key(data, private_key_path)
+    def _sign_data(self, data, private_key_path):
+        sign = self._sign_data_with_private_key(data, private_key_path)
         ordered_items = self.__ordered_data(data)
         quoted_string = "&".join("{}={}".format(k, quote_plus(v)) for k, v in ordered_items)
 
@@ -216,13 +216,13 @@ class AliPay():
         return signed_string
 
     def verify_app_notify(self, data, signature):
-        return self.verify_notify(data, signature, self.__app_alipay_public_key_path)
+        return self._verify_data(data, signature, self.__app_alipay_public_key_path)
 
     def verify_wap_notify(self, data, signature):
         return self.verify_app_notify(data, signature)
 
     def verify_web_notify(self, data, signature):
-        return self.verify_notify(data, signature, self.__web_alipay_public_key_path)
+        return self._verify_data(data, signature, self.__web_alipay_public_key_path)
 
     def _verify(self, raw_content, signature, publickey_path):
         # 开始计算签名
@@ -238,7 +238,7 @@ class AliPay():
                 return True
             return False
 
-    def verify_notify(self, data, signature, alipay_public_key_path):
+    def _verify_data(self, data, signature, alipay_public_key_path):
         if "sign_type" in data:
             sign_type = data.pop("sign_type")
             if sign_type != self.__sign_type:
@@ -250,7 +250,8 @@ class AliPay():
 
     def refund_web_order(self, **kwargs):
         """
-        refund_web_order(out_trade_no="", refund_amount=1.0, out_request_no="部分退款用", **kwargs)
+        eg:
+            refund_web_order(out_trade_no="", refund_amount=1.0, out_request_no="部分退款用", **kwargs)
 
         please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759
         """
@@ -258,7 +259,8 @@ class AliPay():
 
     def refund_app_order(self, **kwargs):
         """
-        refund_app_order(out_trade_no="", refund_amount=1.0, out_request_no="部分退款用", **kwargs)
+        eg:
+            refund_app_order(out_trade_no="", refund_amount=1.0, out_request_no="部分退款用", **kwargs)
 
         please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759
         """
@@ -266,7 +268,8 @@ class AliPay():
 
     def refund_wap_order(self, **kwargs):
         """
-        refund_wap_order(out_trade_no="", refund_amount=1.0, out_request_no="部分退款用", **kwargs)
+        eg:
+            refund_wap_order(out_trade_no="", refund_amount=1.0, out_request_no="部分退款用", **kwargs)
 
         please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759
         """
@@ -297,7 +300,7 @@ class AliPay():
             "version": "1.0",
             "biz_content": kwargs
         }
-        sign = self.sign_data_with_private_key(data, private_key_path)
+        sign = self._sign_data_with_private_key(data, private_key_path)
 
         ordered_items = self.__ordered_data(data)
         quoted_string = "&".join("{}={}".format(k, quote_plus(v)) for k, v in ordered_items)
@@ -312,6 +315,15 @@ class AliPay():
 
     def create_face_to_face_trade(self, out_trade_no, scene, auth_code, subject, **kwargs):
         """
+        eg:
+            self.create_face_to_face_trade(
+                out_trade_no,
+                "bar_code/wave_code",
+                auth_code,
+                subject,
+                total_amount=12,
+                discountable_amount=10
+            )
         Pleasse refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=850
 
         failed response = {
@@ -374,14 +386,14 @@ class AliPay():
             "biz_content": biz_content
         }
 
-        url = self.__gateway + "?" + self.sign_trade(data, self.__app_private_key_path)
-        response = urlopen(url, timeout=15)
-        result = json.loads(response.read().decode("utf-8"))
-        return result["alipay_trade_pay_response"]
+        url = self.__gateway + "?" + self._sign_data(data, self.__app_private_key_path)
+        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
+        return self.__verify_and_return_sync_response(raw_string, "alipay_trade_pay_response")
 
     def query_face_to_face_trade(self, **kwargs):
         """
-        query_face_to_face_trade(out_trade_no="")
+        eg:
+            query_face_to_face_trade(out_trade_no="")
 
         Please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=757
 
@@ -424,13 +436,14 @@ class AliPay():
             "biz_content": biz_content
         }
 
-        url = self.__gateway + "?" + self.sign_trade(data, self.__app_private_key_path)
-        response = urlopen(url, timeout=15)
-        return json.loads(response.read().decode("utf-8"))["alipay_trade_query_response"]
+        url = self.__gateway + "?" + self._sign_data(data, self.__app_private_key_path)
+        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
+        return self.__verify_and_return_sync_response(raw_string, "alipay_trade_query_response")
 
     def cancel_face_to_face_trade(self, **kwargs):
         """
-        cancel_face_to_face_trade(out_trade_no="")
+        eg:
+            cancel_face_to_face_trade(out_trade_no="")
 
         Please refer to https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=866
 
@@ -456,9 +469,9 @@ class AliPay():
             "biz_content": biz_content
         }
 
-        url = self.__gateway + "?" + self.sign_trade(data, self.__app_private_key_path)
-        response = urlopen(url, timeout=15)
-        return json.loads(response.read().decode("utf-8"))["alipay_trade_cancel_response"]
+        url = self.__gateway + "?" + self._sign_data(data, self.__app_private_key_path)
+        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
+        return self.__verify_and_return_sync_response(raw_string, "alipay_trade_cancel_response")
 
     def precreate_face_to_face_trade(self, out_trade_no, total_amount, subject, **kwargs):
         """
@@ -504,7 +517,61 @@ class AliPay():
             "biz_content": biz_content
         }
 
-        url = self.__gateway + "?" + self.sign_trade(data, self.__app_private_key_path)
-        response = urlopen(url, timeout=15)
-        result = json.loads(response.read().decode("utf-8"))
-        return result["alipay_trade_precreate_response"]
+        url = self.__gateway + "?" + self._sign_data(data, self.__app_private_key_path)
+        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
+        return self.__verify_and_return_sync_response(raw_string, "alipay_trade_precreate_response")
+
+    def __verify_and_return_sync_response(self, raw_string, response_type):
+        """
+        return data if verification succeeded, else raise exception
+        """
+
+        response = json.loads(raw_string)
+        result = response[response_type]
+        sign = response["sign"]
+
+        # locate string to be signed
+        raw_string = self.__get_string_to_be_signed(
+            raw_string, response_type
+        )
+
+        if not self._verify(raw_string, sign, self.__app_alipay_public_key_path):
+            raise AliPayValidationError
+        return result
+
+    def __get_string_to_be_signed(self, raw_string, response_type):
+        """
+        https://doc.open.alipay.com/docs/doc.htm?docType=1&articleId=106120
+        从同步返回的接口里面找到待签名的字符串
+        """
+        left_index = 0
+        right_index = 0
+
+        index = raw_string.find(response_type)
+        left_index = raw_string.find("{", index)
+        index = left_index + 1
+
+        balance = -1
+        while balance < 0 and index < len(raw_string) - 1:
+            index_a = raw_string.find("{", index)
+            index_b = raw_string.find("}", index)
+
+            # 右括号没找到， 退出
+            if index_b == -1:
+                break
+            right_index = index_b
+
+            # 左括号没找到，移动到右括号的位置
+            if index_a == -1:
+                index = index_b + 1
+                balance += 1
+            # 左括号出现在有括号之前，移动到左括号的位置
+            elif index_a > index_b:
+                balance += 1
+                index = index_b + 1
+            # 左括号出现在右括号之后， 移动到右括号的位置
+            else:
+                balance -= 1
+                index = index_a + 1
+
+        return raw_string[left_index: right_index + 1]

@@ -74,7 +74,7 @@ pip install python-alipay-sdk
       web_alipay_public_key_path="" 
     )
 ```
-    
+ 
 #### Creating order string
 ```Python
     # paid by App，just generating order_string and pass it to your mobile app
