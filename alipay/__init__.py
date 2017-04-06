@@ -180,8 +180,7 @@ class AliPay():
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "version": "1.0",
             "notify_url": self.__app_notify_url,
-            "biz_content": {
-            }
+            "biz_content": biz_content
         }
         return self._sign_data(data, self.__app_private_key_path)
 

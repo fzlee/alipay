@@ -3,6 +3,9 @@
 ## [中文文档](https://github.com/fzlee/alipay/blob/master/README.zh-hans.md)
 ## Changelog
 
+### 2017-04-05(version 0.6.5)
+* bug fix for create wap trade 
+
 ### 2017-03-27(version 0.6.4)
 * validation for sync response
 * several bug fix
