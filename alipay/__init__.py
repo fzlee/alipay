@@ -244,7 +244,7 @@ class AliPay():
                 raise AliPayException(None, "Unknown sign type: {}".format(sign_type))
         # 排序后的字符串
         unsigned_items = self.__ordered_data(data)
-        message = "&".join("{}={}".format(k, v) for k, v in unsigned_items)
+        message = "&".join(u"{}={}".format(k, v) for k, v in unsigned_items)
         return self._verify(message, signature, alipay_public_key_path)
 
     def refund_web_order(self, **kwargs):

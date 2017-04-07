@@ -1,6 +1,11 @@
 ## python-alipay-sdk
 [![PyPI version](https://badge.fury.io/py/python-alipay-sdk.svg)](https://badge.fury.io/py/python-alipay-sdk)[![codecov](https://codecov.io/gh/fzlee/alipay/branch/master/graph/badge.svg)](https://codecov.io/gh/fzlee/alipay)![travis-ci](https://travis-ci.org/fzlee/alipay.svg?branch=master)
 ## Changelog
+
+### 2017-04-07(version 0.6.6)
+* 修复python2 下的ascii编码问题
+* 修复create wap trade的bug
+
 ### 2017-03-27(version 0.6.4)
 * 对于同步请求的数据也进行验签
 * 几处小的bug修复
@@ -86,6 +91,26 @@ pip install python-alipay-sdk
     order_string = alipay.create_web_trade(out_trade_no="20161112", total_amount="0.01", subject="测试订单", return_url="https://example.com")
 ```
 #### 通知验证
+这里有一个简单的基于flask的验证：
+```Python
+from flask import Flask
+from flask import request
+app = Flask(__name__)
+
+@app.route('/', methods=["GET", "POST"])
+def hello_world():
+    data = request.form.to_dict()
+    signature = data.pop("sign")
+
+    print(json.dumps(data))
+    print(signature)
+
+    # verify 
+    alipay.verify_wap/web/app_notify(data, signature)
+    return 'Hello, World!'
+```
+
+一般而言，可以这样验证回调通知
 ```Python
     # 验证alipay的异步通知，data来自支付宝回调POST 给你的data，字典格式.
     data = {

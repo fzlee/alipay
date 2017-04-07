@@ -3,7 +3,8 @@
 ## [中文文档](https://github.com/fzlee/alipay/blob/master/README.zh-hans.md)
 ## Changelog
 
-### 2017-04-05(version 0.6.5)
+### 2017-04-07(version 0.6.6)
+* bug fix for ascii encode error in python2
 * bug fix for create wap trade 
 
 ### 2017-03-27(version 0.6.4)
@@ -94,6 +95,29 @@ pip install python-alipay-sdk
 #### Notification Validation
 Once an order is paid, you will get a POST request from alipay servers which informs you that the order is paid 
 
+Here is a simple example for flask web server:
+
+```Python
+import json
+from flask import Flask
+from flask import request
+app = Flask(__name__)
+
+@app.route('/', methods=["GET", "POST"])
+def hello_world():
+    data = request.form.to_dict()
+    signature = data.pop("sign")
+
+    print(json.dumps(data))
+    print(signature)
+
+    # verify 
+    alipay.verify_wap/web/app_notify(data, signature)
+    return 'Hello, World!'
+
+```
+
+Here is a more general example for verification
 ```Python
     # gathering all parameters sent from alipay server, and put them in a dictionary called data
     data = {
