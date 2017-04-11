@@ -52,7 +52,7 @@ pip install python-alipay-sdk
 ```
 
 #### Intialization
-```Python
+```python
     from alipay import AliPay
     
     # paid by WAP or iOS/Android
@@ -86,7 +86,12 @@ pip install python-alipay-sdk
 ```
  
 #### Creating order string
-```Python
+```python
+    # if you are using Python 2(you should really think about Python 3), making sure non-ascii strings are utf-8 encoded
+    subject = u"测试订单".encode("utf8")
+    # if you are Python3 user, just use the default string
+    subject = "测试订单"
+
     # paid by App，just generating order_string and pass it to your mobile app
     order_string = alipay.create_app_trade(out_trade_no="20161112", total_amount=0.01, subject="testing order")
     # paid by WAP, open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
@@ -99,7 +104,7 @@ Once an order is paid, you will get a POST request from alipay servers which inf
 
 Here is a simple example for flask web server:
 
-```Python
+```python
 import json
 from flask import Flask
 from flask import request
@@ -120,7 +125,7 @@ def hello_world():
 ```
 
 Here is a more general example for verification
-```Python
+```python
     # gathering all parameters sent from alipay server, and put them in a dictionary called data
     data = {
           "subject": "testing order",
@@ -163,7 +168,7 @@ Here is a more general example for verification
 
 If you want to know what parameters are accepted, take a look into the [official document](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759), they are listed in **请求参数**
 
-```Python
+```python
 # Example for refund
 result = alipay.refund_web_order(out_trade_no="xxx", refund_amount="xxx", ...)
 result = alipay.refund_app_order(out_trade_no="xxx", refund_amount="xxx", ...)
@@ -175,7 +180,7 @@ if result["code"] == "10000":
 
 #### Creating face to face trade
 
-```Python
+```python
 alipay = AliPay(appid="", ...)
 
 result = alipay.create_face_to_face_trade(
@@ -190,7 +195,7 @@ if  result["code"] == "10000":
 ```
 
 #### Precreate/Query/Cancel face to face trade
-```Python
+```python
 alipay = AliPay(appid="", ...)
 
 # create an order

@@ -257,17 +257,23 @@ class AliPayTestCase(unittest.TestCase):
 
     def test_encodnig(self):
         """编码测试"""
+        import sys
+        if str(sys.version[0]) == "3":
+            subject = "中文测试"
+        else:
+            subject = u"中文测试".encode("utf8")
+
         alipay = self.get_client(sign_type="RSA2")
         alipay.create_web_trade(
             out_trade_no="out_trade_no",
             total_amount=100,
-            subject="中文测试",
+            subject=subject,
             return_url="http://baidu.com"
         )
         alipay.create_app_trade(
             out_trade_no="out_trade_no",
             total_amount=100,
-            subject="中文测试",
+            subject=subject,
             return_url="http://baidu.com"
         )
 
@@ -275,13 +281,13 @@ class AliPayTestCase(unittest.TestCase):
         alipay.create_web_trade(
             out_trade_no="out_trade_no",
             total_amount=100,
-            subject="中文测试",
+            subject=subject,
             return_url="http://baidu.com"
         )
         alipay.create_app_trade(
             out_trade_no="out_trade_no",
             total_amount=100,
-            subject="中文测试",
+            subject=subject,
             return_url="http://baidu.com"
         )
 

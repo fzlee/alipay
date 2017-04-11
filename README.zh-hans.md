@@ -51,7 +51,7 @@ pip install python-alipay-sdk
 ```
 
 ####初始化
-```Python
+```python
     from alipay import AliPay
     
     # 手机网站或者app支付
@@ -85,17 +85,23 @@ pip install python-alipay-sdk
 ```
 
 #### 生成订单
-```Python
+
+```python
+    # 如果你是Python 2用户（考虑考虑升级到Python 3吧），请确保非ascii的字符串为utf8编码：
+    subject = u"测试订单".encode("utf8")
+    # 如果你是 Python 3的用户，使用默认的字符串即可
+    subject = "测试订单"
+
     # App支付，将order_string返回给app即可
-    order_string = alipay.create_app_trade(out_trade_no="20161112", total_amount="0.01", subject="测试订单")
+    order_string = alipay.create_app_trade(out_trade_no="20161112", total_amount="0.01", subject=subject)
     # 手机网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
-    order_string = alipay.create_wap_trade(out_trade_no="20161112", total_amount="0.01", subject="测试订单", return_url="https://example.com")
+    order_string = alipay.create_wap_trade(out_trade_no="20161112", total_amount="0.01", subject=subject, return_url="https://example.com")
     # 即时到帐，需要跳转到https://mapi.alipay.com/gateway.do? + order_string
-    order_string = alipay.create_web_trade(out_trade_no="20161112", total_amount="0.01", subject="测试订单", return_url="https://example.com")
+    order_string = alipay.create_web_trade(out_trade_no="20161112", total_amount="0.01", subject=subject, return_url="https://example.com")
 ```
 #### 通知验证
 这里有一个简单的基于flask的验证：
-```Python
+```python
 from flask import Flask
 from flask import request
 app = Flask(__name__)
@@ -114,7 +120,7 @@ def hello_world():
 ```
 
 一般而言，可以这样验证回调通知
-```Python
+```python
     # 验证alipay的异步通知，data来自支付宝回调POST 给你的data，字典格式.
     data = {
           "subject": "测试订单",
@@ -157,7 +163,7 @@ def hello_world():
 
 refund 需要传入的参数参见[官方文档](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759)的**请求参数**
 
-```Python
+```python
 # 即时到账退款
 result = alipay.refund_web_order(out_trade_no="xxx", refund_amount="xxx", ...)
 result = alipay.refund_app_order(out_trade_no="xxx", refund_amount="xxx", ...)
@@ -170,7 +176,7 @@ if result["code"] == "10000":
 #### 创建当面付
 
 以下是一个当面付的基本例子
-```Python
+```python
 alipay = AliPay(appid="", ...)
 
 result = alipay.create_face_to_face_trade(
@@ -185,7 +191,7 @@ if  result["code"] == "10000":
 ```
 
 #### 预创建/查询/取消当面付
-```Python
+```python
 alipay = AliPay(appid="", ...)
 
 # create an order
@@ -217,7 +223,7 @@ python -m unittest discover
 ```
 
 或者你可以传入debug=True, 进行手动测试
-```Python
+```python
 alipay = AliPay(..., debug=True)
 ```
 
