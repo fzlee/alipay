@@ -2,6 +2,9 @@
 [![PyPI version](https://badge.fury.io/py/python-alipay-sdk.svg)](https://badge.fury.io/py/python-alipay-sdk)[![codecov](https://codecov.io/gh/fzlee/alipay/branch/master/graph/badge.svg)](https://codecov.io/gh/fzlee/alipay)![travis-ci](https://travis-ci.org/fzlee/alipay.svg?branch=master)
 ## Changelog
 
+### 2017-04-11(version 0.6.7)
+*  修复 verify data的编码问题
+
 ### 2017-04-07(version 0.6.6)
 * 修复python2 下的ascii编码问题
 * 修复create wap trade的bug

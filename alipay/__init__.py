@@ -11,7 +11,7 @@ from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA, SHA256
 from Crypto.PublicKey import RSA
 
-from .compat import quote_plus, urlopen, decodebytes, encodebytes
+from .compat import quote_plus, urlopen, decodebytes, encodebytes, b
 from .exceptions import AliPayException, AliPayValidationError
 
 
@@ -124,9 +124,9 @@ class AliPay():
             key = RSA.importKey(fp.read())
             signer = PKCS1_v1_5.new(key)
             if self.__sign_type == "RSA":
-                signature = signer.sign(SHA.new(unsigned_string.encode("utf8")))
+                signature = signer.sign(SHA.new(b(unsigned_string)))
             else:
-                signature = signer.sign(SHA256.new(unsigned_string.encode("utf8")))
+                signature = signer.sign(SHA256.new(b(unsigned_string)))
             # base64 编码，转换为unicode表示并移除回车
             sign = encodebytes(signature).decode("utf8").replace("\n", "")
             return sign

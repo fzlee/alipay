@@ -2,6 +2,8 @@
 [![PyPI version](https://badge.fury.io/py/python-alipay-sdk.svg)](https://badge.fury.io/py/python-alipay-sdk)[![codecov](https://codecov.io/gh/fzlee/alipay/branch/master/graph/badge.svg)](https://codecov.io/gh/fzlee/alipay)![travis-ci](https://travis-ci.org/fzlee/alipay.svg?branch=master)
 ## [中文文档](https://github.com/fzlee/alipay/blob/master/README.zh-hans.md)
 ## Changelog
+### 2017-04-11(version 0.6.7)
+* bug fix for encocode issue in verify data
 
 ### 2017-04-07(version 0.6.6)
 * bug fix for ascii encode error in python2
