@@ -51,6 +51,14 @@ Or you may just follow this manual if you are not.
 pip install python-alipay-sdk
 ```
 
+#### cert generation
+```bash
+openssl
+OpenSSL> genrsa -out app_private_key.pem   2048  # the private key file
+OpenSSL> rsa -in app_private_key.pem -pubout -out app_public_key.pem # export public key
+OpenSSL> exit
+```
+
 #### Intialization
 ```python
     from alipay import AliPay

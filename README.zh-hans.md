@@ -50,6 +50,14 @@
 pip install python-alipay-sdk
 ```
 
+#### 生成密钥文件
+```bash
+openssl
+OpenSSL> genrsa -out app_private_key.pem   2048  # 私钥
+OpenSSL> rsa -in app_private_key.pem -pubout -out app_public_key.pem # 导出公钥
+OpenSSL> exit
+```
+
 ####初始化
 ```python
     from alipay import AliPay
