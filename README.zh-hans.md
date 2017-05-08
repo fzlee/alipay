@@ -1,32 +1,5 @@
 ## python-alipay-sdk
 [![PyPI version](https://badge.fury.io/py/python-alipay-sdk.svg)](https://badge.fury.io/py/python-alipay-sdk)[![codecov](https://codecov.io/gh/fzlee/alipay/branch/master/graph/badge.svg)](https://codecov.io/gh/fzlee/alipay)![travis-ci](https://travis-ci.org/fzlee/alipay.svg?branch=master)
-## Changelog
-
-### 2017-04-11(version 0.6.7)
-*  修复 verify data的编码问题
-
-### 2017-04-07(version 0.6.6)
-* 修复python2 下的ascii编码问题
-* 修复create wap trade的bug
-
-### 2017-03-27(version 0.6.4)
-* 对于同步请求的数据也进行验签
-* 几处小的bug修复
-
-### 2017-03-21 (version 0.6)
-* 创建/取消/查询 当面付订单
-* 对于非10000的code，直接返回消息体而不是抛出异常
-
-### 2017-01-17(version 0.5.1)
-* 修复网页扫码支付的退款bug(感谢varwey)
-
-### 2017-01-13(version 0.5)
-* 默认使用SHA256withRSA签名算法, 如果你想用SHA1withRSA算法，创建alipay的时候传入sign_type = "RSA"
-
-### 2017-01-06(version 0.4)
-* 添加了退款功能
-* 添加了测试
-* 修复Python 2下中文编码问题
 
 ##  支付宝Python SDK
 支付宝没有提供Python SDK。生成预付订单需要使用SHA1withRSA签名，签名的生成比较麻烦容易出错。这里提供了一个简单的库，希望能够简化一些Python开发的流程。
@@ -58,7 +31,7 @@ OpenSSL> rsa -in app_private_key.pem -pubout -out app_public_key.pem # 导出公
 OpenSSL> exit
 ```
 
-####初始化
+#### 初始化
 ```python
     from alipay import AliPay
     
@@ -237,3 +210,30 @@ alipay = AliPay(..., debug=True)
 
 ## 感谢（排名不分先后）
 * varwey
+
+## Changelog
+### 2017-04-11(version 0.6.7)
+*  修复 verify data的编码问题
+
+### 2017-04-07(version 0.6.6)
+* 修复python2 下的ascii编码问题
+* 修复create wap trade的bug
+
+### 2017-03-27(version 0.6.4)
+* 对于同步请求的数据也进行验签
+* 几处小的bug修复
+
+### 2017-03-21 (version 0.6)
+* 创建/取消/查询 当面付订单
+* 对于非10000的code，直接返回消息体而不是抛出异常
+
+### 2017-01-17(version 0.5.1)
+* 修复网页扫码支付的退款bug(感谢varwey)
+
+### 2017-01-13(version 0.5)
+* 默认使用SHA256withRSA签名算法, 如果你想用SHA1withRSA算法，创建alipay的时候传入sign_type = "RSA"
+
+### 2017-01-06(version 0.4)
+* 添加了退款功能
+* 添加了测试
+* 修复Python 2下中文编码问题

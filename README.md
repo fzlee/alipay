@@ -1,32 +1,6 @@
 ## python-alipay-sdk
 [![PyPI version](https://badge.fury.io/py/python-alipay-sdk.svg)](https://badge.fury.io/py/python-alipay-sdk)[![codecov](https://codecov.io/gh/fzlee/alipay/branch/master/graph/badge.svg)](https://codecov.io/gh/fzlee/alipay)![travis-ci](https://travis-ci.org/fzlee/alipay.svg?branch=master)
 ## [中文文档](https://github.com/fzlee/alipay/blob/master/README.zh-hans.md)
-## Changelog
-### 2017-04-11(version 0.6.7)
-* bug fix for encocode issue in verify data
-
-### 2017-04-07(version 0.6.6)
-* bug fix for ascii encode error in python2
-* bug fix for create wap trade 
-
-### 2017-03-27(version 0.6.4)
-* validation for sync response
-* several bug fix
-
-### 2017-03-21(version 0.6)
-* precreate/create/cancel/query face to face trade
-* return response body instead of raising exception even if code is not 10000 
-
-### 2017-01-17(version 0.5.1)
-* Refund bug fix( many thanks to varwey)
-
-### 2017-01-13(version 0.5)
-* SHA256withRSA is the default sign method now, if you want to use SHA1withRSA，set `sign_type = "RSA"` while intializing alipay instance
-
-### 2017-01-06(version 0.4)
-* Refund functions
-* Code for testing
-* Fixed coding and decoding issues in Python 2 
 
 ##  AliPay Python SDK
 I can't find any official python alipay sdks so far, and it really pains a lot dealing with those sign methods. Hoping this libarary could do some help :).
@@ -242,3 +216,30 @@ alipay = AliPay(..., debug=True)
 
 ## Thanks to
 * varwey
+
+## Changelog
+### 2017-04-11(version 0.6.7)
+* bug fix for encocode issue in verify data
+
+### 2017-04-07(version 0.6.6)
+* bug fix for ascii encode error in python2
+* bug fix for create wap trade 
+
+### 2017-03-27(version 0.6.4)
+* validation for sync response
+* several bug fix
+
+### 2017-03-21(version 0.6)
+* precreate/create/cancel/query face to face trade
+* return response body instead of raising exception even if code is not 10000 
+
+### 2017-01-17(version 0.5.1)
+* Refund bug fix( many thanks to varwey)
+
+### 2017-01-13(version 0.5)
+* SHA256withRSA is the default sign method now, if you want to use SHA1withRSA，set `sign_type = "RSA"` while intializing alipay instance
+
+### 2017-01-06(version 0.4)
+* Refund functions
+* Code for testing
+* Fixed coding and decoding issues in Python 2 
