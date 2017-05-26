@@ -4,7 +4,7 @@
 ##  支付宝Python SDK
 支付宝没有提供Python SDK。生成预付订单需要使用SHA1withRSA签名，签名的生成比较麻烦容易出错。这里提供了一个简单的库，希望能够简化一些Python开发的流程。
 
-自`1.0`开始，我们不再支持旧版的接口，比如[即时到帐](https://doc.open.alipay.com/doc2/detail?treeId=62&articleId=103566&docType=1)（你可以选择使用`0.6.\*`版本的python-alipay-sdk或者使用[电脑网站支付](https://doc.open.alipay.com/doc2/detail.htm?treeId=270&articleId=105901&docType=1)接口）。
+自`1.0`开始，我们不再支持旧版的接口，比如[即时到帐](https://doc.open.alipay.com/doc2/detail?treeId=62&articleId=103566&docType=1)（你可以选择使用`0.6.*`版本的python-alipay-sdk或者使用[电脑网站支付](https://doc.open.alipay.com/doc2/detail.htm?treeId=270&articleId=105901&docType=1)接口）。
 
 我们支持的所有支付方式，其签名类型必须为RSA或者RSA2。目前实现了以下功能：
 * [电脑网站支付](https://doc.open.alipay.com/doc2/detail.htm?treeId=270&articleId=105901&docType=1)
@@ -50,25 +50,26 @@ OpenSSL> exit
 对于一个支付宝的接口，比如`alipay.trade.page.pay`，则一般可以这么调用接口：`alipay.api_alipay_trade_page_pay()`.
 也就是说，我们做了这么一个转换:
 
-	 内部函数名 =  alipay\_ + 支付宝接口名.replace(".", "_")
-	 
+     内部函数名 =  alipay_ + 支付宝接口名.replace(".", "_")
+     
 支付宝对于请求的biz_content,里面有一些参数必选，有一些可选。对于必选的参数，他们一般被明确定义在函数的参数里面。对于可选参数，他们一般被放在kwargs里面,然后被添加到biz_content里面去。比如`alipay.trade.page.pay`可以这么调用:
 ```python
 alipay.api_alipay_trade_page_pay(
-	subject="测试订单", 
-	out_trade_no="2017020101", 
-	total_amount=100
+    subject="测试订单", 
+    out_trade_no="2017020101", 
+    total_amount=100
 )
 ```
 
 也可以这么调用：
 ```python
 alipay.api_alipay_trade_page_pay(
-	subject="测试订单", 
-	out_trade_no="2017020101", 
-	total_amount=100,
-	goods_type=0,  # 可选
-	timeout_express="90m"
+    subject="测试订单", 
+    out_trade_no="2017020101", 
+    total_amount=100,
+    goods_type=0,  # 可选
+    timeout_express="90m"  # 可选
+    ...
 )
 ```
 
@@ -106,9 +107,9 @@ alipay.api_alipay_trade_page_pay(
     # App支付，将order_string返回给app即可
     order_string = alipay.api_alipay_trade_app_pay(
         out_trade_no="20161112",
-		total_amount="0.01",
-		subject=subject
-	)
+        total_amount="0.01",
+        subject=subject
+    )
 ```
 
 #### 通知验证
@@ -186,9 +187,9 @@ alipay = AliPay(appid="", ...)
 
 result = alipay.api_alipay_trade_pay(
     out_trade_no="out_trade_no", 
-	scene="bar_code/wave_code",
-	auth_code="auth_code", 
-	subject="subject",
+    scene="bar_code/wave_code",
+    auth_code="auth_code", 
+    subject="subject",
     discountable_amount=10,
     total_amount=20
     )
@@ -202,10 +203,10 @@ if  result["code"] == "10000":
 alipay = AliPay(appid="", ...)
 
 # create an order
-alipay.api_alipay_trade_precreate	(
-	subject="test subject",
+alipay.api_alipay_trade_precreate    (
+    subject="test subject",
     out_trade_no="out_trade_no",
-	total_amount=100
+    total_amount=100
 )
 
 # check order status

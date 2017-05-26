@@ -71,7 +71,7 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
     subject = "测试订单"
 
     # paid via Web，open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
-    order_string = alipay.api_alipay_trade_page_pay	(
+    order_string = alipay.api_alipay_trade_page_pay    (
         out_trade_no="20161112",
         total_amount=0.01,
         subject=subject,
@@ -85,10 +85,10 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
     # paid via WAP, open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
     order_string = alipay.api_alipay_trade_app_pay(
         out_trade_no="20161112",
-		total_amount="0.01",
-		subject=subject,
+        total_amount="0.01",
+        subject=subject,
         return_url="http://example.com"
-	)
+    )
 ```
 
 #### [alipay.trade.app.pay](https://doc.open.alipay.com/docs/doc.htm?spm=a219a.7629140.0.0.SLVDO1&treeId=204&articleId=105465&docType=1)
@@ -96,9 +96,9 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
     # paid via App，just order_string to your Android or iOS client
     order_string = alipay.api_alipay_trade_app_pay(
         out_trade_no="20161112",
-		total_amount="0.01",
-		subject=subject
-	)
+        total_amount="0.01",
+        subject=subject
+    )
 ```
 
 #### Notification Validation
@@ -181,9 +181,9 @@ alipay = AliPay(appid="", ...)
 
 result = alipay.api_alipay_trade_pay(
     out_trade_no="out_trade_no", 
-	scene="bar_code/wave_code",
-	auth_code="auth_code", 
-	subject="subject",
+    scene="bar_code/wave_code",
+    auth_code="auth_code", 
+    subject="subject",
     discountable_amount=10,
     total_amount=20
     )
@@ -197,10 +197,10 @@ if  result["code"] == "10000":
 alipay = AliPay(appid="", ...)
 
 # create an order
-alipay.api_alipay_trade_precreate	(
-	subject="test subject",
+alipay.api_alipay_trade_precreate    (
+    subject="test subject",
     out_trade_no="out_trade_no",
-	total_amount=100
+    total_amount=100
 )
 
 # check order status
