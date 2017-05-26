@@ -6,9 +6,9 @@
 I can't find any official python alipay sdks so far, and it really pains a lot dealing with those sign methods. Hoping this libarary could do some help :).
 
 So far, the following functions are supported:
-* [Paid by Android/iOS](https://doc.open.alipay.com/docs/doc.htm?treeId=193&articleId=105051&docType=1)
-* [Paid by WAP](https://doc.open.alipay.com/docs/doc.htm?treeId=193&articleId=105288&docType=1)
-* [Paid by Web](https://doc.open.alipay.com/doc2/detail?treeId=62&articleId=103566&docType=1)
+* [Paid via Android/iOS](https://doc.open.alipay.com/docs/doc.htm?treeId=193&articleId=105051&docType=1)
+* [Paid via WAP](https://doc.open.alipay.com/docs/doc.htm?treeId=193&articleId=105288&docType=1)
+* [Paid via Web](https://doc.open.alipay.com/doc2/detail?treeId=62&articleId=103566&docType=1)
 * [Refund](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759)
 * [Create face to face trade](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=850)
 * [Query face to face trade](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=757)
@@ -37,7 +37,7 @@ OpenSSL> exit
 ```python
     from alipay import AliPay
     
-    # paid by WAP or iOS/Android
+    # paid via WAP or iOS/Android
     alipay = AliPay(
       appid="",
       app_notify_url="", 
@@ -46,7 +46,7 @@ OpenSSL> exit
       sign_type="RSA" # RSA or  RSA2
     )
     
-    # paid by Web
+    # paid via Web
     alipay = AliPay(
       partner="",
       web_notify_url="", 
@@ -74,11 +74,11 @@ OpenSSL> exit
     # if you are Python3 user, just use the default string
     subject = "测试订单"
 
-    # paid by App，just generating order_string and pass it to your mobile app
+    # paid via App，just generating order_string and pass it to your mobile app
     order_string = alipay.create_app_trade(out_trade_no="20161112", total_amount=0.01, subject="testing order")
-    # paid by WAP, open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
+    # paid via WAP, open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
     order_string = alipay.create_wap_trade(out_trade_no="20161112", total_amount=0.01, subject="testing order", return_url="https://example.com")
-    # paid by Web，open this url in your browser: https://mapi.alipay.com/gateway.do? + order_string
+    # paid via Web，open this url in your browser: https://mapi.alipay.com/gateway.do? + order_string
     order_string = alipay.create_web_trade(out_trade_no="20161112", total_amount=0.01, subject="testing order", return_url="https://example.com")
 ```
 #### Notification Validation
