@@ -231,12 +231,14 @@ alipay = AliPay(..., debug=True)
 ```
 
 ## Thanks to
+* John60676
 * varwey
 
-
 ## Changelog
+#### 2017-05-28(version 1.0.1)
+* return url missing for `alipay.trade.page.pay`
 
-#### 2017-05-26(version 1.0)
+#### 2017-05-26(version 1.0.0)
 * code refactoring, all functions are renamed
 * `alipay.trade.page.pay` is used instead of `create_direct_pay_by_user`
 * load key into memory, local key file access is needed for the 1st time 

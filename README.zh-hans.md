@@ -237,9 +237,13 @@ alipay = AliPay(..., debug=True)
 ```
 
 ## 感谢（排名不分先后）
+* John60676
 * varwey
 
 ## Changelog
+#### 2017-05-28(version 1.0.1)
+* `alipay.trade.page.pay`里面return_url没有被传入
+
 ### 2017-05-26 (version 1.0)
 * 后台全部重构，对各种接口重命名。
 * 使用新版的`电脑网站支付接口`，不再`支持即使到帐`接口
