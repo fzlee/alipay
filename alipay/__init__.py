@@ -215,18 +215,7 @@ class AliPay():
         }
 
         biz_content.update(kwargs)
-        data = {
-            "app_id": self.__appid,
-            "method": "alipay.trade.page.pay",
-            "charset": "utf-8",
-            "sign_type": self.__sign_type,
-            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "version": "1.0",
-            "notify_url": self.__app_notify_url,
-            "biz_content": biz_content
-        }
-        biz_content.update(kwargs)
-        data = self.build_body("alipay.trade.page.pay", biz_content)
+        data = self.build_body("alipay.trade.page.pay", biz_content, return_url)
         return self.sign_data(data)
 
     def api_alipay_trade_query(self, out_trade_no=None, trade_no=None):
