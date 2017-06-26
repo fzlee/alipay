@@ -404,6 +404,43 @@ class AliPay():
         raw_string = urlopen(url, timeout=15).read().decode("utf-8")
         return self.__verify_and_return_sync_response(raw_string, "alipay_trade_precreate_response")
 
+    def api_alipay_fund_trans_toaccount_transfer(
+            self, out_biz_no, payee_type, payee_account, amount, **kwargs
+    ):
+        assert payee_type in ("ALIPAY_USERID", "ALIPAY_LOGONID"), "unknown payee type"
+        biz_content = {
+            "out_biz_no": out_biz_no,
+            "payee_type": payee_type,
+            "payee_account": payee_account,
+            "amount": amount
+        }
+        biz_content.update(kwargs)
+        data = self.build_body("alipay.fund.trans.toaccount.transfer", biz_content)
+
+        url = self.__gateway + "?" + self.sign_data(data)
+        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
+        return self.__verify_and_return_sync_response(
+            raw_string, "alipay_fund_trans_toaccount_transfer_response"
+        )
+
+    def api_alipay_fund_trans_order_query(self, out_biz_no=None, order_id=None):
+        if out_biz_no is None and order_id is None:
+            raise Exception("Both out_biz_no and order_id are None!")
+
+        biz_content = {}
+        if out_biz_no:
+            biz_content["out_biz_no"] = out_biz_no
+        if order_id:
+            biz_content["order_id"] = order_id
+
+        data = self.build_body("alipay.fund.trans.order.query", biz_content)
+
+        url = self.__gateway + "?" + self.sign_data(data)
+        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
+        return self.__verify_and_return_sync_response(
+            raw_string, "alipay_fund_trans_order_query_response"
+        )
+
     def __verify_and_return_sync_response(self, raw_string, response_type):
         """
         return data if verification succeeded, else raise exception

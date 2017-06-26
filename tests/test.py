@@ -61,6 +61,12 @@ class AliPayTestCase(unittest.TestCase):
     def _prepare_refund_face_to_face_response(self, alipay):
         return self._prepare_sync_response(alipay, "alipay_trade_refund_response")
 
+    def _prepare_alipay_fund_trans_toaccount_transfer_respone(self, alipay):
+        return self._prepare_sync_response(alipay, "alipay_fund_trans_toaccount_transfer_response")
+
+    def _prepare_alipay_fund_trans_order_query(self, alipay):
+        return self._prepare_sync_response(alipay, "alipay_fund_trans_order_query_response")
+
     def get_client(self, sign_type):
         return AliPay(
             appid="appid",
@@ -200,6 +206,35 @@ class AliPayTestCase(unittest.TestCase):
             alipay.api_alipay_trade_precreate(
                 "out_trade_no", 12, "test subject"
             )
+
+    @mock.patch("alipay.urlopen")
+    def test_alipay_fund_trans_toaccount_transfer(self, mock_urlopen):
+        alipay = self.get_client("RSA2")
+        response = mock.Mock()
+        response.read.return_value = self._prepare_alipay_fund_trans_toaccount_transfer_respone(alipay)
+        mock_urlopen.return_value = response
+
+        alipay.api_alipay_fund_trans_toaccount_transfer(
+            "out_biz_no",
+            "ALIPAY_USERID",
+            "alipay account",
+            12.3
+        )
+
+        self.assertTrue(mock_urlopen.called)
+
+    @mock.patch("alipay.urlopen")
+    def test_alipay_fund_trans_order_query(self, mock_urlopen):
+        alipay = self.get_client("RSA2")
+        response = mock.Mock()
+        response.read.return_value = self._prepare_alipay_fund_trans_order_query(alipay)
+        mock_urlopen.return_value = response
+
+        alipay.api_alipay_fund_trans_order_query(
+            "out_biz_no",
+        )
+
+        self.assertTrue(mock_urlopen.called)
 
     def test_encodnig(self):
         """编码测试"""

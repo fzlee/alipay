@@ -6,14 +6,17 @@
 I can't find any official python alipay sdks so far, and it really pains a lot dealing with those sign methods. Hoping this libarary could do some help :).
 
 So far, the following functions are supported:
-* [paid via Web](https://doc.open.alipay.com/doc2/detail.htm?treeId=270&articleId=105901&docType=1)
-* [paid via App](https://doc.open.alipay.com/docs/doc.htm?spm=a219a.7629140.0.0.A7oKRx&treeId=204&articleId=105051&docType=1)
-* [paid via WAP](https://doc.open.alipay.com/doc2/detail.htm?treeId=203&articleId=105463&docType=1)
-* [face to face trade](https://doc.open.alipay.com/doc2/detail?treeId=194&articleId=105072&docType=1)
-* [query trade](https://doc.open.alipay.com/doc2/apiDetail.htm?spm=a219a.7629065.0.0.PlTwKb&apiId=757&docType=4)
-* [cancel trade](https://doc.open.alipay.com/docs/api.htm?spm=a219a.7395905.0.0.qoLd9V&docType=4&apiId=866)
-* [precreate trade](https://doc.open.alipay.com/docs/api.htm?spm=a219a.7395905.0.0.Vttrhx&docType=4&apiId=862)
-* [refund](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759)
+* [Pay via Web](#alipay.trade.page.pay)
+* [Pay via WAP](#alipay.trade.wap.pay)
+* [Pay via App](#alipay.trade.app.pay)
+* [Verification](#verification)
+* [Face to face trade](#alipay.trade.pay)
+* [Precreate trade](#alipay.trade.precreate)
+* [Query trade](#alipay.trade.precreate)
+* [Cancel trade](#alipay.trade.precreate)
+* [Refund](#alipay.trade.refund)
+* [Transfer money to alipay account](#alipay.fund.trans.toaccount.transfer)
+* [Query money transfer result](#alipay.fund.trans.order.query)
 
 Taking a look at [this guide](https://ifconfiger.com/page/python-alipay-sdk) if you are interested at the details on signing your order requests.
 Or you may just follow this manual if not.
@@ -62,7 +65,7 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
     biz_content.update(kwargs)
 ```
 
-#### [alipay.trade.page.pay](https://doc.open.alipay.com/doc2/detail.htm?treeId=270&articleId=105901&docType=1)
+#### <a name="alipay.trade.page.pay"></a>[alipay.trade.page.pay](https://docs.open.alipay.com/270/105900/)
 
 ```python
     # if you are using Python 2(you should really think about Python 3), making sure non-ascii strings are utf-8 encoded
@@ -79,11 +82,11 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
     )
 ```
 
-#### [alipay.trade.wap.pay](https://doc.open.alipay.com/doc2/detail.htm?treeId=203&articleId=105463&docType=1)
+#### <a name="alipay.trade.wap.pay"></a>[alipay.trade.wap.pay](https://docs.open.alipay.com/60/104790)
 
 ```python
     # paid via WAP, open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
-    order_string = alipay.api_alipay_trade_app_pay(
+    order_string = alipay.api_alipay_trade_wap_pay(
         out_trade_no="20161112",
         total_amount="0.01",
         subject=subject,
@@ -91,7 +94,7 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
     )
 ```
 
-#### [alipay.trade.app.pay](https://doc.open.alipay.com/docs/doc.htm?spm=a219a.7629140.0.0.SLVDO1&treeId=204&articleId=105465&docType=1)
+#### <a name="alipay.trade.app.pay"></a>[alipay.trade.app.pay](https://docs.open.alipay.com/204/105465)
 ```python
     # paid via App，just order_string to your Android or iOS client
     order_string = alipay.api_alipay_trade_app_pay(
@@ -101,7 +104,7 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
     )
 ```
 
-#### Notification Validation
+#### <a name="verification"></a>[Notification Validation](https://docs.open.alipay.com/58/103596/)
 Once an order is paid, you will get a POST request from alipay servers which informs you that the order is paid 
 
 Here is a simple example for flask web server:
@@ -163,18 +166,7 @@ Here is a more general example for verification
         print("trade succeed")
 ```
 
-#### [alipay.trade.refund](https://doc.open.alipay.com/doc2/apiDetail.htm?spm=a219a.7629065.0.0.PlTwKb&apiId=759&docType=4)
-
-If you want to know what parameters are accepted, take a look into the [official document](https://doc.open.alipay.com/docs/api.htm?docType=4&apiId=759), they are listed in **请求参数**
-
-```python
-result = alipay.api_alipay_trade_refund(out_trade_no="xxx", refund_amount="xxx", ...)
-
-if result["code"] == "10000":
-    print("success")
-```
-
-#### [alipay.trade.pay](https://doc.open.alipay.com/doc2/apiDetail.htm?spm=a219a.7629065.0.0.PlTwKb&apiId=850&docType=4)
+#### <a name="alipay.trade.pay"></a>[alipay.trade.pay](https://docs.open.alipay.com/api_1/alipay.trade.pay)
 
 ```python
 alipay = AliPay(appid="", ...)
@@ -192,7 +184,7 @@ if  result["code"] == "10000":
     print("Order is paid")
 ```
 
-#### [alipay.trade.precreate](https://doc.open.alipay.com/doc2/apiDetail.htm?spm=a219a.7629065.0.0.PlTwKb&apiId=862&docType=4)
+#### <a name="alipay.trade.precreate"></a>[alipay.trade.precreate](https://docs.open.alipay.com/194/105203/)
 ```python
 alipay = AliPay(appid="", ...)
 
@@ -218,6 +210,37 @@ for i in range(10):
 # order is not paid in 30s , cancel this order
 if paid is False:
     alipay.api_alipay_trade_cancel(out_trade_no=out_trade_no)
+```
+
+#### <a name="alipay.trade.refund"></a>[alipay.trade.refund](https://docs.open.alipay.com/api_1/alipay.trade.refund)
+
+If you want to know what parameters are accepted, take a look into the official document
+
+```python
+result = alipay.api_alipay_trade_refund(out_trade_no="xxx", refund_amount="xxx", ...)
+
+if result["code"] == "10000":
+    print("success")
+```
+
+#### <a name="alipay.fund.trans.toaccount.transfer"></a>[alipay.fund.trans.toaccount.transfer](https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer)
+```python
+    # transfer money to alipay account
+    result = alipay.api_alipay_fund_trans_toaccount_transfer(
+        datetime.now().strftime("%Y%m%d%H%M%S"),
+        payee_type="ALIPAY_LOGONID/ALIPAY_USERID",
+        payee_account="csqnji8117@sandbox.com",
+        amount=3.12
+    )
+    result = {'code': '10000', 'msg': 'Success', 'order_id': '', 'out_biz_no': '', 'pay_date': '2017-06-26 14:36:25'}
+```
+
+#### <a name="alipay.fund.trans.order.query"></a> [alipay.fund.trans.order.query](https://docs.open.alipay.com/api_28/alipay.fund.trans.order.query)
+```python
+   result = alipay.api_alipay_fund_trans_order_query(
+        out_biz_no="20170626152216"
+    )
+    print(result)
 ```
 
 ## test
