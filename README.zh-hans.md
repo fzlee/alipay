@@ -35,6 +35,8 @@ OpenSSL> genrsa -out app_private_key.pem   2048  # 私钥
 OpenSSL> rsa -in app_private_key.pem -pubout -out app_public_key.pem # 导出公钥
 OpenSSL> exit
 ```
+#### 关于支付宝公钥
+在支付宝上下载的公钥是txt文本格式，需要转成pem格式，可以下载之后参考[这里](https://github.com/fzlee/alipay/blob/master/tests/certs/ali/ali_public_key.pem)做出格式上的调整(首尾加上-----BEGIN PUBLIC KEY-----和-----END PUBLIC KEY-----)
 
 #### 初始化
 ```python
