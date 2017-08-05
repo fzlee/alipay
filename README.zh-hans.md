@@ -18,6 +18,8 @@
 * [退款](#alipay.trade.refund)
 * [单笔转账到支付宝账户接口](#alipay.fund.trans.toaccount.transfer)
 * [查询转账订单接口](#alipay.fund.trans.order.query)
+* [ISV集成/生成app_auth_code](#alipay.open.auth.token.app)
+* [ISV集成/查询授权产品](#alipay.open.auth.token.app.query)
 
 关于签名的详细实现细节参看[这篇教程](https://ifconfiger.com/page/python-alipay-sdk). 如果你不希望深入了解技术实现的细节，你可以直接阅读下面的使用教程。
 
@@ -41,7 +43,7 @@ OpenSSL> exit
 
 #### 初始化
 ```python
-    from alipay import AliPay
+    from alipay import AliPay, ISVAlipay
 
     alipay = AliPay(
       appid="",
@@ -51,6 +53,21 @@ OpenSSL> exit
       sign_type="RSA" # RSA 或者 RSA2
       debug=False  # 默认False
     )
+
+
+    # If you don't know what ISV is, then forget about what I mentioned below
+    # either app_auth_code or app_auth_token should not be None
+    isv_alipay = ISVAliPay(
+      appid="",
+      app_notify_url="", 
+      app_private_key_path="", 
+      alipay_public_key_path=""  # alipay public key file path, do not put your public key file here
+      sign_type="RSA" # RSA or RSA2
+      debug=False  # False by default,
+      app_auth_code=None, 
+      app_auth_token=None
+    )
+
 ```
 #### 接口基本命名规则
 对于一个支付宝的接口，比如`alipay.trade.page.pay`，则一般可以这么调用接口：`alipay.api_alipay_trade_page_pay()`.
@@ -245,7 +262,38 @@ if result["code"] == "10000":
 
 ```
 
-#### <a name="查询转账订单接口"></a>查询转账订单接口 [alipay.fund.trans.order.query](https://docs.open.alipay.com/api_28/alipay.fund.trans.order.query)
+#### <a name="alipay.fund.trans.order.query"></a> 查询转账订单接口 [alipay.fund.trans.order.query](https://docs.open.alipay.com/api_28/alipay.fund.trans.order.query)
+
+```python
+   result = alipay.api_alipay_fund_trans_order_query(
+        out_biz_no="20170626152216"
+    )
+    print(result)
+```
+
+
+## [ISV 集成](https://doc.open.alipay.com/doc2/detail?treeId=216&articleId=105193&docType=1)
+
+#### <a name="alipay.open.auth.token.app"></a> 生成app_auth_code []()
+```
+    response = isv_alipay.api_alipay_open_auth_token_app(app_auth_code)
+    response = {
+      "code": "10000",
+      "msg": "Success",
+      "app_auth_token": "201708xxx",
+      "app_refresh_token": "201708xxx",
+      "auth_app_id": "appid",
+      "expires_in": 31536000,
+      "re_expires_in": 32140800,
+      "user_id": "2088xxxxx
+    }
+```
+
+#### <a name="alipay.open.auth.token.app.query"></a> 查询授权产品 []()
+```
+    response = alipay_open_auth_token_app_query()
+```
+
 
 ## 测试
 ```

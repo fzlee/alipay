@@ -17,6 +17,8 @@ So far, the following functions are supported:
 * [Refund](#alipay.trade.refund)
 * [Transfer money to alipay account](#alipay.fund.trans.toaccount.transfer)
 * [Query money transfer result](#alipay.fund.trans.order.query)
+* [ISV integration/Get app_auth_code by app_auth_token](#alipay.open.auth.token.app)
+* [ISV integration/Query authorized apps](#alipay.open.auth.token.app.query)
 
 Taking a look at [this guide](https://ifconfiger.com/page/python-alipay-sdk) if you are interested at the details on signing your order requests.
 Or you may just follow this manual if not.
@@ -41,7 +43,7 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
 
 #### Intialization
 ```python
-    from alipay import AliPay
+    from alipay import AliPay, ISVAliPay
 
     alipay = AliPay(
       appid="",
@@ -50,6 +52,20 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
       alipay_public_key_path=""  # alipay public key file path, do not put your public key file here
       sign_type="RSA" # RSA or RSA2
       debug=False  # False by default
+    )
+
+    
+    # If you don't know what ISV is, then forget about what I mentioned below
+    # either app_auth_code or app_auth_token should not be None
+    isv_alipay = ISVAliPay(
+      appid="",
+      app_notify_url="", 
+      app_private_key_path="", 
+      alipay_public_key_path=""  # alipay public key file path, do not put your public key file here
+      sign_type="RSA" # RSA or RSA2
+      debug=False  # False by default,
+      app_auth_code=None, 
+      app_auth_token=None
     )
 ```
 
@@ -71,9 +87,9 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
 #### <a name="alipay.trade.page.pay"></a>[alipay.trade.page.pay](https://docs.open.alipay.com/270/105900/)
 
 ```python
-    # if you are using Python 2(you should really think about Python 3), making sure non-ascii strings are utf-8 encoded
+    # For Python 2 users(you should really think about Python 3), making sure non-ascii strings are utf-8 encoded
     subject = u"测试订单".encode("utf8")
-    # if you are Python3 user, just use the default string
+    # For Python 3 users, just use the default string
     subject = "测试订单"
 
     # Pay via Web，open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
@@ -245,6 +261,28 @@ if result["code"] == "10000":
     )
     print(result)
 ```
+
+## [ISV Integration](https://doc.open.alipay.com/doc2/detail?treeId=216&articleId=105193&docType=1)
+#### alipay.open.auth.token.app
+```
+    response = isv_alipay.api_alipay_open_auth_token_app(app_auth_code)
+    response = {
+      "code": "10000",
+      "msg": "Success",
+      "app_auth_token": "201708xxx",
+      "app_refresh_token": "201708xxx",
+      "auth_app_id": "appid",
+      "expires_in": 31536000,
+      "re_expires_in": 32140800,
+      "user_id": "2088xxxxx
+    }
+```
+
+#### alipay.open.auth.token.app.query
+```
+    response = alipay_open_auth_token_app_query()
+```
+
 
 ## test
 ```
