@@ -502,4 +502,68 @@ class AliPay(BaseAliPay):
 
 
 class ISVAliPay(BaseAliPay):
-    pass
+
+    def __init__(self, appid, app_notify_url, app_private_key_path,
+                 alipay_public_key_path, sign_type="RSA2", debug=False,
+                 app_auth_token=None, app_auth_code=None):
+        if not app_auth_token and not app_auth_code:
+            raise Exception("Both app_auth_code and app_auth_token are None !!!")
+
+        self._app_auth_token = app_auth_token
+        self._app_auth_code = app_auth_code
+        super(ISVAliPay, self).__init__(
+            appid, app_notify_url, app_private_key_path,
+            alipay_public_key_path, sign_type, debug
+        )
+
+    @property
+    def app_auth_token(self):
+        # 没有则换取token
+        if not self._app_auth_token:
+            result = self.api_alipay_open_auth_token_app(self._app_auth_code)
+            self._app_auth_token = result.get("app_auth_token", None)
+
+        if not self._app_auth_token:
+            raise Exception("Get auth token by auth code failed: {}".format(self._app_auth_code))
+        return self._app_auth_token
+
+    def build_body(self, method, biz_content, return_url=None, append_auth_token=True):
+
+        if append_auth_token:
+            biz_content["app_auth_token"] = self.app_auth_token
+
+        return super(ISVAliPay, self).build_body(method, biz_content, return_url)
+
+    def api_alipay_open_auth_token_app(self, app_auth_code):
+        """
+        response = {
+          "code": "10000",
+          "msg": "Success",
+          "app_auth_token": "201708BB28623ce3d10f4f62875e9ef5cbeebX07",
+          "app_refresh_token": "201708BB108a270d8bb6409890d16175a04a7X07",
+          "auth_app_id": "appid",
+          "expires_in": 31536000,
+          "re_expires_in": 32140800,
+          "user_id": "2088xxxxx
+        }
+        """
+        biz_content = {
+            "grant_type": "authorization_code",
+            "code": app_auth_code
+        }
+
+        data = self.build_body("alipay.open.auth.token.app", biz_content, append_auth_token=False)
+
+        url = self._gateway + "?" + self.sign_data(data)
+        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
+        return self._verify_and_return_sync_response(
+            raw_string, "alipay_open_auth_token_app_response"
+        )
+
+    def api_alipay_open_auth_token_app_query(self):
+        data = self.build_body("alipay.open.auth.token.app.query", {})
+        url = self._gateway + "?" + self.sign_data(data)
+        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
+        return self._verify_and_return_sync_response(
+            raw_string, "alipay_open_auth_token_app_query_response"
+        )
