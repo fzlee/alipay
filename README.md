@@ -265,7 +265,7 @@ if result["code"] == "10000":
 ## [ISV Integration](https://doc.open.alipay.com/doc2/detail?treeId=216&articleId=105193&docType=1)
 #### alipay.open.auth.token.app
 ```
-    response = isv_alipay.api_alipay_open_auth_token_app(app_auth_code)
+    response = isv_alipay.api_alipay_open_auth_token_app(app_auth_code=app_auth_code)
     response = {
       "code": "10000",
       "msg": "Success",

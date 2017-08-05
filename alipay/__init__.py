@@ -534,7 +534,7 @@ class ISVAliPay(BaseAliPay):
 
         return super(ISVAliPay, self).build_body(method, biz_content, return_url)
 
-    def api_alipay_open_auth_token_app(self, app_auth_code):
+    def api_alipay_open_auth_token_app(self, app_auth_code=None, refresh_token=None):
         """
         response = {
           "code": "10000",
@@ -547,10 +547,17 @@ class ISVAliPay(BaseAliPay):
           "user_id": "2088xxxxx
         }
         """
-        biz_content = {
-            "grant_type": "authorization_code",
-            "code": app_auth_code
-        }
+
+        if app_auth_code:
+            biz_content = {
+                "grant_type": "authorization_code",
+                "code": app_auth_code
+            }
+        else:
+            biz_content = {
+                "grant_type": "refresh_token",
+                "refresh_token": refresh_token
+            }
 
         data = self.build_body("alipay.open.auth.token.app", biz_content, append_auth_token=False)
 
