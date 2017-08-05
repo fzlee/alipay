@@ -15,36 +15,36 @@ from .compat import quote_plus, urlopen, decodebytes, encodebytes, b
 from .exceptions import AliPayException, AliPayValidationError
 
 
-class AliPay():
+class BaseAliPay():
     @property
     def appid(self):
-        return self.__appid
+        return self._appid
 
     @property
     def sign_type(self):
-        return self.__sign_type
+        return self._sign_type
 
     @property
     def app_private_key(self):
         """
         签名用
         """
-        if not self.__app_private_key:
-            with open(self.__app_private_key_path) as fp:
-                self.__app_private_key = RSA.importKey(fp.read())
+        if not self._app_private_key:
+            with open(self._app_private_key_path) as fp:
+                self._app_private_key = RSA.importKey(fp.read())
 
-        return self.__app_private_key
+        return self._app_private_key
 
     @property
     def alipay_public_key(self):
         """
         验证签名用
         """
-        if not self.__alipay_public_key:
-            with open(self.__alipay_public_key_path) as fp:
-                self.__alipay_public_key = RSA.importKey(fp.read())
+        if not self._alipay_public_key:
+            with open(self._alipay_public_key_path) as fp:
+                self._alipay_public_key = RSA.importKey(fp.read())
 
-        return self.__alipay_public_key
+        return self._alipay_public_key
 
     def __init__(self, appid, app_notify_url, app_private_key_path,
                  alipay_public_key_path, sign_type="RSA2", debug=False):
@@ -58,32 +58,32 @@ class AliPay():
           sign_type="RSA2"
         )
         """
-        self.__appid = appid
-        self.__app_notify_url = app_notify_url
-        self.__app_private_key_path = app_private_key_path
-        self.__alipay_public_key_path = alipay_public_key_path
+        self._appid = appid
+        self._app_notify_url = app_notify_url
+        self._app_private_key_path = app_private_key_path
+        self._alipay_public_key_path = alipay_public_key_path
 
-        self.__app_private_key = None
-        self.__alipay_public_key = None
+        self._app_private_key = None
+        self._alipay_public_key = None
         if sign_type not in ("RSA", "RSA2"):
             raise AliPayException(None, "Unsupported sign type {}".format(sign_type))
-        self.__sign_type = sign_type
+        self._sign_type = sign_type
 
         if debug is True:
-            self.__gateway = "https://openapi.alipaydev.com/gateway.do"
+            self._gateway = "https://openapi.alipaydev.com/gateway.do"
         else:
-            self.__gateway = "https://openapi.alipay.com/gateway.do"
+            self._gateway = "https://openapi.alipay.com/gateway.do"
 
     def _sign(self, unsigned_string):
         """
         通过如下方法调试签名
         方法1
-            key = rsa.PrivateKey.load_pkcs1(open(self.__app_private_key_path).read())
+            key = rsa.PrivateKey.load_pkcs1(open(self._app_private_key_path).read())
             sign = rsa.sign(unsigned_string.encode("utf8"), key, "SHA-1")
             # base64 编码，转换为unicode表示并移除回车
             sign = base64.encodebytes(sign).decode("utf8").replace("\n", "")
         方法2
-            key = RSA.importKey(open(self.__app_private_key_path).read())
+            key = RSA.importKey(open(self._app_private_key_path).read())
             signer = PKCS1_v1_5.new(key)
             signature = signer.sign(SHA.new(unsigned_string.encode("utf8")))
             # base64 编码，转换为unicode表示并移除回车
@@ -95,7 +95,7 @@ class AliPay():
         # 开始计算签名
         key = self.app_private_key
         signer = PKCS1_v1_5.new(key)
-        if self.__sign_type == "RSA":
+        if self._sign_type == "RSA":
             signature = signer.sign(SHA.new(b(unsigned_string)))
         else:
             signature = signer.sign(SHA256.new(b(unsigned_string)))
@@ -103,7 +103,7 @@ class AliPay():
         sign = encodebytes(signature).decode("utf8").replace("\n", "")
         return sign
 
-    def __ordered_data(self, data):
+    def _ordered_data(self, data):
         complex_keys = []
         for key, value in data.items():
             if isinstance(value, dict):
@@ -117,10 +117,10 @@ class AliPay():
 
     def build_body(self, method, biz_content, return_url=None):
         data = {
-            "app_id": self.__appid,
+            "app_id": self._appid,
             "method": method,
             "charset": "utf-8",
-            "sign_type": self.__sign_type,
+            "sign_type": self._sign_type,
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "version": "1.0",
             "biz_content": biz_content
@@ -132,17 +132,17 @@ class AliPay():
             "alipay.trade.app.pay", "alipay.trade.wap.pay", "alipay.trade.page.pay",
             "alipay.trade.pay"
         ):
-            data["notify_url"] = self.__app_notify_url
+            data["notify_url"] = self._app_notify_url
 
         return data
 
     def sign_data(self, data):
         data.pop("sign", None)
         # 排序后的字符串
-        unsigned_items = self.__ordered_data(data)
+        unsigned_items = self._ordered_data(data)
         unsigned_string = "&".join("{}={}".format(k, v) for k, v in unsigned_items)
         sign = self._sign(unsigned_string)
-        ordered_items = self.__ordered_data(data)
+        ordered_items = self._ordered_data(data)
         quoted_string = "&".join("{}={}".format(k, quote_plus(v)) for k, v in ordered_items)
 
         # 获得最终的订单信息字符串
@@ -153,7 +153,7 @@ class AliPay():
         # 开始计算签名
         key = self.alipay_public_key
         signer = PKCS1_v1_5.new(key)
-        if self.__sign_type == "RSA":
+        if self._sign_type == "RSA":
             digest = SHA.new()
         else:
             digest = SHA256.new()
@@ -165,10 +165,10 @@ class AliPay():
     def verify(self, data, signature):
         if "sign_type" in data:
             sign_type = data.pop("sign_type")
-            if sign_type != self.__sign_type:
+            if sign_type != self._sign_type:
                 raise AliPayException(None, "Unknown sign type: {}".format(sign_type))
         # 排序后的字符串
-        unsigned_items = self.__ordered_data(data)
+        unsigned_items = self._ordered_data(data)
         message = "&".join(u"{}={}".format(k, v) for k, v in unsigned_items)
         return self._verify(message, signature)
 
@@ -256,9 +256,9 @@ class AliPay():
             biz_content["trade_no"] = trade_no
         data = self.build_body("alipay.trade.query", biz_content)
 
-        url = self.__gateway + "?" + self.sign_data(data)
+        url = self._gateway + "?" + self.sign_data(data)
         raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self.__verify_and_return_sync_response(raw_string, "alipay_trade_query_response")
+        return self._verify_and_return_sync_response(raw_string, "alipay_trade_query_response")
 
     def api_alipay_trade_pay(self, out_trade_no, scene, auth_code, subject, **kwargs):
         """
@@ -322,9 +322,9 @@ class AliPay():
         biz_content.update(**kwargs)
         data = self.build_body("alipay.trade.pay", biz_content)
 
-        url = self.__gateway + "?" + self.sign_data(data)
+        url = self._gateway + "?" + self.sign_data(data)
         raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self.__verify_and_return_sync_response(raw_string, "alipay_trade_pay_response")
+        return self._verify_and_return_sync_response(raw_string, "alipay_trade_pay_response")
 
     def api_alipay_trade_refund(self, refund_amount, out_trade_no=None, trade_no=None, **kwargs):
         biz_content = {
@@ -338,9 +338,9 @@ class AliPay():
 
         data = self.build_body("alipay.trade.refund", biz_content)
 
-        url = self.__gateway + "?" + self.sign_data(data)
+        url = self._gateway + "?" + self.sign_data(data)
         raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self.__verify_and_return_sync_response(raw_string, "alipay_trade_refund_response")
+        return self._verify_and_return_sync_response(raw_string, "alipay_trade_refund_response")
 
     def api_alipay_trade_cancel(self, out_trade_no=None, trade_no=None):
         """
@@ -365,9 +365,9 @@ class AliPay():
 
         data = self.build_body("alipay.trade.cancel", biz_content)
 
-        url = self.__gateway + "?" + self.sign_data(data)
+        url = self._gateway + "?" + self.sign_data(data)
         raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self.__verify_and_return_sync_response(raw_string, "alipay_trade_cancel_response")
+        return self._verify_and_return_sync_response(raw_string, "alipay_trade_cancel_response")
 
     def api_alipay_trade_precreate(self, subject, out_trade_no, total_amount, **kwargs):
         """
@@ -400,9 +400,9 @@ class AliPay():
         biz_content.update(**kwargs)
         data = self.build_body("alipay.trade.precreate", biz_content)
 
-        url = self.__gateway + "?" + self.sign_data(data)
+        url = self._gateway + "?" + self.sign_data(data)
         raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self.__verify_and_return_sync_response(raw_string, "alipay_trade_precreate_response")
+        return self._verify_and_return_sync_response(raw_string, "alipay_trade_precreate_response")
 
     def api_alipay_fund_trans_toaccount_transfer(
             self, out_biz_no, payee_type, payee_account, amount, **kwargs
@@ -417,9 +417,9 @@ class AliPay():
         biz_content.update(kwargs)
         data = self.build_body("alipay.fund.trans.toaccount.transfer", biz_content)
 
-        url = self.__gateway + "?" + self.sign_data(data)
+        url = self._gateway + "?" + self.sign_data(data)
         raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self.__verify_and_return_sync_response(
+        return self._verify_and_return_sync_response(
             raw_string, "alipay_fund_trans_toaccount_transfer_response"
         )
 
@@ -435,13 +435,13 @@ class AliPay():
 
         data = self.build_body("alipay.fund.trans.order.query", biz_content)
 
-        url = self.__gateway + "?" + self.sign_data(data)
+        url = self._gateway + "?" + self.sign_data(data)
         raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self.__verify_and_return_sync_response(
+        return self._verify_and_return_sync_response(
             raw_string, "alipay_fund_trans_order_query_response"
         )
 
-    def __verify_and_return_sync_response(self, raw_string, response_type):
+    def _verify_and_return_sync_response(self, raw_string, response_type):
         """
         return data if verification succeeded, else raise exception
         """
@@ -451,7 +451,7 @@ class AliPay():
         sign = response["sign"]
 
         # locate string to be signed
-        raw_string = self.__get_string_to_be_signed(
+        raw_string = self._get_string_to_be_signed(
             raw_string, response_type
         )
 
@@ -459,7 +459,7 @@ class AliPay():
             raise AliPayValidationError
         return result
 
-    def __get_string_to_be_signed(self, raw_string, response_type):
+    def _get_string_to_be_signed(self, raw_string, response_type):
         """
         https://doc.open.alipay.com/docs/doc.htm?docType=1&articleId=106120
         从同步返回的接口里面找到待签名的字符串
@@ -495,3 +495,11 @@ class AliPay():
                 index = index_a + 1
 
         return raw_string[left_index: right_index + 1]
+
+
+class AliPay(BaseAliPay):
+    pass
+
+
+class ISVAliPay(BaseAliPay):
+    pass

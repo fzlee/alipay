@@ -36,6 +36,9 @@ OpenSSL> rsa -in app_private_key.pem -pubout -out app_public_key.pem # export pu
 OpenSSL> exit
 ```
 
+The public key we download from open.alipay.com is a string, saving it to a text file is not enough, making sure it's surrounded with `-----BEGIN PUBLIC KEY-----` and `-----END PUBLIC KEY-----`
+There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/certs/ali/ali_public_key.pem) for your reference
+
 #### Intialization
 ```python
     from alipay import AliPay
@@ -73,7 +76,7 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
     # if you are Python3 user, just use the default string
     subject = "测试订单"
 
-    # paid via Web，open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
+    # Pay via Web，open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
     order_string = alipay.api_alipay_trade_page_pay    (
         out_trade_no="20161112",
         total_amount=0.01,
@@ -85,7 +88,7 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
 #### <a name="alipay.trade.wap.pay"></a>[alipay.trade.wap.pay](https://docs.open.alipay.com/60/104790)
 
 ```python
-    # paid via WAP, open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
+    # Pay via WAP, open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
     order_string = alipay.api_alipay_trade_wap_pay(
         out_trade_no="20161112",
         total_amount="0.01",
@@ -96,7 +99,7 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
 
 #### <a name="alipay.trade.app.pay"></a>[alipay.trade.app.pay](https://docs.open.alipay.com/204/105465)
 ```python
-    # paid via App，just order_string to your Android or iOS client
+    # Pay via App，just pass order_string to your Android or iOS client
     order_string = alipay.api_alipay_trade_app_pay(
         out_trade_no="20161112",
         total_amount="0.01",
@@ -124,7 +127,7 @@ def hello_world():
     print(signature)
 
     # verify 
-    alipay.verify(data, signature)
+    success = alipay.verify(data, signature)
     if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED" ):
         print("trade succeed")
     return 'Hello, World!'

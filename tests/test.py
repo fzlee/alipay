@@ -32,7 +32,7 @@ class AliPayTestCase(unittest.TestCase):
 
     def setUp(self):
         super(AliPayTestCase, self).setUp()
-        self.__app_private_key_path, self.__app_public_key_path = helper.get_app_certs()
+        self._app_private_key_path, self._app_public_key_path = helper.get_app_certs()
 
     def _prepare_sync_response(self, alipay, response_type):
         """sign data with private key so we can validate with our public key later"""
@@ -71,8 +71,8 @@ class AliPayTestCase(unittest.TestCase):
         return AliPay(
             appid="appid",
             app_notify_url="http://example.com/app_notify_url",
-            app_private_key_path=self.__app_private_key_path,
-            alipay_public_key_path=self.__app_public_key_path,
+            app_private_key_path=self._app_private_key_path,
+            alipay_public_key_path=self._app_public_key_path,
             sign_type=sign_type
         )
 
@@ -102,7 +102,7 @@ class AliPayTestCase(unittest.TestCase):
         result1 = alipay._sign("hello\n")
         result2 = subprocess.check_output(
             "echo hello | openssl sha -sha1 -sign {} | openssl base64".format(
-                self.__app_private_key_path
+                self._app_private_key_path
             ), shell=True).decode("utf-8")
         result2 = result2.replace("\n", "")
         self.assertEqual(result1, result2)
@@ -114,7 +114,7 @@ class AliPayTestCase(unittest.TestCase):
         result1 = alipay._sign("hello\n")
         result2 = subprocess.check_output(
             "echo hello | openssl sha -sha256 -sign {} | openssl base64".format(
-                self.__app_private_key_path
+                self._app_private_key_path
             ), shell=True).decode("utf-8")
         result2 = result2.replace("\n", "")
         self.assertEqual(result1, result2)
@@ -296,27 +296,27 @@ class AliPayTestCase(unittest.TestCase):
         alipay = self.get_client(sign_type="RSA2")
         alipay.verify(data, "ssss")
 
-    def test__get_string_to_be_signed(self):
+    def test_get_string_to_be_signed(self):
         alipay = self.get_client("RSA2")
 
         # 简单测试
         s = """{"response_type":{"key1":"name"}}"""
         expected = """{"key1":"name"}"""
-        returned = alipay._AliPay__get_string_to_be_signed(s, "response_type")
+        returned = alipay._get_string_to_be_signed(s, "response_type")
         self.assertEqual(expected, returned)
         # 嵌套测试
         s = """{"response_type":{"key1":{"key2": ""}}}"""
         expected = """{"key1":{"key2": ""}}"""
-        returned = alipay._AliPay__get_string_to_be_signed(s, "response_type")
+        returned = alipay._get_string_to_be_signed(s, "response_type")
         self.assertEqual(expected, returned)
         # 嵌套测试
         s = """{"response_type":{"key1":{"key2": {"key3": ""}}}}"""
         expected = """{"key1":{"key2": {"key3": ""}}}"""
-        returned = alipay._AliPay__get_string_to_be_signed(s, "response_type")
+        returned = alipay._get_string_to_be_signed(s, "response_type")
         self.assertEqual(expected, returned)
         # 不合法测试, 不报错就好
         s = """{"response_type":{"key1":{"key2": {{"""
-        alipay._AliPay__get_string_to_be_signed(s, "response_type")
+        alipay._get_string_to_be_signed(s, "response_type")
         # 不合法测试, 不报错就好
         s = """{"response_type":"key1":"key2":"""
-        alipay._AliPay__get_string_to_be_signed(s, "response_type")
+        alipay._get_string_to_be_signed(s, "response_type")
