@@ -115,7 +115,7 @@ class BaseAliPay():
 
         return sorted([(k, v) for k, v in data.items()])
 
-    def build_body(self, method, biz_content, return_url=None):
+    def build_body(self, method, biz_content, return_url=None, append_auth_token=False):
         data = {
             "app_id": self._appid,
             "method": method,
@@ -125,6 +125,8 @@ class BaseAliPay():
             "version": "1.0",
             "biz_content": biz_content
         }
+        if append_auth_token:
+            data["app_auth_token"] = self.app_auth_token
 
         if return_url is not None:
             data["return_url"] = return_url
@@ -529,10 +531,7 @@ class ISVAliPay(BaseAliPay):
 
     def build_body(self, method, biz_content, return_url=None, append_auth_token=True):
 
-        if append_auth_token:
-            biz_content["app_auth_token"] = self.app_auth_token
-
-        return super(ISVAliPay, self).build_body(method, biz_content, return_url)
+        return super(ISVAliPay, self).build_body(method, biz_content, return_url, append_auth_token)
 
     def api_alipay_open_auth_token_app(self, app_auth_code=None, refresh_token=None):
         """
@@ -559,7 +558,11 @@ class ISVAliPay(BaseAliPay):
                 "refresh_token": refresh_token
             }
 
-        data = self.build_body("alipay.open.auth.token.app", biz_content, append_auth_token=False)
+        data = self.build_body(
+            "alipay.open.auth.token.app",
+            biz_content,
+            append_auth_token=False
+        )
 
         url = self._gateway + "?" + self.sign_data(data)
         raw_string = urlopen(url, timeout=15).read().decode("utf-8")
@@ -568,7 +571,14 @@ class ISVAliPay(BaseAliPay):
         )
 
     def api_alipay_open_auth_token_app_query(self):
-        data = self.build_body("alipay.open.auth.token.app.query", {})
+        biz_content = {
+            "app_auth_token": self.app_auth_token
+        }
+        data = self.build_body(
+            "alipay.open.auth.token.app.query",
+            biz_content,
+            append_auth_token=False
+        )
         url = self._gateway + "?" + self.sign_data(data)
         raw_string = urlopen(url, timeout=15).read().decode("utf-8")
         return self._verify_and_return_sync_response(
