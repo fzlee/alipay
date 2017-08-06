@@ -274,6 +274,8 @@ if result["code"] == "10000":
 
 ## [ISV 集成](https://doc.open.alipay.com/doc2/detail?treeId=216&articleId=105193&docType=1)
 
+在开始前，请务必阅读[官方文档](https://docs.open.alipay.com/common/105193)
+
 #### <a name="alipay.open.auth.token.app"></a> 生成app_auth_code []()
 ```
     response = isv_alipay.api_alipay_open_auth_token_app(app_auth_code=app_auth_code)
