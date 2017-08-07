@@ -312,6 +312,13 @@ alipay = AliPay(..., debug=True)
 * varwey
 
 ## Changelog
+
+#### 2017-08-07(version 1.2.0)
+ISV 授权等功能
+
+#### 2017-06-25(version 1.1.0)
+* `alipay.fund.trans.toaccount.transfer` 以及 `alipay.fund.trans.order.query`
+
 #### 2017-05-28(version 1.0.1)
 * `alipay.trade.page.pay`里面return_url没有被传入
 

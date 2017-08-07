@@ -302,6 +302,10 @@ alipay = AliPay(..., debug=True)
 * varwey
 
 ## Changelog
+
+#### 2017-08-07(version 1.2.0)
+ISV integration
+
 #### 2017-06-25(version 1.1.0)
 * `alipay.fund.trans.toaccount.transfer` and `alipay.fund.trans.order.query`
 
