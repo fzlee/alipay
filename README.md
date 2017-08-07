@@ -268,7 +268,12 @@ Go through [the details](https://docs.open.alipay.com/common/105193) before you 
 
 #### alipay.open.auth.token.app
 ```
-    response = isv_alipay.api_alipay_open_auth_token_app(app_auth_code=app_auth_code)
+    isv_alipay = ISVAliPay(
+        ...
+        app_auth_code="app_auth_code" 
+    )
+
+    response = isv_alipay.api_alipay_open_auth_token_app()
     response = {
       "code": "10000",
       "msg": "Success",
