@@ -47,7 +47,7 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
 
     alipay = AliPay(
       appid="",
-      app_notify_url="", 
+      app_notify_url="",  # the default notify path
       app_private_key_path="", 
       alipay_public_key_path=""  # alipay public key file path, do not put your public key file here
       sign_type="RSA" # RSA or RSA2
@@ -59,7 +59,7 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
     # either app_auth_code or app_auth_token should not be None
     isv_alipay = ISVAliPay(
       appid="",
-      app_notify_url="", 
+      app_notify_url="",  # the default notify path
       app_private_key_path="", 
       alipay_public_key_path=""  # alipay public key file path, do not put your public key file here
       sign_type="RSA" # RSA or RSA2
@@ -97,7 +97,8 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
         out_trade_no="20161112",
         total_amount=0.01,
         subject=subject,
-        return_url="https://example.com"
+        return_url="https://example.com",
+        notify_url="https://example.com/notify" # this is optional 
     )
 ```
 
@@ -109,7 +110,8 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
         out_trade_no="20161112",
         total_amount="0.01",
         subject=subject,
-        return_url="http://example.com"
+        return_url="http://example.com",
+        notify_url="https://example.com/notify" # this is optional 
     )
 ```
 
@@ -119,7 +121,8 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
     order_string = alipay.api_alipay_trade_app_pay(
         out_trade_no="20161112",
         total_amount="0.01",
-        subject=subject
+        subject=subject,
+        notify_url="https://example.com/notify" # this is optional 
     )
 ```
 
@@ -196,8 +199,9 @@ result = alipay.api_alipay_trade_pay(
     auth_code="auth_code", 
     subject="subject",
     discountable_amount=10,
-    total_amount=20
-    )
+    total_amount=20,
+    notify_url="https://example.com/notify" # this is optional 
+)
 
 if  result["code"] == "10000":
     print("Order is paid")
@@ -308,8 +312,12 @@ alipay = AliPay(..., debug=True)
 
 ## Changelog
 
+
+#### 2017-08-21(version 1.3.0)
+* allow notify_url be overriden in hose 4 functions: `alipay.trade.wap.pay` `alipay_trade_app_pay` `alipay.trade.page.pay` `alipay.trade.pay`
+
 #### 2017-08-07(version 1.2.0)
-ISV integration
+* ISV integration
 
 #### 2017-06-25(version 1.1.0)
 * `alipay.fund.trans.toaccount.transfer` and `alipay.fund.trans.order.query`

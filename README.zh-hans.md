@@ -47,7 +47,7 @@ OpenSSL> exit
 
     alipay = AliPay(
       appid="",
-      app_notify_url="", 
+      app_notify_url="",  # 默认回调url
       app_private_key_path="", 
       alipay_public_key_path=""  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
       sign_type="RSA" # RSA 或者 RSA2
@@ -59,7 +59,7 @@ OpenSSL> exit
     # either app_auth_code or app_auth_token should not be None
     isv_alipay = ISVAliPay(
       appid="",
-      app_notify_url="", 
+      app_notify_url="",  # 默认回调url
       app_private_key_path="", 
       alipay_public_key_path=""  # alipay public key file path, do not put your public key file here
       sign_type="RSA" # RSA or RSA2
@@ -109,7 +109,8 @@ alipay.api_alipay_trade_page_pay(
         out_trade_no="20161112",
         total_amount=0.01,
         subject=subject,
-        return_url="https://example.com"
+        return_url="https://example.com",
+        notify_url="https://example.com/notify" # 可选, 不填则使用默认notify url
     )
 ```
 
@@ -121,7 +122,8 @@ alipay.api_alipay_trade_page_pay(
         out_trade_no="20161112",
         total_amount="0.01",
         subject=subject,
-        return_url="https://example.com"
+        return_url="https://example.com",
+        notify_url="https://example.com/notify" # 可选, 不填则使用默认notify url
     )
 ```
 
@@ -131,7 +133,8 @@ alipay.api_alipay_trade_page_pay(
     order_string = alipay.api_alipay_trade_app_pay(
         out_trade_no="20161112",
         total_amount="0.01",
-        subject=subject
+        subject=subject,
+        notify_url="https://example.com/notify" # 可选, 不填则使用默认notify url
     )
 ```
 
@@ -203,7 +206,8 @@ result = alipay.api_alipay_trade_pay(
     auth_code="auth_code", 
     subject="subject",
     discountable_amount=10,
-    total_amount=20
+    total_amount=20,
+    notify_url="https://example.com/notify" # 可选, 不填则使用默认notify url
     )
 
 if  result["code"] == "10000":
@@ -314,12 +318,21 @@ alipay = AliPay(..., debug=True)
 
 ## 感谢（排名不分先后）
 * John60676
+* EveryIsNormal 
 * varwey
 
 ## Changelog
 
+
+#### 2017-08-21(version 1.3.0)
+`alipay.trade.wap.pay` `alipay_trade_app_pay` `alipay.trade.page.pay` `alipay.trade.pay`
+
+
 #### 2017-08-07(version 1.2.0)
-ISV 授权等功能
+* 四个支付函数可以额外传入notify_url
+
+#### 2017-08-07(version 1.2.0)
+* ISV 授权等功能
 
 #### 2017-06-25(version 1.1.0)
 * `alipay.fund.trans.toaccount.transfer` 以及 `alipay.fund.trans.order.query`
