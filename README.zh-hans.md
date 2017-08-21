@@ -222,7 +222,8 @@ alipay = AliPay(appid="", ...)
 alipay.api_alipay_trade_precreate    (
     subject="test subject",
     out_trade_no="out_trade_no",
-    total_amount=100
+    total_amount=100,
+    timeout_express='60s' # 交易自动关闭时间
 )
 
 # check order status
