@@ -138,8 +138,8 @@ class BaseAliPay():
             if self._app_notify_url is not None:
                 data["notify_url"] = self._app_notify_url
 
-        if notify_url is not None:
-            data["notify_url"] = notify_url
+            if notify_url is not None:
+                data["notify_url"] = notify_url
 
         return data
 
