@@ -27,6 +27,9 @@
 #### 安装
 
 ```bash
+# 从 1.3.0升级上来的用户, 请先卸载pycrypto:
+pip uninstall pycrypto
+# 安装python-alipay-sdk
 pip install python-alipay-sdk --upgrade
 ```
 
@@ -322,7 +325,8 @@ alipay = AliPay(..., debug=True)
 * varwey
 
 ## Changelog
-
+#### 2017-10-20(version 1.4.0)
+* 将加密库依赖更新到pycryptodome，旧版用户请卸载pycrypto后安装使用.
 
 #### 2017-08-21(version 1.3.0)
 `alipay.trade.wap.pay` `alipay_trade_app_pay` `alipay.trade.page.pay` `alipay.trade.pay`

@@ -27,6 +27,10 @@ Or you may just follow this manual if not.
 #### Installation
 
 ```bash
+# for users upgraded from 1.3.0, uninstall pycrypto first
+pip uninstall pycrypto
+
+# installation
 pip install python-alipay-sdk --upgrade
 ```
 
@@ -311,7 +315,8 @@ alipay = AliPay(..., debug=True)
 * varwey
 
 ## Changelog
-
+#### 2017-10-20(version 1.4.0)
+* change dependence from pycrypto to pycryptodome. for users upgraded from 1.3.0, uninstall pycrypto first
 
 #### 2017-08-21(version 1.3.0)
 * allow notify_url be overriden in hose 4 functions: `alipay.trade.wap.pay` `alipay_trade_app_pay` `alipay.trade.page.pay` `alipay.trade.pay`
