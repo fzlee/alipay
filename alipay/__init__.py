@@ -135,7 +135,7 @@ class BaseAliPay():
 
         if method in (
             "alipay.trade.app.pay", "alipay.trade.wap.pay", "alipay.trade.page.pay",
-            "alipay.trade.pay"
+            "alipay.trade.pay", "alipay.trade.precreate"
         ):
             if self._app_notify_url is not None:
                 data["notify_url"] = self._app_notify_url
