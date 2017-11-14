@@ -323,8 +323,12 @@ alipay = AliPay(..., debug=True)
 * John60676
 * EveryIsNormal 
 * varwey
+* Macuilxochitl
 
 ## Changelog
+#### 2017-11-14(version 1.4.1)
+* 修复忘记将notify url 传入`api_alipay_trade_precreate`的bug.
+
 #### 2017-10-20(version 1.4.0)
 * 将加密库依赖更新到pycryptodome，旧版用户请卸载pycrypto后安装使用.
 

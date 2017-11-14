@@ -312,9 +312,13 @@ alipay = AliPay(..., debug=True)
 
 ## Thanks to
 * John60676
+* EveryIsNormal 
 * varwey
 
 ## Changelog
+#### 2017-11-14(version 1.4.1)
+* bug fix for `api_alipay_trade_precreate`, notify url is not included in request params.
+
 #### 2017-10-20(version 1.4.0)
 * change dependence from pycrypto to pycryptodome. for users upgraded from 1.3.0, uninstall pycrypto first
 
