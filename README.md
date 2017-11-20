@@ -314,6 +314,7 @@ alipay = AliPay(..., debug=True)
 * John60676
 * EveryIsNormal 
 * varwey
+* Macuilxochitl
 
 ## Changelog
 #### 2017-11-14(version 1.4.1)
