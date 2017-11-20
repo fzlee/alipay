@@ -58,7 +58,7 @@ class BaseAliPay(object):
           sign_type="RSA2"
         )
         """
-        self._appid = appid
+        self._appid = str(appid)
         self._app_notify_url = app_notify_url
         self._app_private_key_path = app_private_key_path
         self._alipay_public_key_path = alipay_public_key_path
