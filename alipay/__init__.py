@@ -15,7 +15,7 @@ from .compat import quote_plus, urlopen, decodebytes, encodebytes, b
 from .exceptions import AliPayException, AliPayValidationError
 
 
-class BaseAliPay():
+class BaseAliPay(object):
     @property
     def appid(self):
         return self._appid
