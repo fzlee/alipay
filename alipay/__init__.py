@@ -429,6 +429,26 @@ class BaseAliPay():
         raw_string = urlopen(url, timeout=15).read().decode("utf-8")
         return self._verify_and_return_sync_response(raw_string, "alipay_trade_precreate_response")
 
+    def api_alipay_trade_fastpay_refund_query(
+        self, out_request_no, trade_no=None, out_trade_no=None
+    ):
+        assert (out_trade_no is not None) or (trade_no is not None),\
+            "Both trade_no and out_trade_no are None"
+
+        biz_content = {"out_request_no": out_request_no}
+        if trade_no:
+            biz_content["trade_no"] = trade_no
+        else:
+            biz_content["out_trade_no"] = out_trade_no
+
+        data = self.build_body("alipay.trade.fastpay.refund.query", biz_content)
+
+        url = self._gateway + "?" + self.sign_data(data)
+        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
+        return self._verify_and_return_sync_response(
+            raw_string, "alipay_trade_fastpay_refund_query_response"
+        )
+
     def api_alipay_fund_trans_toaccount_transfer(
             self, out_biz_no, payee_type, payee_account, amount, **kwargs
     ):

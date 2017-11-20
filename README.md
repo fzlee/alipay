@@ -15,6 +15,7 @@ So far, the following functions are supported:
 * [Query trade](#alipay.trade.precreate)
 * [Cancel trade](#alipay.trade.precreate)
 * [Refund](#alipay.trade.refund)
+* [Query refund result](#alipay.trade.fastpay.refund.query)
 * [Transfer money to alipay account](#alipay.fund.trans.toaccount.transfer)
 * [Query money transfer result](#alipay.fund.trans.order.query)
 * [ISV integration/Get app_auth_code by app_auth_token](#alipay.open.auth.token.app)
@@ -250,6 +251,22 @@ if result["code"] == "10000":
     print("success")
 ```
 
+#### <a name="alipay.trade.fastpay.refund.query"></a>Query refund result[alipay.trade.fastpay.refund.query](https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query)
+
+```python
+result = alipay.api_alipay_trade_fastpay_refund_query("20171120", out_trade_no="20171120")
+
+result = {
+    'code': '10000', 
+    'msg': 'Success', 
+    'out_request_no': '20171120', 
+    'out_trade_no': '20171120', 
+    'refund_amount': '20.00', 
+    'total_amount': '20.00', 
+    'trade_no': '2017112021001004070200297107'
+}
+```
+
 #### <a name="alipay.fund.trans.toaccount.transfer"></a>[alipay.fund.trans.toaccount.transfer](https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer)
 ```python
     # transfer money to alipay account
@@ -317,6 +334,10 @@ alipay = AliPay(..., debug=True)
 * Macuilxochitl
 
 ## Changelog
+
+#### 2017-11-20(version 1.5)
+* `alipay.trade.fastpay.refund.query` Query refund result.
+
 #### 2017-11-14(version 1.4.1)
 * bug fix for `api_alipay_trade_precreate`, notify url is not included in request params.
 
