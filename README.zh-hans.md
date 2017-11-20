@@ -121,7 +121,7 @@ alipay.api_alipay_trade_page_pay(
 
 ```python
     # 手机网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
-    order_string = alipay.alipay_trade_wap_pay(
+    order_string = alipay.api_alipay_trade_wap_pay(
         out_trade_no="20161112",
         total_amount="0.01",
         subject=subject,
