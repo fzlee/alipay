@@ -343,6 +343,10 @@ alipay = AliPay(..., debug=True)
 * Macuilxochitl
 
 ## Changelog
+
+#### 2017-12-04(version 1.5.1)
+* bug fix for `ISVAlipay.build_body`.
+
 #### 2017-11-20(version 1.5)
 * `alipay.trade.fastpay.refund.query` 统一收单交易退款查询
 

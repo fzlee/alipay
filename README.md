@@ -335,6 +335,9 @@ alipay = AliPay(..., debug=True)
 
 ## Changelog
 
+#### 2017-12-04(version 1.5.1)
+* bug fix for `ISVAlipay.build_body`.
+
 #### 2017-11-20(version 1.5)
 * `alipay.trade.fastpay.refund.query` Query refund result.
 

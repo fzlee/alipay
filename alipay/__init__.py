@@ -572,9 +572,12 @@ class ISVAliPay(BaseAliPay):
             raise Exception("Get auth token by auth code failed: {}".format(self._app_auth_code))
         return self._app_auth_token
 
-    def build_body(self, method, biz_content, return_url=None, append_auth_token=True):
-
-        return super(ISVAliPay, self).build_body(method, biz_content, return_url, append_auth_token)
+    def build_body(
+        self, method, biz_content, return_url=None, notify_url=None, append_auth_token=True
+    ):
+        return super(ISVAliPay, self).build_body(
+            method, biz_content, return_url, notify_url, append_auth_token
+        )
 
     def api_alipay_open_auth_token_app(self, refresh_token=None):
         """
