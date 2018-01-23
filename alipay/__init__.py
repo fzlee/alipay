@@ -30,8 +30,14 @@ class BaseAliPay(object):
         签名用
         """
         if not self._app_private_key:
-            with open(self._app_private_key_path) as fp:
-                self._app_private_key = RSA.importKey(fp.read())
+
+            if self._app_private_key_path:
+                with open(self._app_private_key_path) as fp:
+                    self._app_private_key = RSA.importKey(fp.read())
+            elif self._app_private_key_string:
+                self._app_private_key = RSA.importKey(self._app_private_key_string)
+            else:
+                raise Exception("App private key is not specified")
 
         return self._app_private_key
 
@@ -41,13 +47,26 @@ class BaseAliPay(object):
         验证签名用
         """
         if not self._alipay_public_key:
-            with open(self._alipay_public_key_path) as fp:
-                self._alipay_public_key = RSA.importKey(fp.read())
+            if self._alipay_public_key_path:
+                with open(self._alipay_public_key_path) as fp:
+                    self._alipay_public_key = RSA.importKey(fp.read())
+            elif self._alipay_public_key_string:
+                self._alipay_public_key = RSA.importKey(self._alipay_public_key_string)
+            else:
+                raise Exception("Alipay public key is not specified")
 
         return self._alipay_public_key
 
-    def __init__(self, appid, app_notify_url, app_private_key_path,
-                 alipay_public_key_path, sign_type="RSA2", debug=False):
+    def __init__(
+        self,
+        appid,
+        app_notify_url,
+        app_private_key_path=None,
+        app_private_key_string=None,
+        alipay_public_key_path=None,
+        alipay_public_key_string=None,
+        sign_type="RSA2",
+        debug=False):
         """
         初始化:
         alipay = AliPay(
@@ -61,7 +80,9 @@ class BaseAliPay(object):
         self._appid = str(appid)
         self._app_notify_url = app_notify_url
         self._app_private_key_path = app_private_key_path
+        self._app_private_key_string = app_private_key_string
         self._alipay_public_key_path = alipay_public_key_path
+        self._alipay_public_key_string = alipay_public_key_string
 
         self._app_private_key = None
         self._alipay_public_key = None

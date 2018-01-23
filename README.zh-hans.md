@@ -49,11 +49,14 @@ OpenSSL> exit
 ```python
     from alipay import AliPay, ISVAlipay
 
+    app_private_key_string = open("/path/to/your/private/key.pem").read()
+    alipay_public_key_string = open("/path/to/alipay/public/key.pem").read()
+
     alipay = AliPay(
       appid="",
       app_notify_url="",  # 默认回调url
-      app_private_key_path="", 
-      alipay_public_key_path=""  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
+      app_private_key_string=app_private_key_string,
+      alipay_public_key_string=alipay_public_key_string,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
       sign_type="RSA" # RSA 或者 RSA2
       debug=False  # 默认False
     )
@@ -343,6 +346,9 @@ alipay = AliPay(..., debug=True)
 * Macuilxochitl
 
 ## Changelog
+
+#### 2018-01-23(version 1.6)
+* 支持传入密钥字符串初始化Alipay对象
 
 #### 2017-12-04(version 1.5.1)
 * bug fix for `ISVAlipay.build_body`.

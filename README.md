@@ -50,11 +50,15 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
 ```python
     from alipay import AliPay, ISVAliPay
 
+    # Making sure your key file is adhered to standards, you may find examples [here](https://github.com/fzlee/alipay/blob/master/tests/certs/ali/ali_private_key.pem)
+    app_private_key_string = open("/path/to/your/private/key.pem").read()
+    alipay_public_key_string = open("/path/to/alipay/public/key.pem").read()
+
     alipay = AliPay(
       appid="",
       app_notify_url="",  # the default notify path
-      app_private_key_path="", 
-      alipay_public_key_path=""  # alipay public key file path, do not put your public key file here
+      app_private_key_string=app_private_key_string, 
+      alipay_public_key_string=alipay_public_key_string  # alipay public key file path, do not put your public key file here
       sign_type="RSA" # RSA or RSA2
       debug=False  # False by default
     )
@@ -65,8 +69,8 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
     isv_alipay = ISVAliPay(
       appid="",
       app_notify_url="",  # the default notify path
-      app_private_key_path="", 
-      alipay_public_key_path=""  # alipay public key file path, do not put your public key file here
+      app_private_key_string="", 
+      alipay_public_key_string=""  # alipay public key string, do not put your public key file here
       sign_type="RSA" # RSA or RSA2
       debug=False  # False by default,
       app_auth_code=None, 
@@ -334,6 +338,9 @@ alipay = AliPay(..., debug=True)
 * Macuilxochitl
 
 ## Changelog
+
+#### 2018-01-23(version 1.6)
+* initialize Alipay instance with key string
 
 #### 2017-12-04(version 1.5.1)
 * bug fix for `ISVAlipay.build_body`.
