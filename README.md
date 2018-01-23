@@ -54,6 +54,18 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
     app_private_key_string = open("/path/to/your/private/key.pem").read()
     alipay_public_key_string = open("/path/to/alipay/public/key.pem").read()
 
+    app_private_key_string == "
+        -----BEGIN RSA PRIVATE KEY-----
+        base64 encoded content
+        -----END RSA PRIVATE KEY-----
+        "
+
+    alipay_public_key_string == "
+        -----BEGIN PUBLIC KEY-----
+        base64 encoded content
+        -----END PUBLIC KEY-----
+    "
+   
     alipay = AliPay(
       appid="",
       app_notify_url="",  # the default notify path
