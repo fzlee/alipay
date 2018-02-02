@@ -70,7 +70,7 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
       appid="",
       app_notify_url="",  # the default notify path
       app_private_key_string=app_private_key_string, 
-      alipay_public_key_string=alipay_public_key_string  # alipay public key file path, do not put your public key file here
+      alipay_public_key_string=alipay_public_key_string  # alipay public key, do not use your public key!
       sign_type="RSA" # RSA or RSA2
       debug=False  # False by default
     )
@@ -82,7 +82,7 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
       appid="",
       app_notify_url="",  # the default notify path
       app_private_key_string="", 
-      alipay_public_key_string=""  # alipay public key string, do not put your public key file here
+      alipay_public_key_string=alipay_public_key_string  # alipay public key, do not use your public key!
       sign_type="RSA" # RSA or RSA2
       debug=False  # False by default,
       app_auth_code=None, 

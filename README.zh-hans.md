@@ -80,7 +80,7 @@ OpenSSL> exit
       appid="",
       app_notify_url="",  # 默认回调url
       app_private_key_srting="", 
-      alipay_public_key_string=""  # alipay public key file path, do not put your public key file here
+      alipay_public_key_string="", # alipay public key, do not use your public key!
       sign_type="RSA" # RSA or RSA2
       debug=False  # False by default,
       app_auth_code=None, 
