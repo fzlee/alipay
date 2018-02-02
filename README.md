@@ -3,7 +3,7 @@
 ## [中文文档](https://github.com/fzlee/alipay/blob/master/README.zh-hans.md)
 
 ##  AliPay Python SDK
-I can't find any official python alipay sdks so far, and it really pains a lot dealing with those sign methods. Hoping this libarary could do some help :).
+I can't find any official python alipay sdks so far, and it really pains a lot dealing with those sign methods. Hoping this library could do some help :).
 
 So far, the following functions are supported:
 * [Pay via Web](#alipay.trade.page.pay)
@@ -43,7 +43,7 @@ OpenSSL> rsa -in app_private_key.pem -pubout -out app_public_key.pem # export pu
 OpenSSL> exit
 ```
 
-The public key we download from open.alipay.com is a string, saving it to a text file is not enough, making sure it's surrounded with `-----BEGIN PUBLIC KEY-----` and `-----END PUBLIC KEY-----`
+The public key we download from open.alipay.com is a string, which cannot be recognied by this lib directly, making sure it's surrounded with `-----BEGIN PUBLIC KEY-----` and `-----END PUBLIC KEY-----`
 There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/certs/ali/ali_public_key.pem) for your reference
 
 #### Intialization
@@ -54,17 +54,17 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
     app_private_key_string = open("/path/to/your/private/key.pem").read()
     alipay_public_key_string = open("/path/to/alipay/public/key.pem").read()
 
-    app_private_key_string == "
+    app_private_key_string = """
         -----BEGIN RSA PRIVATE KEY-----
         base64 encoded content
         -----END RSA PRIVATE KEY-----
-        "
+        """
 
-    alipay_public_key_string == "
+    alipay_public_key_string = """
         -----BEGIN PUBLIC KEY-----
         base64 encoded content
         -----END PUBLIC KEY-----
-    "
+    """
    
     alipay = AliPay(
       appid="",

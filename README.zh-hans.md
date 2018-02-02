@@ -42,7 +42,7 @@ OpenSSL> rsa -in app_private_key.pem -pubout -out app_public_key.pem # 导出公
 OpenSSL> exit
 ```
 
-在支付宝上下载的公钥是一个字符串，直接放入文本文件不能被我们识别，你需要在文本的首尾添加标记位(-----BEGIN PUBLIC KEY-----和-----END PUBLIC KEY-----)
+在支付宝上下载的公钥是一个字符串，你需要在文本的首尾添加标记位(-----BEGIN PUBLIC KEY-----和-----END PUBLIC KEY-----)  才能正常使用
 证书的格式你可以参考[这里](https://github.com/fzlee/alipay/blob/master/tests/certs/ali/ali_public_key.pem)
 
 #### 初始化
@@ -52,17 +52,17 @@ OpenSSL> exit
     app_private_key_string = open("/path/to/your/private/key.pem").read()
     alipay_public_key_string = open("/path/to/alipay/public/key.pem").read()
 
-    app_private_key_string == "
+    app_private_key_string == """
         -----BEGIN RSA PRIVATE KEY-----
         base64 encoded content
         -----END RSA PRIVATE KEY-----
-        "
+        """
 
-    alipay_public_key_string == "
+    alipay_public_key_string == """
         -----BEGIN PUBLIC KEY-----
         base64 encoded content
         -----END PUBLIC KEY-----
-    "
+    """
 
     alipay = AliPay(
       appid="",
@@ -79,8 +79,8 @@ OpenSSL> exit
     isv_alipay = ISVAliPay(
       appid="",
       app_notify_url="",  # 默认回调url
-      app_private_key_path="", 
-      alipay_public_key_path=""  # alipay public key file path, do not put your public key file here
+      app_private_key_srting="", 
+      alipay_public_key_string=""  # alipay public key file path, do not put your public key file here
       sign_type="RSA" # RSA or RSA2
       debug=False  # False by default,
       app_auth_code=None, 
