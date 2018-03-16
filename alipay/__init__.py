@@ -7,9 +7,9 @@
 """
 import json
 from datetime import datetime
-from Crypto.Signature import PKCS1_v1_5
-from Crypto.Hash import SHA, SHA256
-from Crypto.PublicKey import RSA
+from Cryptodome.Signature import PKCS1_v1_5
+from Cryptodome.Hash import SHA, SHA256
+from Cryptodome.PublicKey import RSA
 
 from .compat import quote_plus, urlopen, decodebytes, encodebytes, b
 from .exceptions import AliPayException, AliPayValidationError

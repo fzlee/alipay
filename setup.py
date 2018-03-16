@@ -34,6 +34,6 @@ setup(
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
     ],
-    install_requires=["pycryptodome"],
+    install_requires=["pycryptodomex"],
     test_suite="setup.alipay_test_suite"
 )
