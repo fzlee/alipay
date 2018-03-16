@@ -27,18 +27,15 @@ Or you may just follow this manual if not.
 ## GUIDE
 #### Installation
 
-```bash
-# for users upgraded from 1.3.0, uninstall pycrypto first
-pip uninstall pycrypto
-
+```
 # installation
 pip install python-alipay-sdk --upgrade
 ```
 
 #### cert generation
 ```bash
-openssl
-OpenSSL> genrsa -out app_private_key.pem   2048  # the private key file
+# openssl
+OpenSSL> genrsa -out app_private_key.pem 2048  # the private key file
 OpenSSL> rsa -in app_private_key.pem -pubout -out app_public_key.pem # export public key
 OpenSSL> exit
 ```
@@ -129,7 +126,7 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
     # Pay via WAP, open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
     order_string = alipay.api_alipay_trade_wap_pay(
         out_trade_no="20161112",
-        total_amount="0.01",
+        total_amount=0.01,
         subject=subject,
         return_url="http://example.com",
         notify_url="https://example.com/notify" # this is optional 
@@ -141,7 +138,7 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
     # Pay via App，just pass order_string to your Android or iOS client
     order_string = alipay.api_alipay_trade_app_pay(
         out_trade_no="20161112",
-        total_amount="0.01",
+        total_amount=0.01,
         subject=subject,
         notify_url="https://example.com/notify" # this is optional 
     )
@@ -343,13 +340,10 @@ Or you may do test manually in this way, `debug=True` will direct your request t
 alipay = AliPay(..., debug=True)
 ```
 
-## Thanks to
-* John60676
-* EveryIsNormal 
-* varwey
-* Macuilxochitl
-
 ## Changelog
+
+#### 2018-03-16(version 1.7)
+* Do encryption/decryption with `pycryptodomex`，which is not conflict with Pycrypto (many thanks to fakepoet)
 
 #### 2018-01-23(version 1.6)
 * initialize Alipay instance with key string

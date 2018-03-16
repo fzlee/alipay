@@ -28,8 +28,6 @@
 #### 安装
 
 ```bash
-# 从 1.3.0升级上来的用户, 请先卸载pycrypto:
-pip uninstall pycrypto
 # 安装python-alipay-sdk
 pip install python-alipay-sdk --upgrade
 ```
@@ -42,7 +40,7 @@ OpenSSL> rsa -in app_private_key.pem -pubout -out app_public_key.pem # 导出公
 OpenSSL> exit
 ```
 
-在支付宝上下载的公钥是一个字符串，你需要在文本的首尾添加标记位(-----BEGIN PUBLIC KEY-----和-----END PUBLIC KEY-----)  才能正常使用
+在支付宝上下载的公钥是一个字符串，你需要在文本的首尾添加标记位 (-----BEGIN PUBLIC KEY-----和-----END PUBLIC KEY-----)  才能正常使用
 证书的格式你可以参考[这里](https://github.com/fzlee/alipay/blob/master/tests/certs/ali/ali_public_key.pem)
 
 #### 初始化
@@ -139,7 +137,7 @@ alipay.api_alipay_trade_page_pay(
     # 手机网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
     order_string = alipay.api_alipay_trade_wap_pay(
         out_trade_no="20161112",
-        total_amount="0.01",
+        total_amount=0.01,
         subject=subject,
         return_url="https://example.com",
         notify_url="https://example.com/notify" # 可选, 不填则使用默认notify url
@@ -151,7 +149,7 @@ alipay.api_alipay_trade_page_pay(
     # App支付，将order_string返回给app即可
     order_string = alipay.api_alipay_trade_app_pay(
         out_trade_no="20161112",
-        total_amount="0.01",
+        total_amount=0.01,
         subject=subject,
         notify_url="https://example.com/notify" # 可选, 不填则使用默认notify url
     )
@@ -351,13 +349,10 @@ python -m unittest discover
 alipay = AliPay(..., debug=True)
 ```
 
-## 感谢（排名不分先后）
-* John60676
-* EveryIsNormal 
-* varwey
-* Macuilxochitl
-
 ## Changelog
+
+#### 2018-03-16(version 1.7)
+* 使用`pycryptodomex`进行底层加解密运算，避免和旧的加密库冲突(感谢fakepoet)
 
 #### 2018-01-23(version 1.6)
 * 支持传入密钥字符串初始化Alipay对象
