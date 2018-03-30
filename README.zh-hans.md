@@ -64,7 +64,7 @@ OpenSSL> exit
 
     alipay = AliPay(
       appid="",
-      app_notify_url="",  # 默认回调url
+      app_notify_url=None,  # 默认回调url
       app_private_key_string=app_private_key_string,
       alipay_public_key_string=alipay_public_key_string,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
       sign_type="RSA" # RSA 或者 RSA2
@@ -76,7 +76,7 @@ OpenSSL> exit
     # either app_auth_code or app_auth_token should not be None
     isv_alipay = ISVAliPay(
       appid="",
-      app_notify_url="",  # 默认回调url
+      app_notify_url=None,  # 默认回调url
       app_private_key_srting="", 
       alipay_public_key_string="", # alipay public key, do not use your public key!
       sign_type="RSA" # RSA or RSA2

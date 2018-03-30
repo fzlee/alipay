@@ -65,7 +65,7 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
    
     alipay = AliPay(
       appid="",
-      app_notify_url="",  # the default notify path
+      app_notify_url=None,  # the default notify path
       app_private_key_string=app_private_key_string, 
       alipay_public_key_string=alipay_public_key_string  # alipay public key, do not use your public key!
       sign_type="RSA" # RSA or RSA2
@@ -77,7 +77,7 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
     # either app_auth_code or app_auth_token should not be None
     isv_alipay = ISVAliPay(
       appid="",
-      app_notify_url="",  # the default notify path
+      app_notify_url=None,  # the default notify path
       app_private_key_string="", 
       alipay_public_key_string=alipay_public_key_string  # alipay public key, do not use your public key!
       sign_type="RSA" # RSA or RSA2
