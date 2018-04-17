@@ -47,7 +47,8 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
 ```python
     from alipay import AliPay, ISVAliPay
 
-    # Making sure your key file is adhered to standards, you may find examples [here](https://github.com/fzlee/alipay/blob/master/tests/certs/ali/ali_private_key.pem)
+    # Making sure your key file is adhered to standards.
+    # you may find examples at tests/certs/ali/ali_private_key.pem
     app_private_key_string = open("/path/to/your/private/key.pem").read()
     alipay_public_key_string = open("/path/to/alipay/public/key.pem").read()
 
@@ -89,7 +90,7 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
 
 
 #### Naming convention
-Given a alipay function, say `alipay.trade.page.pay`, we will defind a corresponding function `alipay.api_alipay_trade_page_pay()`
+Given an alipay function, say `alipay.trade.page.pay`, we will defind a corresponding function `alipay.api_alipay_trade_page_pay()`
 Generally we will do such a translation:
 
     function_name = "alipay_" + alipay_function_name.replace(".", "_")
