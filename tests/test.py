@@ -9,7 +9,7 @@ import unittest
 import json
 import subprocess
 
-from alipay import AliPay
+from alipay import AliPay, ISVAliPay
 from alipay.exceptions import AliPayValidationError
 from tests import helper
 from tests.compat import mock
@@ -211,7 +211,8 @@ class AliPayTestCase(unittest.TestCase):
     def test_alipay_fund_trans_toaccount_transfer(self, mock_urlopen):
         alipay = self.get_client("RSA2")
         response = mock.Mock()
-        response.read.return_value = self._prepare_alipay_fund_trans_toaccount_transfer_respone(alipay)
+        response.read.return_value = \
+            self._prepare_alipay_fund_trans_toaccount_transfer_respone(alipay)
         mock_urlopen.return_value = response
 
         alipay.api_alipay_fund_trans_toaccount_transfer(
@@ -295,6 +296,18 @@ class AliPayTestCase(unittest.TestCase):
         }
         alipay = self.get_client(sign_type="RSA2")
         alipay.verify(data, "ssss")
+
+    def test_isv_alipay(self):
+        """
+        不报错就行
+        """
+        return ISVAliPay(
+            appid="appid",
+            app_notify_url="http://example.com/app_notify_url",
+            app_private_key_path=self._app_private_key_path,
+            alipay_public_key_path=self._app_public_key_path,
+            app_auth_code="test"
+        )
 
     def test_get_string_to_be_signed(self):
         alipay = self.get_client("RSA2")

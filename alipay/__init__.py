@@ -66,7 +66,8 @@ class BaseAliPay(object):
         alipay_public_key_path=None,
         alipay_public_key_string=None,
         sign_type="RSA2",
-        debug=False):
+        debug=False
+    ):
         """
         初始化:
         alipay = AliPay(
@@ -569,17 +570,33 @@ class AliPay(BaseAliPay):
 
 class ISVAliPay(BaseAliPay):
 
-    def __init__(self, appid, app_notify_url, app_private_key_path,
-                 alipay_public_key_path, sign_type="RSA2", debug=False,
-                 app_auth_token=None, app_auth_code=None):
+    def __init__(
+        self,
+        appid,
+        app_notify_url,
+        app_private_key_path=None,
+        app_private_key_string=None,
+        alipay_public_key_path=None,
+        alipay_public_key_string=None,
+        sign_type="RSA2",
+        debug=False,
+        app_auth_token=None,
+        app_auth_code=None
+    ):
         if not app_auth_token and not app_auth_code:
             raise Exception("Both app_auth_code and app_auth_token are None !!!")
 
         self._app_auth_token = app_auth_token
         self._app_auth_code = app_auth_code
         super(ISVAliPay, self).__init__(
-            appid, app_notify_url, app_private_key_path,
-            alipay_public_key_path, sign_type, debug
+            appid,
+            app_notify_url,
+            app_private_key_path=app_private_key_path,
+            app_private_key_string=app_private_key_string,
+            alipay_public_key_path=alipay_public_key_path,
+            alipay_public_key_string=alipay_public_key_string,
+            sign_type=sign_type,
+            debug=debug
         )
 
     @property
