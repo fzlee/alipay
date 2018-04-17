@@ -29,16 +29,6 @@ class BaseAliPay(object):
         """
         签名用
         """
-        if not self._app_private_key:
-
-            if self._app_private_key_path:
-                with open(self._app_private_key_path) as fp:
-                    self._app_private_key = RSA.importKey(fp.read())
-            elif self._app_private_key_string:
-                self._app_private_key = RSA.importKey(self._app_private_key_string)
-            else:
-                raise Exception("App private key is not specified")
-
         return self._app_private_key
 
     @property
@@ -46,15 +36,6 @@ class BaseAliPay(object):
         """
         验证签名用
         """
-        if not self._alipay_public_key:
-            if self._alipay_public_key_path:
-                with open(self._alipay_public_key_path) as fp:
-                    self._alipay_public_key = RSA.importKey(fp.read())
-            elif self._alipay_public_key_string:
-                self._alipay_public_key = RSA.importKey(self._alipay_public_key_string)
-            else:
-                raise Exception("Alipay public key is not specified")
-
         return self._alipay_public_key
 
     def __init__(
@@ -72,7 +53,7 @@ class BaseAliPay(object):
         初始化:
         alipay = AliPay(
           appid="",
-          app_notify_url="",
+          app_notify_url="http://example.com",
           app_private_key_path="",
           alipay_public_key_path="",
           sign_type="RSA2"
@@ -95,6 +76,24 @@ class BaseAliPay(object):
             self._gateway = "https://openapi.alipaydev.com/gateway.do"
         else:
             self._gateway = "https://openapi.alipay.com/gateway.do"
+
+        # load key file immediately
+        self._load_key()
+
+    def _load_key(self):
+        # load private key
+        content = self._app_private_key_string
+        if not content:
+            with open(self._app_private_key_path) as fp:
+                content = fp.read()
+        self._app_private_key = RSA.importKey(content)
+
+        # load public key
+        content = self._alipay_public_key_string
+        if not content:
+            with open(self._alipay_public_key_path) as fp:
+                content = fp.read()
+        self._alipay_public_key = RSA.importKey(content)
 
     def _sign(self, unsigned_string):
         """
@@ -159,10 +158,10 @@ class BaseAliPay(object):
             "alipay.trade.app.pay", "alipay.trade.wap.pay", "alipay.trade.page.pay",
             "alipay.trade.pay", "alipay.trade.precreate"
         ):
-            if self._app_notify_url is not None:
+            if self._app_notify_url:
                 data["notify_url"] = self._app_notify_url
 
-            if notify_url is not None:
+            if notify_url:
                 data["notify_url"] = notify_url
 
         return data

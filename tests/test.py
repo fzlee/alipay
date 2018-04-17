@@ -309,6 +309,27 @@ class AliPayTestCase(unittest.TestCase):
             app_auth_code="test"
         )
 
+    def test_init_alipay_with_string(self):
+        with open(self._app_private_key_path) as fp:
+            private_string = fp.read()
+        with open(self._app_public_key_path) as fp:
+            public_string = fp.read()
+
+        return AliPay(
+            appid="appid",
+            app_notify_url="http://example.com/app_notify_url",
+            app_private_key_string=private_string,
+            alipay_public_key_string=public_string,
+        )
+
+    def test_init_alipay_with_file(self):
+        return AliPay(
+            appid="appid",
+            app_notify_url="http://example.com/app_notify_url",
+            app_private_key_path=self._app_private_key_path,
+            alipay_public_key_path=self._app_public_key_path,
+        )
+
     def test_get_string_to_be_signed(self):
         alipay = self.get_client("RSA2")
 
