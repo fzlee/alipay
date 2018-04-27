@@ -344,7 +344,7 @@ alipay = AliPay(..., debug=True)
 ## Changelog
 
 #### 2018-03-16(version 1.7)
-* Do encryption/decryption with `pycryptodomex`，which is not conflict with Pycrypto (many thanks to fakepoet)
+* Do encryption/decryption with `pycryptodomex`，which has not conflict with Pycrypto (many thanks to fakepoet)
 
 #### 2018-01-23(version 1.6)
 * initialize Alipay instance with key string
