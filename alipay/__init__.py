@@ -158,11 +158,10 @@ class BaseAliPay(object):
             "alipay.trade.app.pay", "alipay.trade.wap.pay", "alipay.trade.page.pay",
             "alipay.trade.pay", "alipay.trade.precreate"
         ):
-            if self._app_notify_url:
-                data["notify_url"] = self._app_notify_url
-
             if notify_url:
                 data["notify_url"] = notify_url
+            elif self._app_notify_url:
+                data["notify_url"] = self._app_notify_url
 
         return data
 
@@ -192,11 +191,12 @@ class BaseAliPay(object):
             return True
         return False
 
-    def verify(self, data, signature):
+    def verify(self, data, signature=None):
         if "sign_type" in data:
             sign_type = data.pop("sign_type")
             if sign_type != self._sign_type:
                 raise AliPayException(None, "Unknown sign type: {}".format(sign_type))
+        signature = signature or data.pop("sign")
         # 排序后的字符串
         unsigned_items = self._ordered_data(data)
         message = "&".join(u"{}={}".format(k, v) for k, v in unsigned_items)
