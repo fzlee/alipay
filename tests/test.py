@@ -101,7 +101,7 @@ class AliPayTestCase(unittest.TestCase):
         alipay = self.get_client("RSA")
         result1 = alipay._sign("hello\n")
         result2 = subprocess.check_output(
-            "echo hello | openssl sha -sha1 -sign {} | openssl base64".format(
+            "echo hello | openssl dgst -sha1 -sign {} | openssl base64".format(
                 self._app_private_key_path
             ), shell=True).decode("utf-8")
         result2 = result2.replace("\n", "")
@@ -113,7 +113,7 @@ class AliPayTestCase(unittest.TestCase):
         alipay = self.get_client("RSA2")
         result1 = alipay._sign("hello\n")
         result2 = subprocess.check_output(
-            "echo hello | openssl sha -sha256 -sign {} | openssl base64".format(
+            "echo hello | openssl dgst -sha256 -sign {} | openssl base64".format(
                 self._app_private_key_path
             ), shell=True).decode("utf-8")
         result2 = result2.replace("\n", "")
