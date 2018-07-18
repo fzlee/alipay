@@ -509,9 +509,7 @@ class BaseAliPay(object):
         sign = response["sign"]
 
         # locate string to be signed
-        raw_string = self._get_string_to_be_signed(
-            raw_string, response_type
-        )
+        raw_string = self._get_string_to_be_signed(raw_string, response_type)
 
         if not self._verify(raw_string, sign):
             raise AliPayValidationError
@@ -522,37 +520,18 @@ class BaseAliPay(object):
         https://doc.open.alipay.com/docs/doc.htm?docType=1&articleId=106120
         从同步返回的接口里面找到待签名的字符串
         """
-        left_index = 0
-        right_index = 0
-
-        index = raw_string.find(response_type)
-        left_index = raw_string.find("{", index)
-        index = left_index + 1
-
-        balance = -1
-        while balance < 0 and index < len(raw_string) - 1:
-            index_a = raw_string.find("{", index)
-            index_b = raw_string.find("}", index)
-
-            # 右括号没找到， 退出
-            if index_b == -1:
-                break
-            right_index = index_b
-
-            # 左括号没找到，移动到右括号的位置
-            if index_a == -1:
-                index = index_b + 1
-                balance += 1
-            # 左括号出现在有括号之前，移动到左括号的位置
-            elif index_a > index_b:
-                balance += 1
-                index = index_b + 1
-            # 左括号出现在右括号之后， 移动到右括号的位置
-            else:
-                balance -= 1
-                index = index_a + 1
-
-        return raw_string[left_index: right_index + 1]
+        count, start = 0, raw_string.find("{", raw_string.find(response_type))
+        # 从response_type之后的第一个｛的下一位开始匹配，
+        # 如果是｛则count加1; 如果是｝而且count=0，就是待验签字符串的终点
+        for i, c in enumerate(raw_string[start + 1 :], start + 1):
+            if c == "{":
+                count += 1
+            elif c == "}":
+                if count == 0:
+                    end = i + 1
+                    break
+                count -= 1
+        return raw_string[start:end]
 
 
 class AliPay(BaseAliPay):
