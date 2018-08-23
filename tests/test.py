@@ -10,7 +10,7 @@ import json
 import subprocess
 
 from alipay import AliPay, ISVAliPay
-from alipay.exceptions import AliPayValidationError
+from alipay.exceptions import AliPayValidationError, AliPayException
 from tests import helper
 from tests.compat import mock
 
@@ -45,6 +45,16 @@ class AliPayTestCase(unittest.TestCase):
             "sign": alipay._sign(json.dumps(data))
         }
         return json.dumps(response).encode("utf-8")
+
+    def _prepare_failed_trade_query_responsy(self, alipay):
+        return json.dumps({
+            "alipay_trade_query_response": {
+                "sub_code": "isv.invalid-app-id",
+                "code": "40002",
+                "sub_msg": "无效的AppID参数",
+                "msg": "Invalid Arguments"
+            }
+        }).encode("utf8")
 
     def _prepare_precreate_face_to_face_response(self, alipay):
         return self._prepare_sync_response(alipay, "alipay_trade_precreate_response")
@@ -154,6 +164,19 @@ class AliPayTestCase(unittest.TestCase):
             "subject"
         )
 
+        self.assertTrue(mock_urlopen.called)
+
+    @mock.patch("alipay.urlopen")
+    def test_handle_alipay_exception(self, mock_urlopen):
+        alipay = self.get_client("RSA2")
+        response = mock.Mock()
+        response.read.return_value = self._prepare_failed_trade_query_responsy(alipay)
+        mock_urlopen.return_value = response
+
+        with self.assertRaises(AliPayException):
+            alipay.api_alipay_trade_query(
+                out_trade_no="out_trade_no",
+            )
         self.assertTrue(mock_urlopen.called)
 
     @mock.patch("alipay.urlopen")

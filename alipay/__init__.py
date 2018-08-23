@@ -510,10 +510,27 @@ class BaseAliPay(object):
     def _verify_and_return_sync_response(self, raw_string, response_type):
         """
         return data if verification succeeded, else raise exception
+
+        failed response is like
+        {
+          "alipay_trade_query_response": {
+            "sub_code": "isv.invalid-app-id",
+            "code": "40002",
+            "sub_msg": "无效的AppID参数",
+            "msg": "Invalid Arguments"
+          }
+        }
         """
 
         response = json.loads(raw_string)
         result = response[response_type]
+        # raise exceptions
+        if "sign" not in response.keys():
+            raise AliPayException(
+                code=result.get("code", "0"),
+                message=response
+            )
+
         sign = response["sign"]
 
         # locate string to be signed
