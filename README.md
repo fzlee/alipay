@@ -45,47 +45,47 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
 
 #### Intialization
 ```python
-    from alipay import AliPay, ISVAliPay
+from alipay import AliPay, ISVAliPay
 
-    # Making sure your key file is adhered to standards.
-    # you may find examples at tests/certs/ali/ali_private_key.pem
-    app_private_key_string = open("/path/to/your/private/key.pem").read()
-    alipay_public_key_string = open("/path/to/alipay/public/key.pem").read()
+# Making sure your key file is adhered to standards.
+# you may find examples at tests/certs/ali/ali_private_key.pem
+app_private_key_string = open("/path/to/your/private/key.pem").read()
+alipay_public_key_string = open("/path/to/alipay/public/key.pem").read()
 
-    app_private_key_string = """
-        -----BEGIN RSA PRIVATE KEY-----
-        base64 encoded content
-        -----END RSA PRIVATE KEY-----
-        """
+app_private_key_string = """
+    -----BEGIN RSA PRIVATE KEY-----
+    base64 encoded content
+    -----END RSA PRIVATE KEY-----
+"""
 
-    alipay_public_key_string = """
-        -----BEGIN PUBLIC KEY-----
-        base64 encoded content
-        -----END PUBLIC KEY-----
-    """
-   
-    alipay = AliPay(
-      appid="",
-      app_notify_url=None,  # the default notify path
-      app_private_key_string=app_private_key_string, 
-      alipay_public_key_string=alipay_public_key_string  # alipay public key, do not use your public key!
-      sign_type="RSA" # RSA or RSA2
-      debug=False  # False by default
-    )
+alipay_public_key_string = """
+    -----BEGIN PUBLIC KEY-----
+    base64 encoded content
+    -----END PUBLIC KEY-----
+"""
 
-    
-    # If you don't know what ISV is, then forget about what I mentioned below
-    # either app_auth_code or app_auth_token should not be None
-    isv_alipay = ISVAliPay(
-      appid="",
-      app_notify_url=None,  # the default notify path
-      app_private_key_string="", 
-      alipay_public_key_string=alipay_public_key_string  # alipay public key, do not use your public key!
-      sign_type="RSA" # RSA or RSA2
-      debug=False  # False by default,
-      app_auth_code=None, 
-      app_auth_token=None
-    )
+alipay = AliPay(
+    appid="",
+    app_notify_url=None,  # the default notify path
+    app_private_key_string=app_private_key_string,
+    alipay_public_key_string=alipay_public_key_string  # alipay public key, do not use your public key!
+    sign_type="RSA" # RSA or RSA2
+    debug=False  # False by default
+)
+
+
+# If you don't know what ISV is, then forget about what I mentioned below
+# either app_auth_code or app_auth_token should not be None
+isv_alipay = ISVAliPay(
+    appid="",
+    app_notify_url=None,  # the default notify path
+    app_private_key_string="",
+    alipay_public_key_string=alipay_public_key_string  # alipay public key, do not use your public key!
+    sign_type="RSA" # RSA or RSA2
+    debug=False  # False by default,
+    app_auth_code=None,
+    app_auth_token=None
+)
 ```
 
 
@@ -95,7 +95,7 @@ Generally we will do such a translation:
 
     function_name = "api_" + alipay_function_name.replace(".", "_")
 
-according to alipay document, some paremeters in `biz_content` are optional and some are not. 
+according to alipay document, some paremeters in `biz_content` are optional and some are not.
 we defind functions in this way so that you can put those optional parameters in `kwargs`:
 ```
 def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
@@ -106,47 +106,47 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
 #### <a name="alipay.trade.page.pay"></a>[alipay.trade.page.pay](https://docs.open.alipay.com/270/105900/)
 
 ```python
-    # For Python 2 users(you should really think about Python 3), making sure non-ascii strings are utf-8 encoded
-    subject = u"测试订单".encode("utf8")
-    # For Python 3 users, just use the default string
-    subject = "测试订单"
+# For Python 2 users(you should really think about Python 3), making sure non-ascii strings are utf-8 encoded
+subject = u"测试订单".encode("utf8")
+# For Python 3 users, just use the default string
+subject = "测试订单"
 
-    # Pay via Web，open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
-    order_string = alipay.api_alipay_trade_page_pay    (
-        out_trade_no="20161112",
-        total_amount=0.01,
-        subject=subject,
-        return_url="https://example.com",
-        notify_url="https://example.com/notify" # this is optional 
-    )
+# Pay via Web，open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
+order_string = alipay.api_alipay_trade_page_pay    (
+    out_trade_no="20161112",
+    total_amount=0.01,
+    subject=subject,
+    return_url="https://example.com",
+    notify_url="https://example.com/notify" # this is optional
+)
 ```
 
 #### <a name="alipay.trade.wap.pay"></a>[alipay.trade.wap.pay](https://docs.open.alipay.com/60/104790)
 
 ```python
-    # Pay via WAP, open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
-    order_string = alipay.api_alipay_trade_wap_pay(
-        out_trade_no="20161112",
-        total_amount=0.01,
-        subject=subject,
-        return_url="http://example.com",
-        notify_url="https://example.com/notify" # this is optional 
-    )
+# Pay via WAP, open this url in your browser: https://openapi.alipay.com/gateway.do? + order_string
+order_string = alipay.api_alipay_trade_wap_pay(
+    out_trade_no="20161112",
+    total_amount=0.01,
+    subject=subject,
+    return_url="http://example.com",
+    notify_url="https://example.com/notify" # this is optional
+)
 ```
 
 #### <a name="alipay.trade.app.pay"></a>[alipay.trade.app.pay](https://docs.open.alipay.com/204/105465)
 ```python
-    # Pay via App，just pass order_string to your Android or iOS client
-    order_string = alipay.api_alipay_trade_app_pay(
-        out_trade_no="20161112",
-        total_amount=0.01,
-        subject=subject,
-        notify_url="https://example.com/notify" # this is optional 
-    )
+# Pay via App，just pass order_string to your Android or iOS client
+order_string = alipay.api_alipay_trade_app_pay(
+    out_trade_no="20161112",
+    total_amount=0.01,
+    subject=subject,
+    notify_url="https://example.com/notify" # this is optional
+)
 ```
 
 #### <a name="verification"></a>[Notification Validation](https://docs.open.alipay.com/58/103596/)
-Once an order is paid, you will get a POST request from alipay servers which informs you that the order is paid 
+Once an order is paid, you will get a POST request from alipay servers which informs you that the order is paid
 
 Here is a simple example for flask web server:
 
@@ -164,47 +164,46 @@ def hello_world():
     print(json.dumps(data))
     print(signature)
 
-    # verify 
+    # verify
     success = alipay.verify(data, signature)
     if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED" ):
         print("trade succeed")
     return 'Hello, World!'
-
 ```
 
 Here is a more general example for verification
 ```python
-    # gathering all parameters sent from alipay server, and put them in a dictionary called data
-    data = {
-          "subject": "testing order",
-          "gmt_payment": "2016-11-16 11:42:19",
-          "charset": "utf-8",
-          "seller_id": "xxxx",
-          "trade_status": "TRADE_SUCCESS",
-          "buyer_id": "xxxx",
-          "auth_app_id": "xxxx",
-          "buyer_pay_amount": "0.01",
-          "version": "1.0",
-          "gmt_create": "2016-11-16 11:42:18",
-          "trade_no": "xxxx",
-          "fund_bill_list": "[{\"amount\":\"0.01\",\"fundChannel\":\"ALIPAYACCOUNT\"}]",
-          "app_id": "xxxx",
-          "notify_time": "2016-11-16 11:42:19",
-          "point_amount": "0.00",
-          "total_amount": "0.01",
-          "notify_type": "trade_status_sync",
-          "out_trade_no": "xxxx",
-          "buyer_logon_id": "xxxx",
-          "notify_id": "xxxx",
-          "seller_email": "xxxx",
-          "receipt_amount": "0.01",
-          "invoice_amount": "0.01",
-          "sign": "xxx"
-        }
-    signature = data.pop("sign")
-    success = alipay.verify(data, signature)
-    if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED" ):
-        print("trade succeed")
+# gathering all parameters sent from alipay server, and put them in a dictionary called data
+data = {
+     "subject": "testing order",
+     "gmt_payment": "2016-11-16 11:42:19",
+     "charset": "utf-8",
+     "seller_id": "xxxx",
+     "trade_status": "TRADE_SUCCESS",
+     "buyer_id": "xxxx",
+     "auth_app_id": "xxxx",
+     "buyer_pay_amount": "0.01",
+     "version": "1.0",
+     "gmt_create": "2016-11-16 11:42:18",
+     "trade_no": "xxxx",
+     "fund_bill_list": "[{\"amount\":\"0.01\",\"fundChannel\":\"ALIPAYACCOUNT\"}]",
+     "app_id": "xxxx",
+     "notify_time": "2016-11-16 11:42:19",
+     "point_amount": "0.00",
+     "total_amount": "0.01",
+     "notify_type": "trade_status_sync",
+     "out_trade_no": "xxxx",
+     "buyer_logon_id": "xxxx",
+     "notify_id": "xxxx",
+     "seller_email": "xxxx",
+     "receipt_amount": "0.01",
+     "invoice_amount": "0.01",
+     "sign": "xxx"
+}
+signature = data.pop("sign")
+success = alipay.verify(data, signature)
+if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED" ):
+    print("trade succeed")
 ```
 
 #### <a name="alipay.trade.pay"></a>[alipay.trade.pay](https://docs.open.alipay.com/api_1/alipay.trade.pay)
@@ -213,13 +212,13 @@ Here is a more general example for verification
 alipay = AliPay(appid="", ...)
 
 result = alipay.api_alipay_trade_pay(
-    out_trade_no="out_trade_no", 
+    out_trade_no="out_trade_no",
     scene="bar_code/wave_code",
-    auth_code="auth_code", 
+    auth_code="auth_code",
     subject="subject",
     discountable_amount=10,
     total_amount=20,
-    notify_url="https://example.com/notify" # this is optional 
+    notify_url="https://example.com/notify" # this is optional
 )
 
 if  result["code"] == "10000":
@@ -271,34 +270,34 @@ if result["code"] == "10000":
 result = alipay.api_alipay_trade_fastpay_refund_query("20171120", out_trade_no="20171120")
 
 result = {
-    'code': '10000', 
-    'msg': 'Success', 
-    'out_request_no': '20171120', 
-    'out_trade_no': '20171120', 
-    'refund_amount': '20.00', 
-    'total_amount': '20.00', 
+    'code': '10000',
+    'msg': 'Success',
+    'out_request_no': '20171120',
+    'out_trade_no': '20171120',
+    'refund_amount': '20.00',
+    'total_amount': '20.00',
     'trade_no': '2017112021001004070200297107'
 }
 ```
 
 #### <a name="alipay.fund.trans.toaccount.transfer"></a>[alipay.fund.trans.toaccount.transfer](https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer)
 ```python
-    # transfer money to alipay account
-    result = alipay.api_alipay_fund_trans_toaccount_transfer(
-        datetime.now().strftime("%Y%m%d%H%M%S"),
-        payee_type="ALIPAY_LOGONID/ALIPAY_USERID",
-        payee_account="csqnji8117@sandbox.com",
-        amount=3.12
-    )
-    result = {'code': '10000', 'msg': 'Success', 'order_id': '', 'out_biz_no': '', 'pay_date': '2017-06-26 14:36:25'}
+# transfer money to alipay account
+result = alipay.api_alipay_fund_trans_toaccount_transfer(
+    datetime.now().strftime("%Y%m%d%H%M%S"),
+    payee_type="ALIPAY_LOGONID/ALIPAY_USERID",
+    payee_account="csqnji8117@sandbox.com",
+    amount=3.12
+)
+result = {'code': '10000', 'msg': 'Success', 'order_id': '', 'out_biz_no': '', 'pay_date': '2017-06-26 14:36:25'}
 ```
 
 #### <a name="alipay.fund.trans.order.query"></a> [alipay.fund.trans.order.query](https://docs.open.alipay.com/api_28/alipay.fund.trans.order.query)
 ```python
-   result = alipay.api_alipay_fund_trans_order_query(
-        out_biz_no="20170626152216"
-    )
-    print(result)
+result = alipay.api_alipay_fund_trans_order_query(
+    out_biz_no="20170626152216"
+)
+print(result)
 ```
 
 ## [ISV Integration](https://doc.open.alipay.com/doc2/detail?treeId=216&articleId=105193&docType=1)
@@ -307,27 +306,27 @@ Go through [the details](https://docs.open.alipay.com/common/105193) before you 
 
 #### alipay.open.auth.token.app
 ```
-    isv_alipay = ISVAliPay(
-        ...
-        app_auth_code="app_auth_code" 
-    )
+isv_alipay = ISVAliPay(
+    ...
+    app_auth_code="app_auth_code"
+)
 
-    response = isv_alipay.api_alipay_open_auth_token_app()
-    response = {
-      "code": "10000",
-      "msg": "Success",
-      "app_auth_token": "201708xxx",
-      "app_refresh_token": "201708xxx",
-      "auth_app_id": "appid",
-      "expires_in": 31536000,
-      "re_expires_in": 32140800,
-      "user_id": "2088xxxxx
-    }
+response = isv_alipay.api_alipay_open_auth_token_app()
+response = {
+    "code": "10000",
+    "msg": "Success",
+    "app_auth_token": "201708xxx",
+    "app_refresh_token": "201708xxx",
+    "auth_app_id": "appid",
+    "expires_in": 31536000,
+    "re_expires_in": 32140800,
+    "user_id": "2088xxxxx
+}
 ```
 
 #### alipay.open.auth.token.app.query
 ```
-    response = alipay_open_auth_token_app_query()
+response = alipay_open_auth_token_app_query()
 ```
 
 
@@ -376,4 +375,4 @@ alipay = AliPay(..., debug=True)
 #### 2017-05-26(version 1.0.0)
 * code refactoring, all functions are renamed
 * `alipay.trade.page.pay` is used instead of `create_direct_pay_by_user`
-* load key into memory, local key file access is needed for the 1st time 
+* load key into memory, local key file access is needed for the 1st time

@@ -125,10 +125,7 @@ class BaseAliPay(object):
         return sign
 
     def _ordered_data(self, data):
-        complex_keys = []
-        for key, value in data.items():
-            if isinstance(value, dict):
-                complex_keys.append(key)
+        complex_keys = [k for k, v in data.items() if isinstance(v, dict)]
 
         # 将字典类型的数据dump出来
         for key in complex_keys:
@@ -157,22 +154,17 @@ class BaseAliPay(object):
         if method in (
             "alipay.trade.app.pay", "alipay.trade.wap.pay", "alipay.trade.page.pay",
             "alipay.trade.pay", "alipay.trade.precreate"
-        ):
-            if self._app_notify_url:
-                data["notify_url"] = self._app_notify_url
-
-            if notify_url:
-                data["notify_url"] = notify_url
+        ) and (notify_url or self._app_notify_url):
+            data["notify_url"] = notify_url or self._app_notify_url
 
         return data
 
     def sign_data(self, data):
         data.pop("sign", None)
         # 排序后的字符串
-        unsigned_items = self._ordered_data(data)
-        unsigned_string = "&".join("{}={}".format(k, v) for k, v in unsigned_items)
-        sign = self._sign(unsigned_string)
         ordered_items = self._ordered_data(data)
+        unsigned_string = "&".join("{}={}".format(k, v) for k, v in ordered_items)
+        sign = self._sign(unsigned_string)
         quoted_string = "&".join("{}={}".format(k, quote_plus(v)) for k, v in ordered_items)
 
         # 获得最终的订单信息字符串
