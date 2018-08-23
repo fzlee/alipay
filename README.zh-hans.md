@@ -41,7 +41,8 @@ OpenSSL> exit
 ```
 
 在支付宝上下载的公钥是一个字符串，你需要在文本的首尾添加标记位 
-```(-----BEGIN PUBLIC KEY-----和-----END PUBLIC KEY-----) 
+```
+(-----BEGIN PUBLIC KEY-----和-----END PUBLIC KEY-----) 
 ```
 才能正常使用, 证书的格式你可以参考[这里](https://github.com/fzlee/alipay/blob/master/tests/certs/ali/ali_public_key.pem)
 
@@ -92,7 +93,7 @@ OpenSSL> exit
 对于一个支付宝的接口，比如`alipay.trade.page.pay`，则一般可以这么调用接口：`alipay.api_alipay_trade_page_pay()`.
 也就是说，我们做了这么一个转换:
 
-     内部函数名 =  alipay_ + 支付宝接口名.replace(".", "_")
+     内部函数名 =  api_ + 支付宝接口名.replace(".", "_")
 
 支付宝对于请求的biz_content,里面有一些参数必选，有一些可选。对于必选的参数，他们一般被明确定义在函数的参数里面。对于可选参数，他们一般被放在kwargs里面,然后被添加到biz_content里面去。比如`alipay.trade.page.pay`可以这么调用:
 ```python

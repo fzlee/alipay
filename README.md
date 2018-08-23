@@ -32,7 +32,7 @@ Or you may just follow this manual if not.
 pip install python-alipay-sdk --upgrade
 ```
 
-#### cert generation
+#### Cert generation
 ```bash
 # openssl
 OpenSSL> genrsa -out app_private_key.pem 2048  # the private key file
@@ -93,7 +93,7 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
 Given an alipay function, say `alipay.trade.page.pay`, we will defind a corresponding function `alipay.api_alipay_trade_page_pay()`
 Generally we will do such a translation:
 
-    function_name = "alipay_" + alipay_function_name.replace(".", "_")
+    function_name = "api_" + alipay_function_name.replace(".", "_")
 
 according to alipay document, some paremeters in `biz_content` are optional and some are not. 
 we defind functions in this way so that you can put those optional parameters in `kwargs`:
