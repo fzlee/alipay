@@ -17,6 +17,7 @@
 * [交易取消](#alipay.trade.precreate)
 * [退款](#alipay.trade.refund)
 * [统一退款查询](#alipay.trade.fastpay.refund.query)
+* [统一收单交易结算接口](#alipay.trade.order.settle)
 * [单笔转账到支付宝账户接口](#alipay.fund.trans.toaccount.transfer)
 * [查询转账订单接口](#alipay.fund.trans.order.query)
 * [ISV集成/生成app_auth_code](#alipay.open.auth.token.app)
@@ -293,6 +294,17 @@ result = {
 }
 ```
 
+#### <a name="alipay.trade.order.settle"></a>统一收单交易结算接口[alipay.trade.order.settle](https://docs.open.alipay.com/api_1/alipay.trade.order.settle/)
+
+```python
+result = alipay.api_alipay_trade_order_settle(
+    out_request_no,
+    trade_no,
+    royalty_parameters
+)
+```
+
+
 #### <a name="alipay.fund.trans.toaccount.transfer"></a>单笔转账到支付宝账户接口 [alipay.fund.trans.toaccount.transfer](https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer)
 ```python
 # transfer money to alipay account
@@ -356,6 +368,9 @@ alipay = AliPay(..., debug=True)
 ```
 
 ## Changelog
+
+#### 2018-08-23(version 1.8)
+* alipay.trade.order.settle
 
 #### 2018-03-16(version 1.7)
 * 使用`pycryptodomex`进行底层加解密运算，避免和旧的加密库冲突(感谢fakepoet)

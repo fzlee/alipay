@@ -16,6 +16,7 @@ So far, the following functions are supported:
 * [Cancel trade](#alipay.trade.precreate)
 * [Refund](#alipay.trade.refund)
 * [Query refund result](#alipay.trade.fastpay.refund.query)
+* [Order Settlement](#alipay.trade.order.settle)
 * [Transfer money to alipay account](#alipay.fund.trans.toaccount.transfer)
 * [Query money transfer result](#alipay.fund.trans.order.query)
 * [ISV integration/Get app_auth_code by app_auth_token](#alipay.open.auth.token.app)
@@ -264,7 +265,7 @@ if result["code"] == "10000":
     print("success")
 ```
 
-#### <a name="alipay.trade.fastpay.refund.query"></a>Query refund result[alipay.trade.fastpay.refund.query](https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query)
+#### <a name="alipay.trade.fastpay.refund.query"></a>[alipay.trade.fastpay.refund.query](https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query)
 
 ```python
 result = alipay.api_alipay_trade_fastpay_refund_query("20171120", out_trade_no="20171120")
@@ -278,6 +279,16 @@ result = {
     'total_amount': '20.00',
     'trade_no': '2017112021001004070200297107'
 }
+```
+
+#### <a name="alipay.trade.order.settle"></a>[alipay.trade.order.settle](https://docs.open.alipay.com/api_1/alipay.trade.order.settle/)
+
+```python
+result = alipay.api_alipay_trade_order_settle(
+    out_request_no,
+    trade_no,
+    royalty_parameters
+)
 ```
 
 #### <a name="alipay.fund.trans.toaccount.transfer"></a>[alipay.fund.trans.toaccount.transfer](https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer)
@@ -341,6 +352,9 @@ alipay = AliPay(..., debug=True)
 ```
 
 ## Changelog
+
+#### 2018-08-23(version 1.8)
+* alipay.trade.order.settle
 
 #### 2018-03-16(version 1.7)
 * Do encryption/decryption with `pycryptodomex`，which has not conflict with Pycrypto (many thanks to fakepoet)
