@@ -77,6 +77,9 @@ class AliPayTestCase(unittest.TestCase):
     def _prepare_alipay_fund_trans_order_query(self, alipay):
         return self._prepare_sync_response(alipay, "alipay_fund_trans_order_query_response")
 
+    def _prepare_alipay_trade_order_settle(self, alipay):
+        return self._prepare_sync_response(alipay, "alipay_trade_order_settle_response")
+
     def get_client(self, sign_type):
         return AliPay(
             appid="appid",
@@ -256,6 +259,19 @@ class AliPayTestCase(unittest.TestCase):
 
         alipay.api_alipay_fund_trans_order_query(
             "out_biz_no",
+        )
+
+        self.assertTrue(mock_urlopen.called)
+
+    @mock.patch("alipay.urlopen")
+    def test_alipay_trade_order_settle(self, mock_urlopen):
+        alipay = self.get_client("RSA2")
+        response = mock.Mock()
+        response.read.return_value = self._prepare_alipay_trade_order_settle(alipay)
+        mock_urlopen.return_value = response
+
+        alipay.api_alipay_trade_order_settle(
+            "out_biz_no", "trade_no", [{"parameters": "paramters"}]
         )
 
         self.assertTrue(mock_urlopen.called)
