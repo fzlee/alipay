@@ -556,20 +556,21 @@ class BaseAliPay(object):
 
     def _get_string_to_be_signed(self, raw_string, response_type):
         """
-        https://doc.open.alipay.com/docs/doc.htm?docType=1&articleId=106120
+        https://docs.open.alipay.com/200/106120
         从同步返回的接口里面找到待签名的字符串
         """
-        count, start = 0, raw_string.find("{", raw_string.find(response_type))
+        balance = 0
+        start = end = raw_string.find("{", raw_string.find(response_type))
         # 从response_type之后的第一个｛的下一位开始匹配，
-        # 如果是｛则count加1; 如果是｝而且count=0，就是待验签字符串的终点
+        # 如果是｛则balance加1; 如果是｝而且balance=0，就是待验签字符串的终点
         for i, c in enumerate(raw_string[start + 1 :], start + 1):
             if c == "{":
-                count += 1
+                balance += 1
             elif c == "}":
-                if count == 0:
+                if balance == 0:
                     end = i + 1
                     break
-                count -= 1
+                balance -= 1
         return raw_string[start:end]
 
 
