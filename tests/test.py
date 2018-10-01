@@ -10,7 +10,7 @@ import json
 import subprocess
 
 from alipay import AliPay, ISVAliPay
-from alipay.exceptions import AliPayValidationError
+from alipay.exceptions import AliPayValidationError, AliPayException
 from tests import helper
 from tests.compat import mock
 
@@ -46,6 +46,16 @@ class AliPayTestCase(unittest.TestCase):
         }
         return json.dumps(response).encode("utf-8")
 
+    def _prepare_failed_trade_query_responsy(self, alipay):
+        return json.dumps({
+            "alipay_trade_query_response": {
+                "sub_code": "isv.invalid-app-id",
+                "code": "40002",
+                "sub_msg": "无效的AppID参数",
+                "msg": "Invalid Arguments"
+            }
+        }).encode("utf8")
+
     def _prepare_precreate_face_to_face_response(self, alipay):
         return self._prepare_sync_response(alipay, "alipay_trade_precreate_response")
 
@@ -66,6 +76,9 @@ class AliPayTestCase(unittest.TestCase):
 
     def _prepare_alipay_fund_trans_order_query(self, alipay):
         return self._prepare_sync_response(alipay, "alipay_fund_trans_order_query_response")
+
+    def _prepare_alipay_trade_order_settle(self, alipay):
+        return self._prepare_sync_response(alipay, "alipay_trade_order_settle_response")
 
     def get_client(self, sign_type):
         return AliPay(
@@ -157,6 +170,19 @@ class AliPayTestCase(unittest.TestCase):
         self.assertTrue(mock_urlopen.called)
 
     @mock.patch("alipay.urlopen")
+    def test_handle_alipay_exception(self, mock_urlopen):
+        alipay = self.get_client("RSA2")
+        response = mock.Mock()
+        response.read.return_value = self._prepare_failed_trade_query_responsy(alipay)
+        mock_urlopen.return_value = response
+
+        with self.assertRaises(AliPayException):
+            alipay.api_alipay_trade_query(
+                out_trade_no="out_trade_no",
+            )
+        self.assertTrue(mock_urlopen.called)
+
+    @mock.patch("alipay.urlopen")
     def test_query(self, mock_urlopen):
         alipay = self.get_client("RSA2")
         response = mock.Mock()
@@ -233,6 +259,19 @@ class AliPayTestCase(unittest.TestCase):
 
         alipay.api_alipay_fund_trans_order_query(
             "out_biz_no",
+        )
+
+        self.assertTrue(mock_urlopen.called)
+
+    @mock.patch("alipay.urlopen")
+    def test_alipay_trade_order_settle(self, mock_urlopen):
+        alipay = self.get_client("RSA2")
+        response = mock.Mock()
+        response.read.return_value = self._prepare_alipay_trade_order_settle(alipay)
+        mock_urlopen.return_value = response
+
+        alipay.api_alipay_trade_order_settle(
+            "out_biz_no", "trade_no", [{"parameters": "paramters"}]
         )
 
         self.assertTrue(mock_urlopen.called)

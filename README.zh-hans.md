@@ -17,6 +17,7 @@
 * [交易取消](#alipay.trade.precreate)
 * [退款](#alipay.trade.refund)
 * [统一退款查询](#alipay.trade.fastpay.refund.query)
+* [统一收单交易结算接口](#alipay.trade.order.settle)
 * [单笔转账到支付宝账户接口](#alipay.fund.trans.toaccount.transfer)
 * [查询转账订单接口](#alipay.fund.trans.order.query)
 * [ISV集成/生成app_auth_code](#alipay.open.auth.token.app)
@@ -40,8 +41,14 @@ OpenSSL> rsa -in app_private_key.pem -pubout -out app_public_key.pem # 导出公
 OpenSSL> exit
 ```
 
+<<<<<<< HEAD
+在支付宝上下载的公钥是一个字符串，你需要在文本的首尾添加标记位 
+```
+(-----BEGIN PUBLIC KEY-----和-----END PUBLIC KEY-----) 
+=======
 在支付宝上下载的公钥是一个字符串，你需要在文本的首尾添加标记位
 ```(-----BEGIN PUBLIC KEY-----和-----END PUBLIC KEY-----)
+>>>>>>> 830ceef52574d3c2dc65617d6157b831ee751971
 ```
 才能正常使用, 证书的格式你可以参考[这里](https://github.com/fzlee/alipay/blob/master/tests/certs/ali/ali_public_key.pem)
 
@@ -91,7 +98,7 @@ isv_alipay = ISVAliPay(
 对于一个支付宝的接口，比如`alipay.trade.page.pay`，则一般可以这么调用接口：`alipay.api_alipay_trade_page_pay()`.
 也就是说，我们做了这么一个转换:
 
-     内部函数名 =  alipay_ + 支付宝接口名.replace(".", "_")
+     内部函数名 =  api_ + 支付宝接口名.replace(".", "_")
 
 支付宝对于请求的biz_content,里面有一些参数必选，有一些可选。对于必选的参数，他们一般被明确定义在函数的参数里面。对于可选参数，他们一般被放在kwargs里面,然后被添加到biz_content里面去。比如`alipay.trade.page.pay`可以这么调用:
 ```python
@@ -287,6 +294,17 @@ result = {
 }
 ```
 
+#### <a name="alipay.trade.order.settle"></a>统一收单交易结算接口[alipay.trade.order.settle](https://docs.open.alipay.com/api_1/alipay.trade.order.settle/)
+
+```python
+result = alipay.api_alipay_trade_order_settle(
+    out_request_no,
+    trade_no,
+    royalty_parameters
+)
+```
+
+
 #### <a name="alipay.fund.trans.toaccount.transfer"></a>单笔转账到支付宝账户接口 [alipay.fund.trans.toaccount.transfer](https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer)
 ```python
 # transfer money to alipay account
@@ -350,6 +368,9 @@ alipay = AliPay(..., debug=True)
 ```
 
 ## Changelog
+
+#### 2018-08-23(version 1.8)
+* alipay.trade.order.settle
 
 #### 2018-03-16(version 1.7)
 * 使用`pycryptodomex`进行底层加解密运算，避免和旧的加密库冲突(感谢fakepoet)

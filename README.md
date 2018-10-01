@@ -16,6 +16,7 @@ So far, the following functions are supported:
 * [Cancel trade](#alipay.trade.precreate)
 * [Refund](#alipay.trade.refund)
 * [Query refund result](#alipay.trade.fastpay.refund.query)
+* [Order Settlement](#alipay.trade.order.settle)
 * [Transfer money to alipay account](#alipay.fund.trans.toaccount.transfer)
 * [Query money transfer result](#alipay.fund.trans.order.query)
 * [ISV integration/Get app_auth_code by app_auth_token](#alipay.open.auth.token.app)
@@ -32,7 +33,7 @@ Or you may just follow this manual if not.
 pip install python-alipay-sdk --upgrade
 ```
 
-#### cert generation
+#### Cert generation
 ```bash
 # openssl
 OpenSSL> genrsa -out app_private_key.pem 2048  # the private key file
@@ -93,7 +94,7 @@ isv_alipay = ISVAliPay(
 Given an alipay function, say `alipay.trade.page.pay`, we will defind a corresponding function `alipay.api_alipay_trade_page_pay()`
 Generally we will do such a translation:
 
-    function_name = "alipay_" + alipay_function_name.replace(".", "_")
+    function_name = "api_" + alipay_function_name.replace(".", "_")
 
 according to alipay document, some paremeters in `biz_content` are optional and some are not.
 we defind functions in this way so that you can put those optional parameters in `kwargs`:
@@ -264,7 +265,7 @@ if result["code"] == "10000":
     print("success")
 ```
 
-#### <a name="alipay.trade.fastpay.refund.query"></a>Query refund result[alipay.trade.fastpay.refund.query](https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query)
+#### <a name="alipay.trade.fastpay.refund.query"></a>[alipay.trade.fastpay.refund.query](https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query)
 
 ```python
 result = alipay.api_alipay_trade_fastpay_refund_query("20171120", out_trade_no="20171120")
@@ -278,6 +279,16 @@ result = {
     'total_amount': '20.00',
     'trade_no': '2017112021001004070200297107'
 }
+```
+
+#### <a name="alipay.trade.order.settle"></a>[alipay.trade.order.settle](https://docs.open.alipay.com/api_1/alipay.trade.order.settle/)
+
+```python
+result = alipay.api_alipay_trade_order_settle(
+    out_request_no,
+    trade_no,
+    royalty_parameters
+)
 ```
 
 #### <a name="alipay.fund.trans.toaccount.transfer"></a>[alipay.fund.trans.toaccount.transfer](https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer)
@@ -341,6 +352,9 @@ alipay = AliPay(..., debug=True)
 ```
 
 ## Changelog
+
+#### 2018-08-23(version 1.8)
+* alipay.trade.order.settle
 
 #### 2018-03-16(version 1.7)
 * Do encryption/decryption with `pycryptodomex`，which has not conflict with Pycrypto (many thanks to fakepoet)

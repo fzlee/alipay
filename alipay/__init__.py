@@ -499,13 +499,52 @@ class BaseAliPay(object):
             raw_string, "alipay_fund_trans_order_query_response"
         )
 
+    def api_alipay_trade_order_settle(
+        self,
+        out_request_no,
+        trade_no,
+        royalty_parameters,
+        **kwargs
+    ):
+        biz_content = {
+            "out_request_no": out_request_no,
+            "trade_no": trade_no,
+            "royalty_parameters": royalty_parameters,
+        }
+        biz_content.update(kwargs)
+
+        data = self.build_body("alipay.trade.order.settle", biz_content)
+
+        url = self._gateway + "?" + self.sign_data(data)
+        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
+        return self._verify_and_return_sync_response(
+            raw_string, "alipay_trade_order_settle_response"
+        )
+
     def _verify_and_return_sync_response(self, raw_string, response_type):
         """
         return data if verification succeeded, else raise exception
+
+        failed response is like
+        {
+          "alipay_trade_query_response": {
+            "sub_code": "isv.invalid-app-id",
+            "code": "40002",
+            "sub_msg": "无效的AppID参数",
+            "msg": "Invalid Arguments"
+          }
+        }
         """
 
         response = json.loads(raw_string)
         result = response[response_type]
+        # raise exceptions
+        if "sign" not in response.keys():
+            raise AliPayException(
+                code=result.get("code", "0"),
+                message=response
+            )
+
         sign = response["sign"]
 
         # locate string to be signed
