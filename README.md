@@ -42,6 +42,7 @@ OpenSSL> exit
 ```
 
 The public key we download from open.alipay.com is a string, which cannot be recognied by this lib directly, making sure it's surrounded with `-----BEGIN PUBLIC KEY-----` and `-----END PUBLIC KEY-----`
+
 There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/certs/ali/ali_public_key.pem) for your reference
 
 #### Intialization
@@ -69,7 +70,8 @@ alipay = AliPay(
     appid="",
     app_notify_url=None,  # the default notify path
     app_private_key_string=app_private_key_string,
-    alipay_public_key_string=alipay_public_key_string  # alipay public key, do not use your public key!
+    # alipay public key, do not use your public key!
+    alipay_public_key_string=alipay_public_key_string,
     sign_type="RSA" # RSA or RSA2
     debug=False  # False by default
 )
@@ -81,7 +83,8 @@ isv_alipay = ISVAliPay(
     appid="",
     app_notify_url=None,  # the default notify path
     app_private_key_string="",
-    alipay_public_key_string=alipay_public_key_string  # alipay public key, do not use your public key!
+    # alipay public key, do not use your public key!
+    alipay_public_key_string=alipay_public_key_string,
     sign_type="RSA" # RSA or RSA2
     debug=False  # False by default,
     app_auth_code=None,
@@ -92,12 +95,13 @@ isv_alipay = ISVAliPay(
 
 #### Naming convention
 Given an alipay function, say `alipay.trade.page.pay`, we will defind a corresponding function `alipay.api_alipay_trade_page_pay()`
+
 Generally we will do such a translation:
 
     function_name = "api_" + alipay_function_name.replace(".", "_")
 
-according to alipay document, some paremeters in `biz_content` are optional and some are not.
-we defind functions in this way so that you can put those optional parameters in `kwargs`:
+According to alipay document, some paremeters in `biz_content` are optional and some are not.
+We defind functions in this way so that you can put those optional parameters in `kwargs`:
 ```
 def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
     ...
@@ -160,6 +164,7 @@ app = Flask(__name__)
 @app.route('/', methods=["GET", "POST"])
 def hello_world():
     data = request.form.to_dict()
+    # sign must be poped out
     signature = data.pop("sign")
 
     print(json.dumps(data))
@@ -337,7 +342,7 @@ response = {
 
 #### alipay.open.auth.token.app.query
 ```
-response = alipay_open_auth_token_app_query()
+response = isv_alipay.alipay_open_auth_token_app_query()
 ```
 
 
