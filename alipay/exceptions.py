@@ -18,6 +18,9 @@ class AliPayException(Exception):
     def __unicode__(self):
         return u"AliPayException<code:{}, message:{}>".format(self.__code, self.__message)
 
+    def __str__(self):
+        return u"AliPayException<code:{}, message:{}>".format(self.__code, self.__message)
+
 
 class AliPayValidationError(Exception):
     pass
