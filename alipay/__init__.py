@@ -180,9 +180,13 @@ class BaseAliPay(object):
         else:
             digest = SHA256.new()
         digest.update(raw_content.encode("utf8"))
-        if signer.verify(digest, decodebytes(signature.encode("utf8"))):
-            return True
-        return False
+
+        try:
+            signer.verify(digest, decodebytes(signature.encode("utf8")))
+        except ValueError:
+            return False
+
+        return True
 
     def verify(self, data, signature):
         if "sign_type" in data:
