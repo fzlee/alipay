@@ -306,7 +306,13 @@ result = alipay.api_alipay_fund_trans_toaccount_transfer(
     payee_account="csqnji8117@sandbox.com",
     amount=3.12
 )
-result = {'code': '10000', 'msg': 'Success', 'order_id': '', 'out_biz_no': '', 'pay_date': '2017-06-26 14:36:25'}
+result = {
+    'code': '10000', 
+    'msg': 'Success', 
+    'order_id': '', 
+    'out_biz_no': '', 
+    'pay_date': '2017-06-26 14:36:25'
+}
 ```
 
 #### <a name="alipay.fund.trans.order.query"></a> [alipay.fund.trans.order.query](https://docs.open.alipay.com/api_28/alipay.fund.trans.order.query)
