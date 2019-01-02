@@ -232,7 +232,7 @@ if  result["code"] == "10000":
     print("Order is paid")
 ```
 
-#### <a name="alipay.trade.precreate"></a>[alipay.trade.precreate](https://docs.open.alipay.com/194/105203/)
+#### <a name="alipay.trade.precreate"></a>[alipay.trade.precreate/alipay.trade.cancel/alipay.trade.query](https://docs.open.alipay.com/194/105203/)
 ```python
 alipay = AliPay(appid="", ...)
 
