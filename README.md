@@ -70,20 +70,20 @@ alipay = AliPay(
     appid="",
     app_notify_url=None,  # the default notify path
     app_private_key_string=app_private_key_string,
-    # alipay public key, do not use your public key!
+    # alipay public key, do not use your own public key!
     alipay_public_key_string=alipay_public_key_string,
     sign_type="RSA" # RSA or RSA2
     debug=False  # False by default
 )
 
 
-# If you don't know what ISV is, then forget about what I mentioned below
+# Forget about what I mentioned below if you don't know what ISV is
 # either app_auth_code or app_auth_token should not be None
 isv_alipay = ISVAliPay(
     appid="",
     app_notify_url=None,  # the default notify path
     app_private_key_string="",
-    # alipay public key, do not use your public key!
+    # alipay public key, do not use your own public key!
     alipay_public_key_string=alipay_public_key_string,
     sign_type="RSA" # RSA or RSA2
     debug=False  # False by default,
@@ -111,7 +111,8 @@ def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
 #### <a name="alipay.trade.page.pay"></a>[alipay.trade.page.pay](https://docs.open.alipay.com/270/105900/)
 
 ```python
-# For Python 2 users(you should really think about Python 3), making sure non-ascii strings are utf-8 encoded
+# For Python 2 users(you should really think about Python 3), 
+# making sure non-ascii strings are utf-8 encoded
 subject = u"测试订单".encode("utf8")
 # For Python 3 users, just use the default string
 subject = "测试订单"
@@ -151,7 +152,7 @@ order_string = alipay.api_alipay_trade_app_pay(
 ```
 
 #### <a name="verification"></a>[Notification Validation](https://docs.open.alipay.com/58/103596/)
-Once an order is paid, you will get a POST request from alipay servers which informs you that the order is paid
+Once an order is paid, a POST request will be sent to tell you the information
 
 Here is a simple example for flask web server:
 
