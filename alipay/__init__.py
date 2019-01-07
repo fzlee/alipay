@@ -523,7 +523,10 @@ class BaseAliPay(object):
 
     def _verify_and_return_sync_response(self, raw_string, response_type):
         """
-        return data if verification succeeded, else raise exception
+        return data if verification succeeded, raise exception if not
+
+        As to ssue #69, json.loads(raw_string)[response_type] should not be return directly,
+        use json.loads(plain_content) instead
 
         failed response is like
         {
@@ -537,9 +540,9 @@ class BaseAliPay(object):
         """
 
         response = json.loads(raw_string)
-        result = response[response_type]
         # raise exceptions
         if "sign" not in response.keys():
+            result = response[response_type]
             raise AliPayException(
                 code=result.get("code", "0"),
                 message=response
@@ -548,11 +551,11 @@ class BaseAliPay(object):
         sign = response["sign"]
 
         # locate string to be signed
-        raw_string = self._get_string_to_be_signed(raw_string, response_type)
+        plain_content = self._get_string_to_be_signed(raw_string, response_type)
 
-        if not self._verify(raw_string, sign):
+        if not self._verify(plain_content, sign):
             raise AliPayValidationError
-        return result
+        return json.loads(plain_content)
 
     def _get_string_to_be_signed(self, raw_string, response_type):
         """
@@ -563,7 +566,7 @@ class BaseAliPay(object):
         start = end = raw_string.find("{", raw_string.find(response_type))
         # 从response_type之后的第一个｛的下一位开始匹配，
         # 如果是｛则balance加1; 如果是｝而且balance=0，就是待验签字符串的终点
-        for i, c in enumerate(raw_string[start + 1 :], start + 1):
+        for i, c in enumerate(raw_string[start + 1:], start + 1):
             if c == "{":
                 balance += 1
             elif c == "}":

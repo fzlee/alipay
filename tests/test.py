@@ -369,6 +369,28 @@ class AliPayTestCase(unittest.TestCase):
             alipay_public_key_path=self._app_public_key_path,
         )
 
+    def test_verify_and_return_sync_response(self):
+        """
+        test for issue#69
+        """
+        alipay = self.get_client("RSA2")
+        response_data = {
+            "should_be_true": True
+        }
+
+        sign = alipay._sign(json.dumps(response_data))
+        raw_string = """
+        {
+            "response": {"should_be_true": true},
+            "response": {"should_be_true": false},
+            "sign": "sign_data"
+        }
+        """
+
+        raw_string = raw_string.replace("sign_data", sign)
+        result = alipay._verify_and_return_sync_response(raw_string, "response")
+        self.assertTrue(result["should_be_true"])
+
     def test_get_string_to_be_signed(self):
         alipay = self.get_client("RSA2")
 

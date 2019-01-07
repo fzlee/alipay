@@ -365,6 +365,9 @@ alipay = AliPay(..., debug=True)
 
 ## Changelog
 
+#### 2019-01-07(version 1.9)
+* potential security issue fix
+
 #### 2018-08-23(version 1.8)
 * alipay.trade.order.settle
 
