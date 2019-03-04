@@ -410,7 +410,7 @@ class BaseAliPay(object):
     def api_alipay_trade_close(self, out_trade_no=None, trade_no=None, operator_id=None):
         """
         response = {
-        "alipay_trade_cancel_response": {
+        "alipay_trade_close_response": {
             "msg": "Success",
             "sub_code": "ACQ.TRADE_HAS_SUCCESS",
             "code": "10000",
