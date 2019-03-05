@@ -79,8 +79,8 @@ alipay = AliPay(
 )
 
 
-# If you don't know what ISV is, then forget about what I mentioned below
-# either app_auth_code or app_auth_token should not be None
+#  如果您没有听说过ISV， 那么以下部分不用看了
+# app_auth_code或app_auth_token二者需要填入一个
 isv_alipay = ISVAliPay(
     appid="",
     app_notify_url=None,  # 默认回调url
