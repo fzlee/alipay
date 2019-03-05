@@ -79,7 +79,7 @@ alipay = AliPay(
 )
 
 
-#  如果您没有听说过ISV， 那么以下部分不用看了
+# 如果您没有听说过ISV， 那么以下部分不用看了
 # app_auth_code或app_auth_token二者需要填入一个
 isv_alipay = ISVAliPay(
     appid="",
