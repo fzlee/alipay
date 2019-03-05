@@ -406,7 +406,37 @@ class BaseAliPay(object):
         url = self._gateway + "?" + self.sign_data(data)
         raw_string = urlopen(url, timeout=15).read().decode("utf-8")
         return self._verify_and_return_sync_response(raw_string, "alipay_trade_cancel_response")
+    
+    def api_alipay_trade_close(self, out_trade_no=None, trade_no=None, operator_id=None):
+        """
+        response = {
+        "alipay_trade_close_response": {
+            "msg": "Success",
+            "sub_code": "ACQ.TRADE_HAS_SUCCESS",
+            "code": "10000",
+            "sub_msg": "交易已被支付",
+            "sign": "sign"
+          }
+        }
+        """
 
+        assert (out_trade_no is not None) or (trade_no is not None),\
+            "Both trade_no and out_trade_no are None"
+
+        biz_content = {}
+        if out_trade_no:
+            biz_content["out_trade_no"] = out_trade_no
+        if trade_no:
+            biz_content["trade_no"] = trade_no
+        if operator_id:
+            biz_content["operator_id"] = operator_id
+
+        data = self.build_body("alipay.trade.close", biz_content)
+
+        url = self._gateway + "?" + self.sign_data(data)
+        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
+        return self._verify_and_return_sync_response(raw_string, "alipay_trade_close_response")
+    
     def api_alipay_trade_precreate(self, subject, out_trade_no, total_amount, **kwargs):
         """
         success response  = {
