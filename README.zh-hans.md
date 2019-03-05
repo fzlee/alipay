@@ -18,6 +18,7 @@
 * [退款](#alipay.trade.refund)
 * [统一退款查询](#alipay.trade.fastpay.refund.query)
 * [统一收单交易结算接口](#alipay.trade.order.settle)
+* [统一收单交易关闭接口](#alipay.trade.close)
 * [单笔转账到支付宝账户接口](#alipay.fund.trans.toaccount.transfer)
 * [查询转账订单接口](#alipay.fund.trans.order.query)
 * [ISV集成/生成app_auth_code](#alipay.open.auth.token.app)
@@ -307,6 +308,23 @@ result = alipay.api_alipay_trade_order_settle(
 )
 ```
 
+#### <a name="alipay.trade.close"></a>[统一收单交易关闭接口](https://docs.open.alipay.com/api_1/alipay.trade.close)
+
+```python
+
+result = alipay.api_alipay_trade_close(
+    trace_no="xxx",
+    out_trade_no="xxx",
+    operator_id="this is optional"
+)
+
+result = {
+     "code": "10000",
+      "msg": "Success",
+      "trade_no": "2013112111001004500000675971",
+      "out_trade_no": "YX_001"
+}
+```
 
 #### <a name="alipay.fund.trans.toaccount.transfer"></a>单笔转账到支付宝账户接口 [alipay.fund.trans.toaccount.transfer](https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer)
 ```python
@@ -371,6 +389,9 @@ alipay = AliPay(..., debug=True)
 ```
 
 ## Changelog
+
+#### 2019-03-05(version 1.10)
+* `alipay.trade.close`(感谢iv8)
 
 #### 2019-01-07(version 1.9)
 修复潜在的安全问题

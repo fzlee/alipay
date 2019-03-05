@@ -17,6 +17,7 @@ So far, the following functions are supported:
 * [Refund](#alipay.trade.refund)
 * [Query refund result](#alipay.trade.fastpay.refund.query)
 * [Order Settlement](#alipay.trade.order.settle)
+* [Close Order](#alipay.trade.close)
 * [Transfer money to alipay account](#alipay.fund.trans.toaccount.transfer)
 * [Query money transfer result](#alipay.fund.trans.order.query)
 * [ISV integration/Get app_auth_code by app_auth_token](#alipay.open.auth.token.app)
@@ -297,6 +298,25 @@ result = alipay.api_alipay_trade_order_settle(
 )
 ```
 
+#### <a name="alipay.trade.close"></a>[alipay.trade.close](https://docs.open.alipay.com/api_1/alipay.trade.close)
+
+```python
+
+result = alipay.api_alipay_trade_close(
+    trace_no="xxx",
+    out_trade_no="xxx",
+    operator_id="this is optional"
+)
+
+result = {
+     "code": "10000",
+      "msg": "Success",
+      "trade_no": "2013112111001004500000675971",
+      "out_trade_no": "YX_001"
+}
+```
+
+
 #### <a name="alipay.fund.trans.toaccount.transfer"></a>[alipay.fund.trans.toaccount.transfer](https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer)
 ```python
 # transfer money to alipay account
@@ -364,6 +384,9 @@ alipay = AliPay(..., debug=True)
 ```
 
 ## Changelog
+
+#### 2019-03-05(version 1.10)
+* `alipay.trade.close`(thanks to iv8)
 
 #### 2019-01-07(version 1.9)
 * potential security issue fix
