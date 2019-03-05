@@ -320,9 +320,9 @@ result = alipay.api_alipay_trade_close(
 
 result = {
      "code": "10000",
-      "msg": "Success",
-      "trade_no": "2013112111001004500000675971",
-      "out_trade_no": "YX_001"
+     "msg": "Success",
+     "trade_no": "2013112111001004500000675971",
+     "out_trade_no": "YX_001"
 }
 ```
 
