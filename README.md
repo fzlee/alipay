@@ -46,7 +46,7 @@ The public key we download from open.alipay.com is a string, which cannot be rec
 
 There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/certs/ali/ali_public_key.pem) for your reference
 
-#### Intialization
+#### Initialization
 ```python
 from alipay import AliPay, ISVAliPay
 
