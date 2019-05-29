@@ -73,7 +73,7 @@ alipay = AliPay(
     app_private_key_string=app_private_key_string,
     # alipay public key, do not use your own public key!
     alipay_public_key_string=alipay_public_key_string,
-    sign_type="RSA" # RSA or RSA2
+    sign_type="RSA", # RSA or RSA2
     debug=False  # False by default
 )
 
