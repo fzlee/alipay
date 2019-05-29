@@ -552,12 +552,12 @@ class BaseAliPay(object):
 
     def _verify_and_return_sync_response(self, raw_string, response_type):
         """
-        return data if verification succeeded, raise exception if not
+        return response if verification succeeded, raise exception if not
 
-        As to ssue #69, json.loads(raw_string)[response_type] should not be return directly,
+        As to issue #69, json.loads(raw_string)[response_type] should not be returned directly,
         use json.loads(plain_content) instead
 
-        failed response is like
+        failed response is like this
         {
           "alipay_trade_query_response": {
             "sub_code": "isv.invalid-app-id",
@@ -574,7 +574,7 @@ class BaseAliPay(object):
             result = response[response_type]
             raise AliPayException(
                 code=result.get("code", "0"),
-                message=response
+                message=raw_string
             )
 
         sign = response["sign"]
