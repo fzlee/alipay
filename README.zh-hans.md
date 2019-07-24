@@ -184,6 +184,26 @@ def hello_world():
         print("trade succeed")
 ```
 
+Django版的
+```python
+
+def hello_world(request):
+    # for django users
+    data = reuqest.dict()
+    # for rest_framework users
+    data = reuqest.data
+
+    signature = data.pop("sign")
+
+    # verification
+    success = alipay.verify(data, signature)
+    if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED" ):
+        print("trade succeed")
+    return 'Hello, World!'
+```
+
+
+
 一般而言，可以这样验证回调通知
 ```python
 # 验证alipay的异步通知，data来自支付宝回调POST 给你的data，字典格式.

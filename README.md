@@ -102,7 +102,7 @@ Generally we will do such a translation:
     function_name = "api_" + alipay_function_name.replace(".", "_")
 
 According to alipay document, some paremeters in `biz_content` are optional and some are not.
-We defind functions in this way so that you can put those optional parameters in `kwargs`:
+We defind functions in this way so that you can put those optional parameters into `kwargs`:
 ```
 def api_alipay_xxx(self, out_trade, total_amount, **kwargs):
     ...
@@ -179,9 +179,27 @@ def hello_world():
     return 'Hello, World!'
 ```
 
+And also an example for Django
+```python
+
+def hello_world(request):
+    # for django users
+    data = reuqets.dict()
+    # for rest_framework users
+    data = reuqest.data
+
+    signature = data.pop("sign")
+
+    # verification
+    success = alipay.verify(data, signature)
+    if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED" ):
+        print("trade succeed")
+    return 'Hello, World!'
+```
+
 Here is a more general example for verification
 ```python
-# gathering all parameters sent from alipay server, and put them in a dictionary called data
+# gathering all parameters sent from alipay server, and put them into a dictionary called data
 data = {
      "subject": "testing order",
      "gmt_payment": "2016-11-16 11:42:19",
@@ -395,7 +413,7 @@ alipay = AliPay(..., debug=True)
 * alipay.trade.order.settle
 
 #### 2018-03-16(version 1.7)
-* Do encryption/decryption with `pycryptodomex`，which has not conflict with Pycrypto (many thanks to fakepoet)
+* Do encryption/decryption with `pycryptodomex`，which has no conflict with Pycrypto (many thanks to fakepoet)
 
 #### 2018-01-23(version 1.6)
 * initialize Alipay instance with key string
