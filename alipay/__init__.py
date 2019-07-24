@@ -436,7 +436,7 @@ class BaseAliPay(object):
         raw_string = urlopen(url, timeout=15).read().decode("utf-8")
         return self._verify_and_return_sync_response(raw_string, "alipay_trade_close_response")
 
-    def api_alipay_trade_precreate(self, subject, out_trade_no, total_amount, **kwargs):
+    def api_alipay_trade_precreate(self, subject, out_trade_no, total_amount, notify_url=None, **kwargs):
         """
         success response  = {
           "alipay_trade_precreate_response": {
@@ -465,7 +465,7 @@ class BaseAliPay(object):
             "subject": subject
         }
         biz_content.update(**kwargs)
-        data = self.build_body("alipay.trade.precreate", biz_content)
+        data = self.build_body("alipay.trade.precreate", biz_content, notify_url=notify_url)
 
         url = self._gateway + "?" + self.sign_data(data)
         raw_string = urlopen(url, timeout=15).read().decode("utf-8")
