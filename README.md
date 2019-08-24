@@ -184,9 +184,9 @@ And also an example for Django
 
 def hello_world(request):
     # for django users
-    data = reuqets.dict()
+    data = request.dict()
     # for rest_framework users
-    data = reuqest.data
+    data = request.data
 
     signature = data.pop("sign")
 
