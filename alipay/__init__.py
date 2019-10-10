@@ -10,9 +10,23 @@ from datetime import datetime
 from Cryptodome.Signature import PKCS1_v1_5
 from Cryptodome.Hash import SHA, SHA256
 from Cryptodome.PublicKey import RSA
+import hashlib
+import OpenSSL
 
 from .compat import quote_plus, urlopen, decodebytes, encodebytes, b
 from .exceptions import AliPayException, AliPayValidationError
+
+
+# 常见加密算法
+CryptoAlgSet = (
+    b'rsaEncryption',
+    b'md2WithRSAEncryption',
+    b'md5WithRSAEncryption',
+    b'sha1WithRSAEncryption',
+    b'sha256WithRSAEncryption',
+    b'sha384WithRSAEncryption',
+    b'sha512WithRSAEncryption'
+)
 
 
 class BaseAliPay(object):
@@ -608,6 +622,120 @@ class BaseAliPay(object):
 
 class AliPay(BaseAliPay):
     pass
+
+
+class DCAliPay(AliPay):
+    """
+    数字证书 (digital certificate) 版本
+    """
+    def __init__(
+        self,
+        appid,
+        app_notify_url,
+        app_private_key_string,
+        app_public_key_cert_string,
+        alipay_public_key_cert_string,
+        alipay_root_cert_string,
+        sign_type="RSA2",
+        debug=False
+    ):
+        """
+        初始化
+        DCAlipay(
+            appid='',
+            app_notify_url='http://example.com',
+            app_private_key_string='',
+            app_public_key_cert_string='',
+            alipay_public_key_cert_sring='',
+            aplipay_root_cert_string='',
+        )
+        """
+        self._app_public_key_cert_string = app_public_key_cert_string
+        self._alipay_public_key_cert_string = alipay_public_key_cert_string
+        self._alipay_root_cert_string = alipay_root_cert_string
+        alipay_public_key_string = self.load_alipay_public_key_string()
+        super().__init__(
+            appid=appid,
+            app_notify_url=app_notify_url,
+            app_private_key_string=app_private_key_string,
+            alipay_public_key_string=alipay_public_key_string,
+            sign_type=sign_type,
+            debug=debug
+        )
+
+    def api_alipay_open_app_alipaycert_download(self, alipay_cert_sn):
+        """
+        下载支付宝证书
+        验签使用，支付宝公钥证书无感知升级机制
+        """
+        biz_content = {
+            "alipay_cert_sn": alipay_cert_sn
+        }
+        data = self.build_body("alipay.open.app.alipaycert.download", biz_content)
+        return self.sign_data(data)
+
+    def build_body(self, *args, **kwargs):
+        data = super(AliPay, self).build_body(*args, **kwargs)
+        data["app_cert_sn"] = self._app_cert_sn
+        data["alipay_root_cert_sn"] = self._alipay_root_cert_sn
+        return data
+
+    def load_alipay_public_key_string(self):
+        cert = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, self._alipay_public_key_cert_string)
+        return OpenSSL.crypto.dump_publickey(OpenSSL.crypto.FILETYPE_PEM, cert.get_pubkey()).decode("utf-8")
+
+    @staticmethod
+    def get_cert_sn(cert):
+        """
+        获取证书 SN 算法
+        """
+        cert = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, cert)
+        certIssue = cert.get_issuer()
+        name = 'CN={},OU={},O={},C={}'.format(certIssue.CN, certIssue.OU, certIssue.O, certIssue.C)
+        string = name + str(cert.get_serial_number())
+        m = hashlib.md5()
+        m.update(bytes(string, encoding="utf8"))
+        return m.hexdigest()
+
+    @staticmethod
+    def read_pem_cert_chain(certContent):
+        """解析根证书"""
+        certs = list()
+        for c in certContent.split('\n\n'):  # 根证书中，每个 cert 中间有两个回车间隔
+            cert = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, c)
+            certs.append(cert)
+        return certs
+
+    @staticmethod
+    def get_root_cert_sn(rootCert):
+        """ 根证书 SN 算法"""
+        certs = DCAliPay.read_pem_cert_chain(rootCert)
+        rootCertSN = None
+        for cert in certs:
+            try:
+                sigAlg = cert.get_signature_algorithm()
+            except ValueError:
+                continue
+            if sigAlg in CryptoAlgSet:
+                certIssue = cert.get_issuer()
+                name = 'CN={},OU={},O={},C={}'.format(certIssue.CN, certIssue.OU, certIssue.O, certIssue.C)
+                string = name + str(cert.get_serial_number())
+                m = hashlib.md5()
+                m.update(bytes(string, encoding="utf8"))
+                certSN = m.hexdigest()
+                if not rootCertSN:
+                    rootCertSN = certSN
+                else:
+                    rootCertSN = rootCertSN + '_' + certSN
+        return rootCertSN
+
+    @property
+    def _app_cert_sn(self):
+        return self.get_cert_sn(self._app_public_key_cert_string)
+
+    @property
+    def _alipay_root_cert_sn(self):
+        return self.get_root_cert_sn(self._alipay_root_cert_string)
 
 
 class ISVAliPay(BaseAliPay):
