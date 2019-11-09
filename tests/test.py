@@ -5,12 +5,12 @@
     ~~~~~~~~~~
 
 """
-import unittest
 import json
 import subprocess
+import unittest
 
 from alipay import AliPay, ISVAliPay
-from alipay.exceptions import AliPayValidationError, AliPayException
+from alipay.exceptions import AliPayException, AliPayValidationError
 from tests import helper
 from tests.compat import mock
 
@@ -314,24 +314,24 @@ class AliPayTestCase(unittest.TestCase):
 
     def test_encoding_verify(self):
         data = {
-          "seller_email": "olfwxa9760@sandbox.com",
-          "trade_no": "2017041121001004070200183979",
-          "seller_id": "2088102179075543",
-          "total_amount": "12.00",
-          "buyer_id": "2088102169481075",
-          "buyer_logon_id": "csq***@sandbox.com",
-          "charset": "utf-8",
-          "app_id": "2016101100660467",
-          "auth_app_id": "2016101100660467",
-          "gmt_create": "2017-04-11 14:55:44",
-          "version": "1.0",
-          "sign_type": "RSA2",
-          "out_trade_no": "20170411145511",
-          "notify_time": "2017-04-11 14:55:44",
-          "trade_status": "WAIT_BUYER_PAY",
-          "notify_id": "4e5a35340926d9e4405f4f7b75b5d45gji",
-          "notify_type": "trade_status_sync",
-          "subject": u"测试"
+            "seller_email": "olfwxa9760@sandbox.com",
+            "trade_no": "2017041121001004070200183979",
+            "seller_id": "2088102179075543",
+            "total_amount": "12.00",
+            "buyer_id": "2088102169481075",
+            "buyer_logon_id": "csq***@sandbox.com",
+            "charset": "utf-8",
+            "app_id": "2016101100660467",
+            "auth_app_id": "2016101100660467",
+            "gmt_create": "2017-04-11 14:55:44",
+            "version": "1.0",
+            "sign_type": "RSA2",
+            "out_trade_no": "20170411145511",
+            "notify_time": "2017-04-11 14:55:44",
+            "trade_status": "WAIT_BUYER_PAY",
+            "notify_id": "4e5a35340926d9e4405f4f7b75b5d45gji",
+            "notify_type": "trade_status_sync",
+            "subject": u"测试"
         }
         alipay = self.get_client(sign_type="RSA2")
         alipay.verify(data, "ssss")

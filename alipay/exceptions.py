@@ -13,7 +13,6 @@ class AliPayException(Exception):
         self.__code = code
         self.__message = message
 
-
     if sys.version_info[0] >= 3:
         def to_unicode(self):
             return "AliPayException: code:{}, message:{}".format(self.__code, self.__message)
@@ -26,6 +25,7 @@ class AliPayException(Exception):
     else:
         def to_unicode(self):
             return u"AliPayException: code:{}, message:{}".format(self.__code, self.__message.decode("utf8"))
+
         def __str__(self):
             return self.to_unicode().encode('utf8')
 
