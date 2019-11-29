@@ -627,6 +627,7 @@ class AliPay(BaseAliPay):
 class DCAliPay(AliPay):
     """
     数字证书 (digital certificate) 版本
+    TODO:目前不支持传入路径
     """
     def __init__(
         self,
