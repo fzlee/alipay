@@ -7,13 +7,14 @@
 """
 import json
 from datetime import datetime
-from Cryptodome.Signature import PKCS1_v1_5
+
 from Cryptodome.Hash import SHA, SHA256
 from Cryptodome.PublicKey import RSA
 import hashlib
 import OpenSSL
+from Cryptodome.Signature import PKCS1_v1_5
 
-from .compat import quote_plus, urlopen, decodebytes, encodebytes, b
+from .compat import b, decodebytes, encodebytes, quote_plus, urlopen
 from .exceptions import AliPayException, AliPayValidationError
 
 
