@@ -5,12 +5,12 @@
     ~~~~~~~~~~
 
 """
-import unittest
 import json
 import subprocess
+import unittest
 
-from alipay import AliPay, ISVAliPay
-from alipay.exceptions import AliPayValidationError, AliPayException
+from alipay import AliPay, DCAliPay, ISVAliPay
+from alipay.exceptions import AliPayException, AliPayValidationError
 from tests import helper
 from tests.compat import mock
 
@@ -314,24 +314,24 @@ class AliPayTestCase(unittest.TestCase):
 
     def test_encoding_verify(self):
         data = {
-          "seller_email": "olfwxa9760@sandbox.com",
-          "trade_no": "2017041121001004070200183979",
-          "seller_id": "2088102179075543",
-          "total_amount": "12.00",
-          "buyer_id": "2088102169481075",
-          "buyer_logon_id": "csq***@sandbox.com",
-          "charset": "utf-8",
-          "app_id": "2016101100660467",
-          "auth_app_id": "2016101100660467",
-          "gmt_create": "2017-04-11 14:55:44",
-          "version": "1.0",
-          "sign_type": "RSA2",
-          "out_trade_no": "20170411145511",
-          "notify_time": "2017-04-11 14:55:44",
-          "trade_status": "WAIT_BUYER_PAY",
-          "notify_id": "4e5a35340926d9e4405f4f7b75b5d45gji",
-          "notify_type": "trade_status_sync",
-          "subject": u"测试"
+            "seller_email": "olfwxa9760@sandbox.com",
+            "trade_no": "2017041121001004070200183979",
+            "seller_id": "2088102179075543",
+            "total_amount": "12.00",
+            "buyer_id": "2088102169481075",
+            "buyer_logon_id": "csq***@sandbox.com",
+            "charset": "utf-8",
+            "app_id": "2016101100660467",
+            "auth_app_id": "2016101100660467",
+            "gmt_create": "2017-04-11 14:55:44",
+            "version": "1.0",
+            "sign_type": "RSA2",
+            "out_trade_no": "20170411145511",
+            "notify_time": "2017-04-11 14:55:44",
+            "trade_status": "WAIT_BUYER_PAY",
+            "notify_id": "4e5a35340926d9e4405f4f7b75b5d45gji",
+            "notify_type": "trade_status_sync",
+            "subject": u"测试"
         }
         alipay = self.get_client(sign_type="RSA2")
         alipay.verify(data, "ssss")
@@ -415,3 +415,56 @@ class AliPayTestCase(unittest.TestCase):
         # 不合法测试, 不报错就好
         s = """{"response_type":"key1":"key2":"""
         alipay._get_string_to_be_signed(s, "response_type")
+
+
+class DCAlipayTestCase(unittest.TestCase):
+
+    def setUp(self):
+        super(DCAlipayTestCase, self).setUp()
+        (
+            self._app_private_key_path,
+            self._app_public_key_cert_path,
+            self._alipay_public_key_cert_path,
+            self._alipay_root_cert_path
+        ) = helper.get_dc_certs()
+
+    def get_client(self):
+        with open(self._app_private_key_path) as fp:
+            app_private_key_string = fp.read()
+        with open(self._app_public_key_cert_path) as fp:
+            app_public_key_cert_string = fp.read()
+        with open(self._alipay_public_key_cert_path) as fp:
+            alipay_public_key_cert_string = fp.read()
+        with open(self._alipay_root_cert_path) as fp:
+            alipay_root_cert_string = fp.read()
+
+        return DCAliPay(
+            appid="appid",
+            app_notify_url="http://example.com/app_notify_url",
+            app_private_key_string=app_private_key_string,
+            app_public_key_cert_string=app_public_key_cert_string,
+            alipay_public_key_cert_string=alipay_public_key_cert_string,
+            alipay_root_cert_string=alipay_root_cert_string
+        )
+
+    def test_sign_data_with_private_key_sha256(self):
+        """openssl 以及aliapy分别对数据进行签名，得到同样的结果
+        """
+        alipay = self.get_client()
+        result1 = alipay._sign("hello\n")
+        result2 = subprocess.check_output(
+            "echo hello | openssl dgst -sha256 -sign {} | openssl base64".format(
+                self._app_private_key_path
+            ), shell=True).decode("utf-8")
+        result2 = result2.replace("\n", "")
+        self.assertEqual(result1, result2)
+
+    def test_verify_sha256(self):
+        alipay = self.get_client()
+        raw_content = "hello\n"
+        signature = alipay._sign(raw_content)
+
+        # 签名验证成功
+        self.assertTrue(alipay._verify(raw_content, signature))
+        # 签名失败
+        self.assertFalse(alipay._verify(raw_content[:-1], signature))
