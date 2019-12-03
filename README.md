@@ -76,6 +76,16 @@ alipay = AliPay(
 )
 
 
+dc_alipay = DCAliPay(
+    appid="appid",
+    app_notify_url="http://example.com/app_notify_url",
+    app_private_key_string=app_private_key_string,
+    app_public_key_cert_string=app_public_key_cert_string,
+    alipay_public_key_cert_string=alipay_public_key_cert_string,
+    alipay_root_cert_string=alipay_root_cert_string
+)
+
+
 # Forget about what I mentioned below if you don't know what ISV is
 # either app_auth_code or app_auth_token should not be None
 isv_alipay = ISVAliPay(
@@ -97,6 +107,7 @@ isv_alipay = ISVAliPay(
 * DCAliPay: sign request with cert
 * ISVAliPay: used when you need to host multiple alipay services
 
+# referer to this doc for more reference https://opensupport.alipay.com/support/knowledge/20069/201602429395?ant_source=zsearch
 
 #### Naming convention
 Given an alipay function, say `alipay.trade.page.pay`, we will defind a corresponding function `alipay.api_alipay_trade_page_pay()`

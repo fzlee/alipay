@@ -75,6 +75,14 @@ alipay = AliPay(
     debug=False  # 默认False
 )
 
+dc_alipay = DCAliPay(
+    appid="appid",
+    app_notify_url="http://example.com/app_notify_url",
+    app_private_key_string=app_private_key_string,
+    app_public_key_cert_string=app_public_key_cert_string,
+    alipay_public_key_cert_string=alipay_public_key_cert_string,
+    alipay_root_cert_string=alipay_root_cert_string
+)
 
 # 如果您没有听说过ISV， 那么以下部分不用看了
 # app_auth_code或app_auth_token二者需要填入一个
@@ -96,6 +104,7 @@ isv_alipay = ISVAliPay(
 * DCAliPay: 使用公钥证书进行验签
 * ISVAliPay: 托管多个支付宝应用使用
 
+# [部分接口](https://opensupport.alipay.com/support/knowledge/20069/201602429395?ant_source=zsearch)必须使用DCAlipay
 
 #### 接口基本命名规则
 对于一个支付宝的接口，比如`alipay.trade.page.pay`，则一般可以这么调用接口：`alipay.api_alipay_trade_page_pay()`.
