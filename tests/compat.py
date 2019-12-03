@@ -5,9 +5,4 @@
     ~~~~~~~~~~
 
 """
-import sys
-
-if str(sys.version[0]) == "3":
-    from unittest import mock
-else:
-    from mock import mock
+from unittest import mock

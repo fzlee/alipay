@@ -1,10 +1,7 @@
 ## python-alipay-sdk
 [![PyPI version](https://badge.fury.io/py/python-alipay-sdk.svg)](https://badge.fury.io/py/python-alipay-sdk) [![codecov](https://codecov.io/gh/fzlee/alipay/branch/master/graph/badge.svg)](https://codecov.io/gh/fzlee/alipay) ![travis-ci](https://travis-ci.org/fzlee/alipay.svg?branch=master)
 
-##  支付宝Python SDK
-支付宝没有提供Python SDK。生成预付订单需要使用SHA1withRSA签名，签名的生成比较麻烦容易出错。这里提供了一个简单的库，希望能够简化一些Python开发的流程。
-
-自`1.0`开始，我们不再支持旧版的接口，比如[即时到帐](https://doc.open.alipay.com/doc2/detail?treeId=62&articleId=103566&docType=1)（你可以选择使用`0.6.*`版本的python-alipay-sdk或者使用[电脑网站支付](https://doc.open.alipay.com/doc2/detail.htm?treeId=270&articleId=105901&docType=1)接口）。
+##  非官方支付宝 Python SDK
 
 我们支持的所有支付方式，其签名类型必须为RSA或者RSA2。目前实现了以下功能：
 * [电脑网站支付](#alipay.trade.page.pay)
@@ -51,7 +48,7 @@ OpenSSL> exit
 
 #### 初始化
 ```python
-from alipay import AliPay, ISVAlipay
+from alipay import AliPay, DCAliPay, ISVAliPay
 
 app_private_key_string = open("/path/to/your/private/key.pem").read()
 alipay_public_key_string = open("/path/to/alipay/public/key.pem").read()
@@ -93,6 +90,13 @@ isv_alipay = ISVAliPay(
     app_auth_token=None
 )
 ```
+
+### AliPay, DCAliPay, ISVAliPay的区别
+* AliPay: 使用应用公钥进行报文验签
+* DCAliPay: 使用公钥证书进行验签
+* ISVAliPay: 托管多个支付宝应用使用
+
+
 #### 接口基本命名规则
 对于一个支付宝的接口，比如`alipay.trade.page.pay`，则一般可以这么调用接口：`alipay.api_alipay_trade_page_pay()`.
 也就是说，我们做了这么一个转换:
@@ -404,52 +408,4 @@ python -m unittest discover
 alipay = AliPay(..., debug=True)
 ```
 
-## Changelog
-
-#### 2019-03-05(version 1.10)
-* `alipay.trade.close`(感谢iv8)
-
-#### 2019-01-07(version 1.9)
-修复潜在的安全问题
-
-#### 2018-08-23(version 1.8)
-* alipay.trade.order.settle
-
-#### 2018-03-16(version 1.7)
-* 使用`pycryptodomex`进行底层加解密运算，避免和旧的加密库冲突(感谢fakepoet)
-
-#### 2018-01-23(version 1.6)
-* 支持传入密钥字符串初始化Alipay对象
-
-#### 2017-12-04(version 1.5.1)
-* bug fix for `ISVAlipay.build_body`.
-
-#### 2017-11-20(version 1.5)
-* `alipay.trade.fastpay.refund.query` 统一收单交易退款查询
-
-#### 2017-11-14(version 1.4.1)
-* 修复忘记将notify url 传入`api_alipay_trade_precreate`的bug.
-
-#### 2017-10-20(version 1.4.0)
-* 将加密库依赖更新到pycryptodome，旧版用户请卸载pycrypto后安装使用.
-
-#### 2017-08-21(version 1.3.0)
-`alipay.trade.wap.pay` `alipay_trade_app_pay` `alipay.trade.page.pay` `alipay.trade.pay`
-
-
-#### 2017-08-07(version 1.2.0)
-* 四个支付函数可以额外传入notify_url
-
-#### 2017-08-07(version 1.2.0)
-* ISV 授权等功能
-
-#### 2017-06-25(version 1.1.0)
-* `alipay.fund.trans.toaccount.transfer` 以及 `alipay.fund.trans.order.query`
-
-#### 2017-05-28(version 1.0.1)
-* `alipay.trade.page.pay`里面return_url没有被传入
-
-### 2017-05-26 (version 1.0)
-* 后台全部重构，对各种接口重命名。
-* 使用新版的`电脑网站支付接口`，不再`支持即时到帐`接口
-* 将key重文件读出后放到内存，避免每次签名都需要访问文件。
+## [Changelog](https://github.com/fzlee/alipay/blob/master/CHANGELOG.md)

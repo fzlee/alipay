@@ -8,13 +8,13 @@
 import json
 from datetime import datetime
 
-from Cryptodome.Hash import SHA, SHA256
-from Cryptodome.PublicKey import RSA
 import hashlib
 import OpenSSL
+from Cryptodome.Hash import SHA, SHA256
+from Cryptodome.PublicKey import RSA
 from Cryptodome.Signature import PKCS1_v1_5
 
-from .compat import b, decodebytes, encodebytes, quote_plus, urlopen
+from .compat import decodebytes, encodebytes, quote_plus, urlopen
 from .exceptions import AliPayException, AliPayValidationError
 
 
@@ -57,9 +57,7 @@ class BaseAliPay(object):
         self,
         appid,
         app_notify_url,
-        app_private_key_path=None,
         app_private_key_string=None,
-        alipay_public_key_path=None,
         alipay_public_key_string=None,
         sign_type="RSA2",
         debug=False
@@ -69,16 +67,12 @@ class BaseAliPay(object):
         alipay = AliPay(
           appid="",
           app_notify_url="http://example.com",
-          app_private_key_path="",
-          alipay_public_key_path="",
           sign_type="RSA2"
         )
         """
         self._appid = str(appid)
         self._app_notify_url = app_notify_url
-        self._app_private_key_path = app_private_key_path
         self._app_private_key_string = app_private_key_string
-        self._alipay_public_key_path = alipay_public_key_path
         self._alipay_public_key_string = alipay_public_key_string
 
         self._app_private_key = None
@@ -98,28 +92,22 @@ class BaseAliPay(object):
     def _load_key(self):
         # load private key
         content = self._app_private_key_string
-        if not content:
-            with open(self._app_private_key_path) as fp:
-                content = fp.read()
         self._app_private_key = RSA.importKey(content)
 
         # load public key
         content = self._alipay_public_key_string
-        if not content:
-            with open(self._alipay_public_key_path) as fp:
-                content = fp.read()
         self._alipay_public_key = RSA.importKey(content)
 
     def _sign(self, unsigned_string):
         """
         通过如下方法调试签名
         方法1
-            key = rsa.PrivateKey.load_pkcs1(open(self._app_private_key_path).read())
+            key = rsa.PrivateKey.load_pkcs1(open(self._app_private_key_string).read())
             sign = rsa.sign(unsigned_string.encode("utf8"), key, "SHA-1")
             # base64 编码，转换为unicode表示并移除回车
             sign = base64.encodebytes(sign).decode("utf8").replace("\n", "")
         方法2
-            key = RSA.importKey(open(self._app_private_key_path).read())
+            key = RSA.importKey(open(self._app_private_key_string).read())
             signer = PKCS1_v1_5.new(key)
             signature = signer.sign(SHA.new(unsigned_string.encode("utf8")))
             # base64 编码，转换为unicode表示并移除回车
@@ -132,9 +120,9 @@ class BaseAliPay(object):
         key = self.app_private_key
         signer = PKCS1_v1_5.new(key)
         if self._sign_type == "RSA":
-            signature = signer.sign(SHA.new(b(unsigned_string)))
+            signature = signer.sign(SHA.new(unsigned_string.encode()))
         else:
-            signature = signer.sign(SHA256.new(b(unsigned_string)))
+            signature = signer.sign(SHA256.new(unsigned_string.encode()))
         # base64 编码，转换为unicode表示并移除回车
         sign = encodebytes(signature).decode("utf8").replace("\n", "")
         return sign
@@ -625,10 +613,9 @@ class AliPay(BaseAliPay):
     pass
 
 
-class DCAliPay(AliPay):
+class DCAliPay(BaseAliPay):
     """
     数字证书 (digital certificate) 版本
-    TODO:目前不支持传入路径
     """
     def __init__(
         self,
@@ -677,14 +664,18 @@ class DCAliPay(AliPay):
         return self.sign_data(data)
 
     def build_body(self, *args, **kwargs):
-        data = super(AliPay, self).build_body(*args, **kwargs)
-        data["app_cert_sn"] = self._app_cert_sn
-        data["alipay_root_cert_sn"] = self._alipay_root_cert_sn
+        data = super().build_body(*args, **kwargs)
+        data["app_cert_sn"] = self.app_cert_sn
+        data["alipay_root_cert_sn"] = self.alipay_root_cert_sn
         return data
 
     def load_alipay_public_key_string(self):
-        cert = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, self._alipay_public_key_cert_string)
-        return OpenSSL.crypto.dump_publickey(OpenSSL.crypto.FILETYPE_PEM, cert.get_pubkey()).decode("utf-8")
+        cert = OpenSSL.crypto.load_certificate(
+            OpenSSL.crypto.FILETYPE_PEM, self._alipay_public_key_cert_string
+        )
+        return OpenSSL.crypto.dump_publickey(
+            OpenSSL.crypto.FILETYPE_PEM, cert.get_pubkey()
+        ).decode("utf-8")
 
     @staticmethod
     def get_cert_sn(cert):
@@ -703,7 +694,10 @@ class DCAliPay(AliPay):
     def read_pem_cert_chain(certContent):
         """解析根证书"""
         certs = list()
-        for c in certContent.split('\n\n'):  # 根证书中，每个 cert 中间有两个回车间隔
+        items = certContent.split('\n\n')  # 根证书中，每个 cert 中间有两个回车间隔
+        items = [i for i in items if i]
+
+        for c in items:
             cert = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, c)
             certs.append(cert)
         return certs
@@ -720,7 +714,9 @@ class DCAliPay(AliPay):
                 continue
             if sigAlg in CryptoAlgSet:
                 certIssue = cert.get_issuer()
-                name = 'CN={},OU={},O={},C={}'.format(certIssue.CN, certIssue.OU, certIssue.O, certIssue.C)
+                name = 'CN={},OU={},O={},C={}'.format(
+                    certIssue.CN, certIssue.OU, certIssue.O, certIssue.C
+                )
                 string = name + str(cert.get_serial_number())
                 m = hashlib.md5()
                 m.update(bytes(string, encoding="utf8"))
@@ -732,12 +728,16 @@ class DCAliPay(AliPay):
         return rootCertSN
 
     @property
-    def _app_cert_sn(self):
-        return self.get_cert_sn(self._app_public_key_cert_string)
+    def app_cert_sn(self):
+        if not hasattr(self, "_app_cert_sn"):
+            self._app_cert_sn = self.get_cert_sn(self._app_public_key_cert_string)
+        return getattr(self, "_app_cert_sn")
 
     @property
-    def _alipay_root_cert_sn(self):
-        return self.get_root_cert_sn(self._alipay_root_cert_string)
+    def alipay_root_cert_sn(self):
+        if not hasattr(self, "_alipay_root_cert_sn"):
+            self._alipay_root_cert_sn = self.get_root_cert_sn(self._alipay_root_cert_string)
+        return getattr(self, "_alipay_root_cert_sn")
 
 
 class ISVAliPay(BaseAliPay):
@@ -746,9 +746,7 @@ class ISVAliPay(BaseAliPay):
         self,
         appid,
         app_notify_url,
-        app_private_key_path=None,
         app_private_key_string=None,
-        alipay_public_key_path=None,
         alipay_public_key_string=None,
         sign_type="RSA2",
         debug=False,
@@ -763,9 +761,7 @@ class ISVAliPay(BaseAliPay):
         super(ISVAliPay, self).__init__(
             appid,
             app_notify_url,
-            app_private_key_path=app_private_key_path,
             app_private_key_string=app_private_key_string,
-            alipay_public_key_path=alipay_public_key_path,
             alipay_public_key_string=alipay_public_key_string,
             sign_type=sign_type,
             debug=debug

@@ -2,8 +2,7 @@
 [![PyPI version](https://badge.fury.io/py/python-alipay-sdk.svg)](https://badge.fury.io/py/python-alipay-sdk) [![codecov](https://codecov.io/gh/fzlee/alipay/branch/master/graph/badge.svg)](https://codecov.io/gh/fzlee/alipay) ![travis-ci](https://travis-ci.org/fzlee/alipay.svg?branch=master)
 ## [中文文档](https://github.com/fzlee/alipay/blob/master/README.zh-hans.md)
 
-##  AliPay Python SDK
-I can't find any official python alipay sdks so far, and it really pains a lot dealing with those sign methods. Hoping this library could do some help :).
+##  Unofficial AliPay Python SDK
 
 So far, the following functions are supported:
 * [Pay via Web](#alipay.trade.page.pay)
@@ -24,7 +23,6 @@ So far, the following functions are supported:
 * [ISV integration/Query authorized apps](#alipay.open.auth.token.app.query)
 
 Taking a look at [this guide](https://ifconfiger.com/page/python-alipay-sdk) if you are interested at the details on signing your order requests.
-Or you may just follow this manual if not.
 
 ## GUIDE
 #### Installation
@@ -48,7 +46,7 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
 
 #### Initialization
 ```python
-from alipay import AliPay, ISVAliPay
+from alipay import AliPay, DCAlipay, ISVAliPay
 
 # Making sure your key file is adhered to standards.
 # you may find examples at tests/certs/ali/ali_private_key.pem
@@ -92,6 +90,12 @@ isv_alipay = ISVAliPay(
     app_auth_token=None
 )
 ```
+
+
+### Difference between AliPay, DCAliPay, and ISVAliPay
+* AliPay: sign request with your private key, several alipay apis are not available
+* DCAliPay: sign request with cert
+* ISVAliPay: used when you need to host multiple alipay services
 
 
 #### Naming convention
@@ -401,48 +405,4 @@ Or you may do test manually in this way, `debug=True` will direct your request t
 alipay = AliPay(..., debug=True)
 ```
 
-## Changelog
-
-#### 2019-03-05(version 1.10)
-* `alipay.trade.close`(thanks to iv8)
-
-#### 2019-01-07(version 1.9)
-* potential security issue fix
-
-#### 2018-08-23(version 1.8)
-* alipay.trade.order.settle
-
-#### 2018-03-16(version 1.7)
-* Do encryption/decryption with `pycryptodomex`，which has no conflict with Pycrypto (many thanks to fakepoet)
-
-#### 2018-01-23(version 1.6)
-* initialize Alipay instance with key string
-
-#### 2017-12-04(version 1.5.1)
-* bug fix for `ISVAlipay.build_body`.
-
-#### 2017-11-20(version 1.5)
-* `alipay.trade.fastpay.refund.query` Query refund result.
-
-#### 2017-11-14(version 1.4.1)
-* bug fix for `api_alipay_trade_precreate`, notify url is not included in request params.
-
-#### 2017-10-20(version 1.4.0)
-* change dependence from pycrypto to pycryptodome. for users upgraded from 1.3.0, uninstall pycrypto first
-
-#### 2017-08-21(version 1.3.0)
-* allow notify_url be overriden in hose 4 functions: `alipay.trade.wap.pay` `alipay_trade_app_pay` `alipay.trade.page.pay` `alipay.trade.pay`
-
-#### 2017-08-07(version 1.2.0)
-* ISV integration
-
-#### 2017-06-25(version 1.1.0)
-* `alipay.fund.trans.toaccount.transfer` and `alipay.fund.trans.order.query`
-
-#### 2017-05-28(version 1.0.1)
-* return url missing for `alipay.trade.page.pay`
-
-#### 2017-05-26(version 1.0.0)
-* code refactoring, all functions are renamed
-* `alipay.trade.page.pay` is used instead of `create_direct_pay_by_user`
-* load key into memory, local key file access is needed for the 1st time
+## [Changelog](https://github.com/fzlee/alipay/blob/master/CHANGELOG.md)
