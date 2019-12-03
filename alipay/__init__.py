@@ -570,7 +570,6 @@ class BaseAliPay(object):
           }
         }
         """
-
         response = json.loads(raw_string)
         # raise exceptions
         if "sign" not in response.keys():

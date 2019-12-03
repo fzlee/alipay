@@ -49,6 +49,19 @@ class AliPayTestCase(unittest.TestCase):
             sign_type=sign_type
         )
 
+    def _prepare_sync_response(self, alipay, response_type):
+        """sign data with private key so we can validate with our public key later"""
+        data = {
+            "name": "Lily",
+            "age": "12"
+        }
+        response = {
+            response_type: data,
+            "sign": alipay._sign(json.dumps(data))
+        }
+        print(response)
+        return json.dumps(response).encode("utf-8")
+
 
 class AliPaySignTestCase(AliPayTestCase):
 
@@ -190,18 +203,6 @@ class AliPayAPItestCase(AliPayTestCase):
 
     def _prepare_alipay_trade_order_settle(self, alipay):
         return self._prepare_sync_response(alipay, "alipay_trade_order_settle_response")
-
-    def _prepare_sync_response(self, alipay, response_type):
-        """sign data with private key so we can validate with our public key later"""
-        data = {
-            "name": "Lily",
-            "age": "12"
-        }
-        response = {
-            response_type: data,
-            "sign": alipay._sign(json.dumps(data))
-        }
-        return json.dumps(response).encode("utf-8")
 
     def _prepare_failed_trade_query_responsy(self, alipay):
         return json.dumps({
@@ -357,7 +358,7 @@ class AliPayAPItestCase(AliPayTestCase):
         self.assertTrue(mock_urlopen.called)
 
 
-class DCAliPayTestCase(unittest.TestCase):
+class DCAliPayTestCase(AliPayTestCase):
 
     def setUp(self):
         super(DCAliPayTestCase, self).setUp()
@@ -378,6 +379,9 @@ class DCAliPayTestCase(unittest.TestCase):
         with open(self._alipay_root_cert_path) as fp:
             alipay_root_cert_string = fp.read()
 
+        # 强制篡改alipay公钥为自己的公钥， 方便后面伪造签名数据
+        alipay_public_key_cert_string = app_public_key_cert_string
+
         return DCAliPay(
             appid="appid",
             app_notify_url="http://example.com/app_notify_url",
@@ -386,6 +390,9 @@ class DCAliPayTestCase(unittest.TestCase):
             alipay_public_key_cert_string=alipay_public_key_cert_string,
             alipay_root_cert_string=alipay_root_cert_string
         )
+
+    def _prepare_create_face_to_face_response(self, alipay):
+        return self._prepare_sync_response(alipay, "alipay_trade_pay_response")
 
     def test_sign_data_with_private_key_sha256(self):
         """openssl 以及aliapy分别对数据进行签名，得到同样的结果
@@ -398,6 +405,23 @@ class DCAliPayTestCase(unittest.TestCase):
             ), shell=True).decode("utf-8")
         result2 = result2.replace("\n", "")
         self.assertEqual(result1, result2)
+
+    @mock.patch("alipay.urlopen")
+    def test_alipay_trade_pay(self, mock_urlopen):
+        alipay = self.get_client()
+
+        response = mock.Mock()
+        response.read.return_value = self._prepare_create_face_to_face_response(alipay)
+        mock_urlopen.return_value = response
+
+        alipay.api_alipay_trade_pay(
+            "out_trade_no",
+            "wave_code",
+            "auth_code",
+            "subject"
+        )
+
+        self.assertTrue(mock_urlopen.called)
 
 
 class AliPayUtilTestCase(AliPayTestCase):
