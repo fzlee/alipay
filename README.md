@@ -40,7 +40,10 @@ OpenSSL> rsa -in app_private_key.pem -pubout -out app_public_key.pem # export pu
 OpenSSL> exit
 ```
 
-The public key we download from open.alipay.com is a string, which cannot be recognied by this lib directly, making sure it's surrounded with `-----BEGIN PUBLIC KEY-----` and `-----END PUBLIC KEY-----`
+The public key we download from open.alipay.com is a string, which cannot be recognied by this lib directly, making sure it's surrounded with
+```
+-----BEGIN PUBLIC KEY----- and -----END PUBLIC KEY-----
+```
 
 There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/certs/ali/ali_public_key.pem) for your reference
 
