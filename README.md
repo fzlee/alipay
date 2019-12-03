@@ -107,7 +107,7 @@ isv_alipay = ISVAliPay(
 * DCAliPay: sign request with cert
 * ISVAliPay: used when you need to host multiple alipay services
 
-# referer to this doc for more reference https://opensupport.alipay.com/support/knowledge/20069/201602429395?ant_source=zsearch
+DCAlipay is a must for certain [serveral alipay apis](https://opensupport.alipay.com/support/knowledge/20069/201602429395?ant_source=zsearch)
 
 #### Naming convention
 Given an alipay function, say `alipay.trade.page.pay`, we will defind a corresponding function `alipay.api_alipay_trade_page_pay()`

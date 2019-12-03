@@ -104,7 +104,7 @@ isv_alipay = ISVAliPay(
 * DCAliPay: 使用公钥证书进行验签
 * ISVAliPay: 托管多个支付宝应用使用
 
-# [部分接口](https://opensupport.alipay.com/support/knowledge/20069/201602429395?ant_source=zsearch)必须使用DCAlipay
+[部分接口](https://opensupport.alipay.com/support/knowledge/20069/201602429395?ant_source=zsearch)必须使用DCAlipay
 
 #### 接口基本命名规则
 对于一个支付宝的接口，比如`alipay.trade.page.pay`，则一般可以这么调用接口：`alipay.api_alipay_trade_page_pay()`.
