@@ -30,7 +30,7 @@ CryptoAlgSet = (
 )
 
 
-class BaseAliPay(object):
+class BaseAliPay:
     @property
     def appid(self):
         return self._appid
@@ -41,16 +41,12 @@ class BaseAliPay(object):
 
     @property
     def app_private_key(self):
-        """
-        签名用
-        """
+        """签名用"""
         return self._app_private_key
 
     @property
     def alipay_public_key(self):
-        """
-        验证签名用
-        """
+        """验证签名用"""
         return self._alipay_public_key
 
     def __init__(
@@ -78,10 +74,11 @@ class BaseAliPay(object):
         self._app_private_key = None
         self._alipay_public_key = None
         if sign_type not in ("RSA", "RSA2"):
-            raise AliPayException(None, "Unsupported sign type {}".format(sign_type))
+            message = "Unsupported sign type {}".format(sign_type)
+            raise AliPayException(None, message)
         self._sign_type = sign_type
 
-        if debug is True:
+        if debug:
             self._gateway = "https://openapi.alipaydev.com/gateway.do"
         else:
             self._gateway = "https://openapi.alipay.com/gateway.do"
@@ -128,13 +125,11 @@ class BaseAliPay(object):
         return sign
 
     def _ordered_data(self, data):
-        complex_keys = [k for k, v in data.items() if isinstance(v, dict)]
-
-        # 将字典类型的数据dump出来
-        for key in complex_keys:
-            data[key] = json.dumps(data[key], separators=(',', ':'))
-
-        return sorted([(k, v) for k, v in data.items()])
+        for k, v in data.items():
+            if isinstance(v, dict):
+                # 将字典类型的数据dump出来
+                data[k] = json.dumps(v, separators=(',', ':'))
+        return sorted(data.items())
 
     def build_body(
         self, method, biz_content, return_url=None, notify_url=None, append_auth_token=False
@@ -166,12 +161,12 @@ class BaseAliPay(object):
         data.pop("sign", None)
         # 排序后的字符串
         ordered_items = self._ordered_data(data)
-        unsigned_string = "&".join("{}={}".format(k, v) for k, v in ordered_items)
-        sign = self._sign(unsigned_string)
-        quoted_string = "&".join("{}={}".format(k, quote_plus(v)) for k, v in ordered_items)
+        raw_string = "&".join("{}={}".format(k, v) for k, v in ordered_items)
+        sign = self._sign(raw_string)
+        unquoted_items = ordered_items + [('sign', sign)]
 
         # 获得最终的订单信息字符串
-        signed_string = quoted_string + "&sign=" + quote_plus(sign)
+        signed_string = "&".join("{}={}".format(k, quote_plus(v)) for k, v in unquoted_items)
         return signed_string
 
     def _verify(self, raw_content, signature):
@@ -182,10 +177,8 @@ class BaseAliPay(object):
             digest = SHA.new()
         else:
             digest = SHA256.new()
-        digest.update(raw_content.encode("utf8"))
-        if signer.verify(digest, decodebytes(signature.encode("utf8"))):
-            return True
-        return False
+        digest.update(raw_content.encode())
+        return bool(signer.verify(digest, decodebytes(signature.encode())))
 
     def verify(self, data, signature):
         if "sign_type" in data:
