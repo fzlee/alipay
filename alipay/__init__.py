@@ -7,6 +7,7 @@
 """
 import json
 from datetime import datetime
+from functools import partial
 
 import hashlib
 import OpenSSL
@@ -100,15 +101,15 @@ class BaseAliPay:
         通过如下方法调试签名
         方法1
             key = rsa.PrivateKey.load_pkcs1(open(self._app_private_key_string).read())
-            sign = rsa.sign(unsigned_string.encode("utf8"), key, "SHA-1")
+            sign = rsa.sign(unsigned_string.encode(), key, "SHA-1")
             # base64 编码，转换为unicode表示并移除回车
-            sign = base64.encodebytes(sign).decode("utf8").replace("\n", "")
+            sign = base64.encodebytes(sign).decode().replace("\n", "")
         方法2
             key = RSA.importKey(open(self._app_private_key_string).read())
             signer = PKCS1_v1_5.new(key)
-            signature = signer.sign(SHA.new(unsigned_string.encode("utf8")))
+            signature = signer.sign(SHA.new(unsigned_string.encode()))
             # base64 编码，转换为unicode表示并移除回车
-            sign = base64.encodebytes(signature).decode("utf8").replace("\n", "")
+            sign = base64.encodebytes(signature).decode().replace("\n", "")
         方法3
             echo "abc" | openssl sha1 -sign alipay.key | openssl base64
 
@@ -121,7 +122,7 @@ class BaseAliPay:
         else:
             signature = signer.sign(SHA256.new(unsigned_string.encode()))
         # base64 编码，转换为unicode表示并移除回车
-        sign = encodebytes(signature).decode("utf8").replace("\n", "")
+        sign = encodebytes(signature).decode().replace("\n", "")
         return sign
 
     def _ordered_data(self, data):
@@ -678,21 +679,15 @@ class DCAliPay(BaseAliPay):
         certIssue = cert.get_issuer()
         name = 'CN={},OU={},O={},C={}'.format(certIssue.CN, certIssue.OU, certIssue.O, certIssue.C)
         string = name + str(cert.get_serial_number())
-        m = hashlib.md5()
-        m.update(bytes(string, encoding="utf8"))
-        return m.hexdigest()
+        return hashlib.md5(string.encode()).hexdigest()
 
     @staticmethod
     def read_pem_cert_chain(certContent):
         """解析根证书"""
-        certs = list()
-        items = certContent.split('\n\n')  # 根证书中，每个 cert 中间有两个回车间隔
-        items = [i for i in items if i]
-
-        for c in items:
-            cert = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, c)
-            certs.append(cert)
-        return certs
+        # 根证书中，每个 cert 中间有两个回车间隔
+        items = [i for i in certContent.split('\n\n') if i]
+        load_cert = partial(OpenSSL.crypto.load_certificate, OpenSSL.crypto.FILETYPE_PEM)
+        return [load_cert(c) for c in items]
 
     @staticmethod
     def get_root_cert_sn(rootCert):
@@ -710,9 +705,7 @@ class DCAliPay(BaseAliPay):
                     certIssue.CN, certIssue.OU, certIssue.O, certIssue.C
                 )
                 string = name + str(cert.get_serial_number())
-                m = hashlib.md5()
-                m.update(bytes(string, encoding="utf8"))
-                certSN = m.hexdigest()
+                certSN = hashlib.md5(string.encode()).hexdigest()
                 if not rootCertSN:
                     rootCertSN = certSN
                 else:
@@ -750,7 +743,7 @@ class ISVAliPay(BaseAliPay):
 
         self._app_auth_token = app_auth_token
         self._app_auth_code = app_auth_code
-        super(ISVAliPay, self).__init__(
+        super().__init__(
             appid,
             app_notify_url,
             app_private_key_string=app_private_key_string,
@@ -764,18 +757,11 @@ class ISVAliPay(BaseAliPay):
         # 没有则换取token
         if not self._app_auth_token:
             result = self.api_alipay_open_auth_token_app(self._app_auth_code)
-            self._app_auth_token = result.get("app_auth_token", None)
-
-        if not self._app_auth_token:
-            raise Exception("Get auth token by auth code failed: {}".format(self._app_auth_code))
+            self._app_auth_token = result.get("app_auth_token")
+            if not self._app_auth_token:
+                msg = "Get auth token by auth code failed: {}"
+                raise Exception(msg.format(self._app_auth_code))
         return self._app_auth_token
-
-    def build_body(
-        self, method, biz_content, return_url=None, notify_url=None, append_auth_token=True
-    ):
-        return super(ISVAliPay, self).build_body(
-            method, biz_content, return_url, notify_url, append_auth_token
-        )
 
     def api_alipay_open_auth_token_app(self, refresh_token=None):
         """
@@ -808,22 +794,20 @@ class ISVAliPay(BaseAliPay):
         )
 
         url = self._gateway + "?" + self.sign_data(data)
-        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
+        raw_string = urlopen(url, timeout=15).read().decode()
         return self._verify_and_return_sync_response(
             raw_string, "alipay_open_auth_token_app_response"
         )
 
     def api_alipay_open_auth_token_app_query(self):
-        biz_content = {
-            "app_auth_token": self.app_auth_token
-        }
+        biz_content = {"app_auth_token": self.app_auth_token}
         data = self.build_body(
             "alipay.open.auth.token.app.query",
             biz_content,
             append_auth_token=False
         )
         url = self._gateway + "?" + self.sign_data(data)
-        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
+        raw_string = urlopen(url, timeout=15).read().decode()
         return self._verify_and_return_sync_response(
             raw_string, "alipay_open_auth_token_app_query_response"
         )

@@ -2,3 +2,4 @@
 max-line-length = 110
 exclude =
     alipay/compat.py,tests/compat.py
+    .tox
