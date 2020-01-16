@@ -288,10 +288,8 @@ class BaseAliPay:
         if trade_no:
             biz_content["trade_no"] = trade_no
         data = self.build_body("alipay.trade.query", biz_content)
-
-        url = self._gateway + "?" + self.sign_data(data)
-        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self._verify_and_return_sync_response(raw_string, "alipay_trade_query_response")
+        response_type = "alipay_trade_query_response"
+        return self.verified_sync_response(data, response_type)
 
     def api_alipay_trade_pay(
         self, out_trade_no, scene, auth_code, subject, notify_url=None, **kwargs
@@ -356,10 +354,8 @@ class BaseAliPay:
         }
         biz_content.update(**kwargs)
         data = self.build_body("alipay.trade.pay", biz_content, notify_url=notify_url)
-
-        url = self._gateway + "?" + self.sign_data(data)
-        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self._verify_and_return_sync_response(raw_string, "alipay_trade_pay_response")
+        response_type = "alipay_trade_pay_response"
+        return self.verified_sync_response(data, response_type)
 
     def api_alipay_trade_refund(self, refund_amount, out_trade_no=None, trade_no=None, **kwargs):
         biz_content = {
@@ -372,10 +368,8 @@ class BaseAliPay:
             biz_content["trade_no"] = trade_no
 
         data = self.build_body("alipay.trade.refund", biz_content)
-
-        url = self._gateway + "?" + self.sign_data(data)
-        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self._verify_and_return_sync_response(raw_string, "alipay_trade_refund_response")
+        response_type = "alipay_trade_refund_response"
+        return self.verified_sync_response(data, response_type)
 
     def api_alipay_trade_cancel(self, out_trade_no=None, trade_no=None):
         """
@@ -399,10 +393,8 @@ class BaseAliPay:
             biz_content["trade_no"] = trade_no
 
         data = self.build_body("alipay.trade.cancel", biz_content)
-
-        url = self._gateway + "?" + self.sign_data(data)
-        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self._verify_and_return_sync_response(raw_string, "alipay_trade_cancel_response")
+        response_type = "alipay_trade_cancel_response"
+        return self.verified_sync_response(data, response_type)
 
     def api_alipay_trade_close(self, out_trade_no=None, trade_no=None, operator_id=None):
         """
@@ -428,10 +420,8 @@ class BaseAliPay:
             biz_content["operator_id"] = operator_id
 
         data = self.build_body("alipay.trade.close", biz_content)
-
-        url = self._gateway + "?" + self.sign_data(data)
-        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self._verify_and_return_sync_response(raw_string, "alipay_trade_close_response")
+        response_type = "alipay_trade_close_response"
+        return self.verified_sync_response(data, response_type)
 
     def api_alipay_trade_precreate(self, subject, out_trade_no, total_amount, notify_url=None, **kwargs):
         """
@@ -463,10 +453,8 @@ class BaseAliPay:
         }
         biz_content.update(**kwargs)
         data = self.build_body("alipay.trade.precreate", biz_content, notify_url=notify_url)
-
-        url = self._gateway + "?" + self.sign_data(data)
-        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self._verify_and_return_sync_response(raw_string, "alipay_trade_precreate_response")
+        response_type = "alipay_trade_precreate_response"
+        return self.verified_sync_response(data, response_type)
 
     def api_alipay_trade_fastpay_refund_query(
         self, out_request_no, trade_no=None, out_trade_no=None
@@ -481,12 +469,8 @@ class BaseAliPay:
             biz_content["out_trade_no"] = out_trade_no
 
         data = self.build_body("alipay.trade.fastpay.refund.query", biz_content)
-
-        url = self._gateway + "?" + self.sign_data(data)
-        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self._verify_and_return_sync_response(
-            raw_string, "alipay_trade_fastpay_refund_query_response"
-        )
+        response_type = "alipay_trade_fastpay_refund_query_response"
+        return self.verified_sync_response(data, response_type)
 
     def api_alipay_fund_trans_toaccount_transfer(
             self, out_biz_no, payee_type, payee_account, amount, **kwargs
@@ -500,12 +484,8 @@ class BaseAliPay:
         }
         biz_content.update(kwargs)
         data = self.build_body("alipay.fund.trans.toaccount.transfer", biz_content)
-
-        url = self._gateway + "?" + self.sign_data(data)
-        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self._verify_and_return_sync_response(
-            raw_string, "alipay_fund_trans_toaccount_transfer_response"
-        )
+        response_type = "alipay_fund_trans_toaccount_transfer_response"
+        return self.verified_sync_response(data, response_type)
 
     def api_alipay_fund_trans_order_query(self, out_biz_no=None, order_id=None):
         if out_biz_no is None and order_id is None:
@@ -518,12 +498,8 @@ class BaseAliPay:
             biz_content["order_id"] = order_id
 
         data = self.build_body("alipay.fund.trans.order.query", biz_content)
-
-        url = self._gateway + "?" + self.sign_data(data)
-        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self._verify_and_return_sync_response(
-            raw_string, "alipay_fund_trans_order_query_response"
-        )
+        response_type = "alipay_fund_trans_order_query_response"
+        return self.verified_sync_response(data, response_type)
 
     def api_alipay_trade_order_settle(
         self,
@@ -538,14 +514,9 @@ class BaseAliPay:
             "royalty_parameters": royalty_parameters,
         }
         biz_content.update(kwargs)
-
         data = self.build_body("alipay.trade.order.settle", biz_content)
-
-        url = self._gateway + "?" + self.sign_data(data)
-        raw_string = urlopen(url, timeout=15).read().decode("utf-8")
-        return self._verify_and_return_sync_response(
-            raw_string, "alipay_trade_order_settle_response"
-        )
+        response_type = "alipay_trade_order_settle_response"
+        return self.verified_sync_response(data, response_type)
 
     def _verify_and_return_sync_response(self, raw_string, response_type):
         """
@@ -582,6 +553,11 @@ class BaseAliPay:
             raise AliPayValidationError
         return json.loads(plain_content)
 
+    def verified_sync_response(self, data, response_type):
+        url = self._gateway + "?" + self.sign_data(data)
+        raw_string = urlopen(url, timeout=15).read().decode()
+        return self._verify_and_return_sync_response(raw_string, response_type)
+
     def _get_string_to_be_signed(self, raw_string, response_type):
         """
         https://docs.open.alipay.com/200/106120
@@ -610,6 +586,7 @@ class DCAliPay(BaseAliPay):
     """
     数字证书 (digital certificate) 版本
     """
+
     def __init__(
         self,
         appid,
@@ -792,12 +769,8 @@ class ISVAliPay(BaseAliPay):
             biz_content,
             append_auth_token=False
         )
-
-        url = self._gateway + "?" + self.sign_data(data)
-        raw_string = urlopen(url, timeout=15).read().decode()
-        return self._verify_and_return_sync_response(
-            raw_string, "alipay_open_auth_token_app_response"
-        )
+        response_type = "alipay_open_auth_token_app_response"
+        return self.verified_sync_response(data, response_type)
 
     def api_alipay_open_auth_token_app_query(self):
         biz_content = {"app_auth_token": self.app_auth_token}
@@ -806,8 +779,5 @@ class ISVAliPay(BaseAliPay):
             biz_content,
             append_auth_token=False
         )
-        url = self._gateway + "?" + self.sign_data(data)
-        raw_string = urlopen(url, timeout=15).read().decode()
-        return self._verify_and_return_sync_response(
-            raw_string, "alipay_open_auth_token_app_query_response"
-        )
+        response_type = "alipay_open_auth_token_app_query_response"
+        return self.verified_sync_response(data, response_type)
