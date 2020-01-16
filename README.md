@@ -30,6 +30,7 @@ Taking a look at [this guide](https://ifconfiger.com/page/python-alipay-sdk) if 
 ```
 # installation
 pip install python-alipay-sdk --upgrade
+# For python2, use: pip install python-alipay-sdk==1.1
 ```
 
 #### Cert generation

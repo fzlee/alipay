@@ -29,6 +29,7 @@
 ```bash
 # 安装python-alipay-sdk
 pip install python-alipay-sdk --upgrade
+# 对于python2, 请安装2.0以下版本: pip install python-alipay-sdk==1.1
 ```
 
 #### 生成密钥文件
