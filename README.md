@@ -8,6 +8,7 @@ So far, the following functions are supported:
 * [Pay via Web](#alipay.trade.page.pay)
 * [Pay via WAP](#alipay.trade.wap.pay)
 * [Pay via App](#alipay.trade.app.pay)
+* [Pay via Mini Program](#alipay.trade.create)
 * [Verification](#verification)
 * [Face to face trade](#alipay.trade.pay)
 * [Precreate trade](#alipay.trade.precreate)
@@ -167,6 +168,18 @@ order_string = alipay.api_alipay_trade_app_pay(
     out_trade_no="20161112",
     total_amount=0.01,
     subject=subject,
+    notify_url="https://example.com/notify" # this is optional
+)
+```
+
+#### <a name="alipay.trade.create"></a>[alipay.trade.create](https://opendocs.alipay.com/mini/introduce/pay)
+```python
+# Mini Program Pay
+alipay.api_alipay_trade_create(
+    out_trade_no="20161112",
+    total_amount=0.01,
+    subject=subject,
+    buyer_id="",
     notify_url="https://example.com/notify" # this is optional
 )
 ```

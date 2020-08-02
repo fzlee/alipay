@@ -7,6 +7,7 @@
 * [电脑网站支付](#alipay.trade.page.pay)
 * [手机网站支付](#alipay.trade.wap.pay)
 * [APP支付](#alipay.trade.app.pay)
+* [小程序支付](#alipay.trade.create)
 * [通知验证](#verification)
 * [当面付](#alipay.trade.pay)
 * [交易预创建](#alipay.trade.precreate)
@@ -174,6 +175,19 @@ order_string = alipay.api_alipay_trade_app_pay(
     notify_url="https://example.com/notify" # 可选, 不填则使用默认notify url
 )
 ```
+
+#### <a name="alipay.trade.create"></a>小程序支付[alipay.trade.create](https://opendocs.alipay.com/mini/introduce/pay)
+```python
+# 小程序支付
+alipay.api_alipay_trade_create(
+    out_trade_no="20161112",
+    total_amount=0.01,
+    subject=subject,
+    buyer_id="",
+    notify_url="https://example.com/notify" # 可选
+)
+```
+
 
 #### <a name="verification"></a>[通知验证](https://docs.open.alipay.com/58/103596/)
 这里有一个简单的基于flask的验证：

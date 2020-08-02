@@ -1,4 +1,8 @@
-## Changelog
+#Mini Program Pay# Changelog
+
+#### 2020-08-01(version2.1.0)
+* alipay.trade.create
+
 
 #### 2019-12-03(version 2.0.0)
 * version 2.0.0 published (thanks to 00Kai0)

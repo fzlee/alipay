@@ -423,7 +423,22 @@ class BaseAliPay:
         response_type = "alipay_trade_close_response"
         return self.verified_sync_response(data, response_type)
 
-    def api_alipay_trade_precreate(self, subject, out_trade_no, total_amount, notify_url=None, **kwargs):
+    def api_alipay_trade_create(
+            self, subject, out_trade_no, total_amount, notify_url=None, **kwargs
+    ):
+        biz_content = {
+            "subject": subject,
+            "out_trade_no": out_trade_no,
+            "total_amount": total_amount
+        }
+        biz_content.update(kwargs)
+        data = self.build_body("alipay.trade.create", biz_content)
+        response_type = "alipay_trade_create"
+        return self.verified_sync_response(data, response_type)
+
+    def api_alipay_trade_precreate(
+            self, subject, out_trade_no, total_amount, notify_url=None, **kwargs
+    ):
         """
         success response  = {
           "alipay_trade_precreate_response": {
