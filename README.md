@@ -52,6 +52,7 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
 #### Initialization
 ```python
 from alipay import AliPay, DCAlipay, ISVAliPay
+from alipay.utils import AliPayConfig
 
 # Making sure your key file is adhered to standards.
 # you may find examples at tests/certs/ali/ali_private_key.pem
@@ -70,6 +71,8 @@ alipay_public_key_string = """
     -----END PUBLIC KEY-----
 """
 
+
+
 alipay = AliPay(
     appid="",
     app_notify_url=None,  # the default notify path
@@ -77,7 +80,8 @@ alipay = AliPay(
     # alipay public key, do not use your own public key!
     alipay_public_key_string=alipay_public_key_string,
     sign_type="RSA", # RSA or RSA2
-    debug=False  # False by default
+    debug=False,  # False by default
+    config=AliPayConfig(timeout=15)  # optional, request timeout
 )
 
 

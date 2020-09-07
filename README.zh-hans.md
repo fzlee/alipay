@@ -50,6 +50,7 @@ OpenSSL> exit
 #### 初始化
 ```python
 from alipay import AliPay, DCAliPay, ISVAliPay
+from alipay.utils import AliPayConfig
 
 app_private_key_string = open("/path/to/your/private/key.pem").read()
 alipay_public_key_string = open("/path/to/alipay/public/key.pem").read()
@@ -73,7 +74,8 @@ alipay = AliPay(
     # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
     alipay_public_key_string=alipay_public_key_string,
     sign_type="RSA" # RSA 或者 RSA2
-    debug=False  # 默认False
+    debug=False,  # 默认False
+    config=AliPayConfig(timeout=15)  # 可选, 请求超时时间
 )
 
 dc_alipay = DCAliPay(

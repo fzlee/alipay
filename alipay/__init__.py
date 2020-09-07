@@ -17,6 +17,7 @@ from Cryptodome.Signature import PKCS1_v1_5
 
 from .compat import decodebytes, encodebytes, quote_plus, urlopen
 from .exceptions import AliPayException, AliPayValidationError
+from .utils import AliPayConfig
 
 
 # 常见加密算法
@@ -57,7 +58,8 @@ class BaseAliPay:
         app_private_key_string=None,
         alipay_public_key_string=None,
         sign_type="RSA2",
-        debug=False
+        debug=False,
+        config=None
     ):
         """
         初始化:
@@ -71,6 +73,7 @@ class BaseAliPay:
         self._app_notify_url = app_notify_url
         self._app_private_key_string = app_private_key_string
         self._alipay_public_key_string = alipay_public_key_string
+        self._config = config or AliPayConfig()
 
         self._app_private_key = None
         self._alipay_public_key = None
@@ -570,7 +573,7 @@ class BaseAliPay:
 
     def verified_sync_response(self, data, response_type):
         url = self._gateway + "?" + self.sign_data(data)
-        raw_string = urlopen(url, timeout=15).read().decode()
+        raw_string = urlopen(url, timeout=self._config.timeout).read().decode()
         return self._verify_and_return_sync_response(raw_string, response_type)
 
     def _get_string_to_be_signed(self, raw_string, response_type):
