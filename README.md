@@ -51,7 +51,7 @@ There is also an [example](https://github.com/fzlee/alipay/blob/master/tests/cer
 
 #### Initialization
 ```python
-from alipay import AliPay, DCAlipay, ISVAliPay
+from alipay import AliPay, DCAliPay, ISVAliPay
 from alipay.utils import AliPayConfig
 
 # Making sure your key file is adhered to standards.
