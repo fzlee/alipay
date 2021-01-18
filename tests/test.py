@@ -394,6 +394,9 @@ class DCAliPayTestCase(AliPayTestCase):
     def _prepare_create_face_to_face_response(self, alipay):
         return self._prepare_sync_response(alipay, "alipay_trade_pay_response")
 
+    def _prepare_alipay_fund_trans_uni_transfer_response(self, alipay):
+        return self._prepare_sync_response(alipay, "alipay_fund_trans_uni_transfer_response")
+
     def test_sign_data_with_private_key_sha256(self):
         """openssl 以及aliapy分别对数据进行签名，得到同样的结果
         """
@@ -421,6 +424,21 @@ class DCAliPayTestCase(AliPayTestCase):
             "subject"
         )
 
+        self.assertTrue(mock_urlopen.called)
+
+    @mock.patch("alipay.urlopen")
+    def test_alipay_fund_trans_uni_transfer(self, mock_urlopen):
+        alipay = self.get_client()
+        response = mock.Mock()
+        response.read.return_value = self._prepare_alipay_fund_trans_uni_transfer_response(alipay)
+        mock_urlopen.return_value = response
+
+        alipay.api_alipay_fund_trans_uni_transfer(
+            "out_biz_no",
+            "ALIPAY_LOGON_ID",
+            "alipay account",
+            8.88,
+        )
         self.assertTrue(mock_urlopen.called)
 
 

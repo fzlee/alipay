@@ -719,6 +719,32 @@ class DCAliPay(BaseAliPay):
             self._alipay_root_cert_sn = self.get_root_cert_sn(self._alipay_root_cert_string)
         return getattr(self, "_alipay_root_cert_sn")
 
+    def api_alipay_fund_trans_uni_transfer(
+        self, out_biz_no, identity_type, identity, trans_amount, name=None, **kwargs
+    ):
+        """
+        单笔转账接口, 只支持公钥证书模式
+        文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.trans.uni.transfer
+        """
+        assert identity_type in ("ALIPAY_USER_ID", "ALIPAY_LOGON_ID"), "unknown identity type"
+
+        biz_content = {
+            "payee_info": {
+                "identity": identity,
+                "identity_type": identity_type,
+            },
+            "out_biz_no": out_biz_no,
+            "trans_amount": trans_amount,
+            "product_code": "TRANS_ACCOUNT_NO_PWD",
+            "biz_scene": "DIRECT_TRANSFER",
+        }
+        biz_content["payee_info"]["name"] = name if name else None
+        biz_content.update(kwargs)
+
+        response_type = "alipay_fund_trans_uni_transfer_response"
+        data = self.build_body("alipay.fund.trans.uni.transfer", biz_content)
+        return self.verified_sync_response(data, response_type)
+
 
 class ISVAliPay(BaseAliPay):
 

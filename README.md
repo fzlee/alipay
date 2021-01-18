@@ -1,6 +1,6 @@
 ## python-alipay-sdk
 [![PyPI version](https://badge.fury.io/py/python-alipay-sdk.svg)](https://badge.fury.io/py/python-alipay-sdk) [![codecov](https://codecov.io/gh/fzlee/alipay/branch/master/graph/badge.svg)](https://codecov.io/gh/fzlee/alipay) ![travis-ci](https://travis-ci.org/fzlee/alipay.svg?branch=master)
-## [中文文档](https://github.com/fzlee/alipay/blob/master/README.zh-hans.md)
+## [中文文档](./README.zh-hans.md)
 
 ##  Unofficial AliPay Python SDK
 
@@ -19,6 +19,7 @@ So far, the following functions are supported:
 * [Order Settlement](#alipay.trade.order.settle)
 * [Close Order](#alipay.trade.close)
 * [Transfer money to alipay account](#alipay.fund.trans.toaccount.transfer)
+* [DC transfer money to alipay account](#alipay.fund.trans.uni.transfer)
 * [Query money transfer result](#alipay.fund.trans.order.query)
 * [ISV integration/Get app_auth_code by app_auth_token](#alipay.open.auth.token.app)
 * [ISV integration/Query authorized apps](#alipay.open.auth.token.app.query)
@@ -387,6 +388,19 @@ result = {
     'out_biz_no': '', 
     'pay_date': '2017-06-26 14:36:25'
 }
+```
+
+#### <a name="alipay.fund.trans.uni.transfer"></a>[alipay.fund.trans.uni.transfer](https://opendocs.alipay.com/apis/api_28/alipay.fund.trans.uni.transfer)
+```python
+# Only support dc_client. Transfer money to alipay account
+result = dc_alipay.api_alipay_fund_trans_uni_transfer(
+    out_biz_no=datetime.now().strftime("%Y%m%d%H%M%S"),
+    identity_type="ALIPAY_LOGON_ID/ALIPAY_LOGON_ID",
+    identity="egdjny5218@sandbox.com",
+    trans_amount=82.32,
+    name="沙箱环境"
+)
+result = {'code': '10000', 'msg': 'Success', 'order_id': '', 'out_biz_no': '', 'status': 'SUCCESS'}
 ```
 
 #### <a name="alipay.fund.trans.order.query"></a> [alipay.fund.trans.order.query](https://docs.open.alipay.com/api_28/alipay.fund.trans.order.query)

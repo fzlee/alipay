@@ -18,6 +18,7 @@
 * [统一收单交易结算接口](#alipay.trade.order.settle)
 * [统一收单交易关闭接口](#alipay.trade.close)
 * [单笔转账到支付宝账户接口](#alipay.fund.trans.toaccount.transfer)
+* [DC/单笔转账接口](#alipay.fund.trans.uni.transfer)
 * [查询转账订单接口](#alipay.fund.trans.order.query)
 * [ISV集成/生成app_auth_code](#alipay.open.auth.token.app)
 * [ISV集成/查询授权产品](#alipay.open.auth.token.app.query)
@@ -381,6 +382,19 @@ result = alipay.api_alipay_fund_trans_toaccount_transfer(
     amount=3.12
 )
 result = {'code': '10000', 'msg': 'Success', 'order_id': '', 'out_biz_no': '', 'pay_date': '2017-06-26 14:36:25'}
+```
+
+#### <a name="alipay.fund.trans.uni.transfer"></a>单笔转账接口 [alipay.fund.trans.uni.transfer](https://opendocs.alipay.com/apis/api_28/alipay.fund.trans.uni.transfer)
+```python
+# Only support dc_client. Transfer money to alipay account
+result = dc_alipay.api_alipay_fund_trans_uni_transfer(
+    out_biz_no=datetime.now().strftime("%Y%m%d%H%M%S"),
+    identity_type="ALIPAY_LOGON_ID/ALIPAY_LOGON_ID",
+    identity="egdjny5218@sandbox.com",
+    trans_amount=82.32,
+    name="沙箱环境"
+)
+result = {'code': '10000', 'msg': 'Success', 'order_id': '', 'out_biz_no': '', 'status': 'SUCCESS'}
 ```
 
 #### <a name="alipay.fund.trans.order.query"></a> 查询转账订单接口 [alipay.fund.trans.order.query](https://docs.open.alipay.com/api_28/alipay.fund.trans.order.query)
