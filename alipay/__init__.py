@@ -536,6 +536,20 @@ class BaseAliPay:
         response_type = "alipay_trade_order_settle_response"
         return self.verified_sync_response(data, response_type)
 
+    def api_alipay_ebpp_invoice_token_batchquery(self, invoice_token=None, scene=None):
+        if scene is None:
+            scene = "INVOICE_EXPENSE"
+        if invoice_token is None:
+            raise Exception("invoice_token is None!")
+
+        biz_content = {
+            "invoice_token": invoice_token,
+            "scene": scene
+        }
+        data = self.build_body("alipay.ebpp.invoice.token.batchquery", biz_content)
+        response_type = "alipay_ebpp_invoice_token_batchquery_response"
+        return self.verified_sync_response(data, response_type)
+
     def _verify_and_return_sync_response(self, raw_string, response_type):
         """
         return response if verification succeeded, raise exception if not
