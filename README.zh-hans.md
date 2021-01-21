@@ -407,6 +407,15 @@ print(result)
 ```
 
 
+#### <a name="alipay.ebpp.invoice.token.batchquery"></a> 根据查询令牌获取发票要素列表 [alipay.ebpp.invoice.token.batchquery](https://opendocs.alipay.com/pre-apis/api_pre/alipay.ebpp.invoice.token.batchquery)
+
+```python
+result = alipay.api_alipay_ebpp_invoice_token_batchquery(
+    invoice_token="123456"
+)
+print(result)
+```
+
 ## [ISV 集成](https://doc.open.alipay.com/doc2/detail?treeId=216&articleId=105193&docType=1)
 
 在开始前，请务必阅读[官方文档](https://docs.open.alipay.com/common/105193)
