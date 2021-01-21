@@ -411,6 +411,15 @@ result = alipay.api_alipay_fund_trans_order_query(
 print(result)
 ```
 
+#### <a name="alipay.ebpp.invoice.token.batchquery"></a> [alipay.ebpp.invoice.token.batchquery](https://opendocs.alipay.com/pre-apis/api_pre/alipay.ebpp.invoice.token.batchquery)
+
+```python
+result = alipay.api_alipay_ebpp_invoice_token_batchquery(
+    invoice_token="123456"
+)
+print(result)
+```
+
 ## [ISV Integration](https://doc.open.alipay.com/doc2/detail?treeId=216&articleId=105193&docType=1)
 
 Go through [the details](https://docs.open.alipay.com/common/105193) before you do anything, or it may pains.
