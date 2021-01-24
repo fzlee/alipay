@@ -135,9 +135,7 @@ class BaseAliPay:
                 data[k] = json.dumps(v, separators=(',', ':'))
         return sorted(data.items())
 
-    def build_body(
-        self, method, biz_content, return_url=None, notify_url=None, append_auth_token=False
-    ):
+    def build_body(self, method, biz_content, **kwargs):
         data = {
             "app_id": self._appid,
             "method": method,
@@ -147,22 +145,18 @@ class BaseAliPay:
             "version": "1.0",
             "biz_content": biz_content
         }
-        if append_auth_token:
-            data["app_auth_token"] = self.app_auth_token
-
-        if return_url is not None:
-            data["return_url"] = return_url
+        data.update(kwargs)
 
         if method in (
-            "alipay.trade.app.pay", "alipay.trade.wap.pay", "alipay.trade.page.pay",
-            "alipay.trade.pay", "alipay.trade.precreate"
-        ) and (notify_url or self._app_notify_url):
-            data["notify_url"] = notify_url or self._app_notify_url
+            "alipay.trade.app.pay", "alipay.trade.wap.pay",
+            "alipay.trade.page.pay", "alipay.trade.pay",
+            "alipay.trade.precreate"
+        ) and not data.get("notify_url") and self._app_notify_url:
+            data["notify_url"] = self._app_notify_url
 
         return data
 
     def sign_data(self, data):
-        data.pop("sign", None)
         # 排序后的字符串
         ordered_items = self._ordered_data(data)
         raw_string = "&".join("{}={}".format(k, v) for k, v in ordered_items)
@@ -170,6 +164,7 @@ class BaseAliPay:
         unquoted_items = ordered_items + [('sign', sign)]
 
         # 获得最终的订单信息字符串
+        print(unquoted_items)
         signed_string = "&".join("{}={}".format(k, quote_plus(v)) for k, v in unquoted_items)
         return signed_string
 
@@ -194,15 +189,22 @@ class BaseAliPay:
         message = "&".join(u"{}={}".format(k, v) for k, v in unsigned_items)
         return self._verify(message, signature)
 
-    def api(self, api_name, **kwargs):
+    def client_api(self, api_name, biz_content, **kwargs):
         """
-        alipay.api("alipay.trade.page.pay", **kwargs) ==> alipay.api_alipay_trade_page_pay(**kwargs)
+        alipay api without http request
         """
-        api_name = api_name.replace(".", "_")
-        key = "api_" + api_name
-        if hasattr(self, key):
-            return getattr(self, key)
-        raise AttributeError("Unknown attribute" + api_name)
+        data = self.build_body(api_name, biz_content, **kwargs)
+        return self.sign_data(data)
+
+    def server_api(self, api_name, biz_content, **kwargs):
+        """
+        alipay api with http request
+        """
+        data = self.build_body(api_name, biz_content, **kwargs)
+        # alipay.trade.query => alipay_trade_query_response
+        response_type = api_name.replace(".", "_") + "_response"
+        print(data)
+        return self.verified_sync_response(data, response_type)
 
     def api_alipay_trade_wap_pay(
         self, subject, out_trade_no, total_amount,
@@ -798,6 +800,12 @@ class ISVAliPay(BaseAliPay):
                 raise Exception(msg.format(self._app_auth_code))
         return self._app_auth_token
 
+    def build_body(self, *args, **kwargs):
+        data = super().build_body(*args, **kwargs)
+        if self._app_auth_token:
+            data["app_auth_token"] = self._app_auth_token
+        return data
+
     def api_alipay_open_auth_token_app(self, refresh_token=None):
         """
         response = {
@@ -825,7 +833,6 @@ class ISVAliPay(BaseAliPay):
         data = self.build_body(
             "alipay.open.auth.token.app",
             biz_content,
-            append_auth_token=False
         )
         response_type = "alipay_open_auth_token_app_response"
         return self.verified_sync_response(data, response_type)
@@ -835,7 +842,6 @@ class ISVAliPay(BaseAliPay):
         data = self.build_body(
             "alipay.open.auth.token.app.query",
             biz_content,
-            append_auth_token=False
         )
         response_type = "alipay_open_auth_token_app_query_response"
         return self.verified_sync_response(data, response_type)
