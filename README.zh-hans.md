@@ -11,7 +11,9 @@
 * [接口](./docs/apis.zh-hans.md)
 * [3.0新版接口](./docs/apis_new.zh-hans.md) 
 
-## 升级到3.0
+## 3.0的特性以及如何升级
+3.0 提供了两个函数`client_api`和`server_api`, 他们可以处理大部分支付宝的接口.
+
 3.0 保持向前的兼容性, 唯一需要注意的是`Alipay.verify`函数不会将sign从data里面pop出来, 你需要自己处理. 
 
 ## 测试

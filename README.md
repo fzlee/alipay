@@ -13,8 +13,11 @@ Taking a look at [this guide](https://ifconfiger.com/page/python-alipay-sdk) if 
 * [New Styled API, introduced in 3.0](./docs/apis_new.md)
 
 
-## Migrate to 3.0
-3.0 keeps backward compability with 2.*, The only thing you should keep in mind is `verify` won't pop `sign` from `data`, you sholud hanlde it by yourself  
+## What's new in 3.0 and how to migrate to 3.0
+3.0 introduced two new functions: `client_api` and `server_appi` as a replacement of old-styled function based api 
+
+
+3.0 keeps backward compability with 2.*, The only thing you should keep in mind is `verify` won't pop `sign` from `data`, you should handle it by yourself.  
 
 
 ## Test
@@ -26,5 +29,3 @@ Or you may do test manually in this way, `debug=True` will direct your request t
 ```
 alipay = AliPay(..., debug=True)
 ```
-
-## [Changelog](https://github.com/fzlee/alipay/blob/master/CHANGELOG.md)
