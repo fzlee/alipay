@@ -26,6 +26,7 @@ alipay = AliPay(
     alipay_public_key_string=alipay_public_key_string,
     sign_type="RSA" # RSA 或者 RSA2
     debug=False,  # 默认False
+    verbose=False,  # 输出调试数据
     config=AliPayConfig(timeout=15)  # 可选, 请求超时时间
 )
 

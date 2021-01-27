@@ -18,6 +18,7 @@ from Cryptodome.Signature import PKCS1_v1_5
 from .compat import decodebytes, encodebytes, quote_plus, urlopen
 from .exceptions import AliPayException, AliPayValidationError
 from .utils import AliPayConfig
+from .loggers import logger
 
 
 # 常见加密算法
@@ -59,6 +60,7 @@ class BaseAliPay:
         alipay_public_key_string=None,
         sign_type="RSA2",
         debug=False,
+        verbose=False,
         config=None
     ):
         """
@@ -73,6 +75,7 @@ class BaseAliPay:
         self._app_notify_url = app_notify_url
         self._app_private_key_string = app_private_key_string
         self._alipay_public_key_string = alipay_public_key_string
+        self._verbose = verbose
         self._config = config or AliPayConfig()
 
         self._app_private_key = None
@@ -154,6 +157,9 @@ class BaseAliPay:
         ) and not data.get("notify_url") and self._app_notify_url:
             data["notify_url"] = self._app_notify_url
 
+        if self._verbose:
+            logger.debug("data to be signed")
+            logger.debug(data)
         return data
 
     def sign_data(self, data):
@@ -164,8 +170,10 @@ class BaseAliPay:
         unquoted_items = ordered_items + [('sign', sign)]
 
         # 获得最终的订单信息字符串
-        print(unquoted_items)
         signed_string = "&".join("{}={}".format(k, quote_plus(v)) for k, v in unquoted_items)
+        if self._verbose:
+            logger.debug("signed srtring")
+            logger.debug(signed_string)
         return signed_string
 
     def _verify(self, raw_content, signature):
@@ -671,6 +679,9 @@ class DCAliPay(BaseAliPay):
         data = super().build_body(*args, **kwargs)
         data["app_cert_sn"] = self.app_cert_sn
         data["alipay_root_cert_sn"] = self.alipay_root_cert_sn
+        if self._verbose:
+            logger.debug("data to be signed")
+            logger.debug(data)
         return data
 
     def load_alipay_public_key_string(self):
@@ -804,6 +815,10 @@ class ISVAliPay(BaseAliPay):
         data = super().build_body(*args, **kwargs)
         if self._app_auth_token:
             data["app_auth_token"] = self._app_auth_token
+        if self._verbose:
+            logger.debug("data to be signed")
+            logger.debug(data)
+                
         return data
 
     def api_alipay_open_auth_token_app(self, refresh_token=None):
