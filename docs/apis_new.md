@@ -21,7 +21,7 @@ alipay.client_api(
     "total_amount": 0.01,
     "subject": "an orders"
   },
-  return_url="https://example.com", # this is optional
+  return_url="https://example.com" 
 )
 
 # query order status
@@ -33,7 +33,6 @@ alipay.server_api(
 )
 
 # refund
-
 alipay.server_api(
   "alipay.rade.refund",
   biz_content={

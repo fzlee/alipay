@@ -10,14 +10,14 @@ Taking a look at [this guide](https://ifconfiger.com/page/python-alipay-sdk) if 
 * [Preparation](./docs/preparation.md)
 * [Initialization & validation](./docs/init.md)
 * [API](./docs/apis.md)
-* [New Styled API, introduced in 3.0](./docs/apis_new.md)
+* [Advanced API, introduced in 3.0](./docs/apis_new.md)
 
 
 ## What's new in 3.0 and how to migrate to 3.0
-3.0 introduced two new functions: `client_api` and `server_appi` as a replacement of old-styled function based api 
+3.0 introduced two new functions: `client_api` and `server_appi` as a replacement of old-styled function based api .
 
 
-3.0 keeps backward compability with 2.*, The only thing you should keep in mind is `verify` won't pop `sign` from `data`, you should handle it by yourself.  
+3.0 keeps backward compability with 2.*, The only thing you should keep in mind is `Alipay.verify` won't pop `sign` from `data` automatically, you should handle it by yourself.  
 
 
 ## Test
