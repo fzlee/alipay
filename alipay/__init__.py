@@ -153,7 +153,7 @@ class BaseAliPay:
         if method in (
             "alipay.trade.app.pay", "alipay.trade.wap.pay",
             "alipay.trade.page.pay", "alipay.trade.pay",
-            "alipay.trade.precreate"
+            "alipay.trade.precreate", "alipay.trade.create"
         ) and not data.get("notify_url") and self._app_notify_url:
             data["notify_url"] = self._app_notify_url
 
@@ -445,7 +445,7 @@ class BaseAliPay:
             "total_amount": total_amount
         }
         biz_content.update(kwargs)
-        data = self.build_body("alipay.trade.create", biz_content)
+        data = self.build_body("alipay.trade.create", biz_content, notify_url=notify_url)
         response_type = "alipay_trade_create"
         return self.verified_sync_response(data, response_type)
 
