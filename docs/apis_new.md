@@ -19,7 +19,7 @@ alipay.client_api(
   biz_content={
     "out_trade_no": "20161112",
     "total_amount": 0.01,
-    "subject": "an orders",
+    "subject": "an order",
     "product_code": "FAST_INSTANT_TRADE_PAY"
   },
   return_url="https://example.com" 
