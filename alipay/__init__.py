@@ -3,7 +3,6 @@
 """
     __init__.py
     ~~~~~~~~~~
-
 """
 import json
 from datetime import datetime
@@ -66,9 +65,9 @@ class BaseAliPay:
         """
         初始化:
         alipay = AliPay(
-          appid="",
-          app_notify_url="http://example.com",
-          sign_type="RSA2"
+            appid="",
+            app_notify_url="http://example.com",
+            sign_type="RSA2"
         )
         """
         self._appid = str(appid)
@@ -108,17 +107,16 @@ class BaseAliPay:
         方法1
             key = rsa.PrivateKey.load_pkcs1(open(self._app_private_key_string).read())
             sign = rsa.sign(unsigned_string.encode(), key, "SHA-1")
-            # base64 编码，转换为unicode表示并移除回车
+            # base64 编码，转换为 unicode 表示并移除回车
             sign = base64.encodebytes(sign).decode().replace("\n", "")
         方法2
             key = RSA.importKey(open(self._app_private_key_string).read())
             signer = PKCS1_v1_5.new(key)
             signature = signer.sign(SHA.new(unsigned_string.encode()))
-            # base64 编码，转换为unicode表示并移除回车
+            # base64 编码，转换为 unicode 表示并移除回车
             sign = base64.encodebytes(signature).decode().replace("\n", "")
         方法3
             echo "abc" | openssl sha1 -sign alipay.key | openssl base64
-
         """
         # 开始计算签名
         key = self.app_private_key
@@ -127,7 +125,7 @@ class BaseAliPay:
             signature = signer.sign(SHA.new(unsigned_string.encode()))
         else:
             signature = signer.sign(SHA256.new(unsigned_string.encode()))
-        # base64 编码，转换为unicode表示并移除回车
+        # base64 编码，转换为 unicode 表示并移除回车
         sign = encodebytes(signature).decode().replace("\n", "")
         return sign
 
@@ -267,29 +265,29 @@ class BaseAliPay:
     def api_alipay_trade_query(self, out_trade_no=None, trade_no=None):
         """
         response = {
-          "alipay_trade_query_response": {
-            "trade_no": "2017032121001004070200176844",
-            "code": "10000",
-            "invoice_amount": "20.00",
-            "open_id": "20880072506750308812798160715407",
-            "fund_bill_list": [
-              {
-                "amount": "20.00",
-                "fund_channel": "ALIPAYACCOUNT"
-              }
-            ],
-            "buyer_logon_id": "csq***@sandbox.com",
-            "send_pay_date": "2017-03-21 13:29:17",
-            "receipt_amount": "20.00",
-            "out_trade_no": "out_trade_no15",
-            "buyer_pay_amount": "20.00",
-            "buyer_user_id": "2088102169481075",
-            "msg": "Success",
-            "point_amount": "0.00",
-            "trade_status": "TRADE_SUCCESS",
-            "total_amount": "20.00"
-          },
-          "sign": ""
+            "alipay_trade_query_response": {
+                "trade_no": "2017032121001004070200176844",
+                "code": "10000",
+                "invoice_amount": "20.00",
+                "open_id": "20880072506750308812798160715407",
+                "fund_bill_list": [
+                    {
+                        "amount": "20.00",
+                        "fund_channel": "ALIPAYACCOUNT"
+                    }
+                ],
+                "buyer_logon_id": "csq***@sandbox.com",
+                "send_pay_date": "2017-03-21 13:29:17",
+                "receipt_amount": "20.00",
+                "out_trade_no": "out_trade_no15",
+                "buyer_pay_amount": "20.00",
+                "buyer_user_id": "2088102169481075",
+                "msg": "Success",
+                "point_amount": "0.00",
+                "trade_status": "TRADE_SUCCESS",
+                "total_amount": "20.00"
+            },
+            "sign": ""
         }
         """
         assert (out_trade_no is not None) or (trade_no is not None),\
@@ -331,18 +329,17 @@ class BaseAliPay:
             },
             "sign": ""
         }
-        succeeded response =
-            {
-              "alipay_trade_pay_response": {
+        succeeded response = {
+            "alipay_trade_pay_response": {
                 "trade_no": "2017032121001004070200176846",
                 "code": "10000",
                 "invoice_amount": "20.00",
                 "open_id": "20880072506750308812798160715407",
                 "fund_bill_list": [
-                  {
-                    "amount": "20.00",
-                    "fund_channel": "ALIPAYACCOUNT"
-                  }
+                    {
+                        "amount": "20.00",
+                        "fund_channel": "ALIPAYACCOUNT"
+                    }
                 ],
                 "buyer_logon_id": "csq***@sandbox.com",
                 "receipt_amount": "20.00",
@@ -353,9 +350,9 @@ class BaseAliPay:
                 "point_amount": "0.00",
                 "gmt_payment": "2017-03-21 15:07:29",
                 "total_amount": "20.00"
-              },
-              "sign": ""
-            }
+            },
+            "sign": ""
+        }
         """
         assert scene in ("bar_code", "wave_code"), 'scene not in ("bar_code", "wave_code")'
 
@@ -387,12 +384,12 @@ class BaseAliPay:
     def api_alipay_trade_cancel(self, out_trade_no=None, trade_no=None):
         """
         response = {
-        "alipay_trade_cancel_response": {
-            "msg": "Success",
-            "out_trade_no": "out_trade_no15",
-            "code": "10000",
-            "retry_flag": "N"
-          }
+            "alipay_trade_cancel_response": {
+                "msg": "Success",
+                "out_trade_no": "out_trade_no15",
+                "code": "10000",
+                "retry_flag": "N"
+            }
         }
         """
 
@@ -453,26 +450,26 @@ class BaseAliPay:
             self, subject, out_trade_no, total_amount, notify_url=None, **kwargs
     ):
         """
-        success response  = {
-          "alipay_trade_precreate_response": {
-            "msg": "Success",
-            "out_trade_no": "out_trade_no17",
-            "code": "10000",
-            "qr_code": "https://qr.alipay.com/bax03431ljhokirwl38f00a7"
-          },
-          "sign": ""
+        success response = {
+            "alipay_trade_precreate_response": {
+                "msg": "Success",
+                "out_trade_no": "out_trade_no17",
+                "code": "10000",
+                "qr_code": "https://qr.alipay.com/bax03431ljhokirwl38f00a7"
+            },
+            "sign": ""
         }
+
 
         failed response = {
-          "alipay_trade_precreate_response": {
-            "msg": "Business Failed",
-            "sub_code": "ACQ.TOTAL_FEE_EXCEED",
-            "code": "40004",
-            "sub_msg": "订单金额超过限额"
-          },
-          "sign": ""
+            "alipay_trade_precreate_response": {
+                "msg": "Business Failed",
+                "sub_code": "ACQ.TOTAL_FEE_EXCEED",
+                "code": "40004",
+                "sub_msg": "订单金额超过限额"
+            },
+            "sign": ""
         }
-
         """
         biz_content = {
             "out_trade_no": out_trade_no,
@@ -569,16 +566,15 @@ class BaseAliPay:
 
         failed response is like this
         {
-          "alipay_trade_query_response": {
-            "sub_code": "isv.invalid-app-id",
-            "code": "40002",
-            "sub_msg": "无效的AppID参数",
-            "msg": "Invalid Arguments"
-          }
+            "alipay_trade_query_response": {
+                "sub_code": "isv.invalid-app-id",
+                "code": "40002",
+                "sub_msg": "无效的AppID参数",
+                "msg": "Invalid Arguments"
+            }
         }
         """
         response = json.loads(raw_string)
-        # raise exceptions
         if "sign" not in response.keys():
             result = response[response_type]
             raise AliPayException(
@@ -824,14 +820,14 @@ class ISVAliPay(BaseAliPay):
     def api_alipay_open_auth_token_app(self, refresh_token=None):
         """
         response = {
-          "code": "10000",
-          "msg": "Success",
-          "app_auth_token": "201708BB28623ce3d10f4f62875e9ef5cbeebX07",
-          "app_refresh_token": "201708BB108a270d8bb6409890d16175a04a7X07",
-          "auth_app_id": "appid",
-          "expires_in": 31536000,
-          "re_expires_in": 32140800,
-          "user_id": "2088xxxxx
+            "code": "10000",
+            "msg": "Success",
+            "app_auth_token": "201708BB28623ce3d10f4f62875e9ef5cbeebX07",
+            "app_refresh_token": "201708BB108a270d8bb6409890d16175a04a7X07",
+            "auth_app_id": "appid",
+            "expires_in": 31536000,
+            "re_expires_in": 32140800,
+            "user_id": "2088xxxxx
         }
         """
 

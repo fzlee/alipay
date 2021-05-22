@@ -3,7 +3,6 @@
 """
     compat.py
     ~~~~~~~~~~
-
 """
 from urllib.parse import quote_plus
 from urllib.request import urlopen

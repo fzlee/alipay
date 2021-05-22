@@ -1,5 +1,4 @@
 ## Initialization
-
 ```python
 from alipay import AliPay, DCAliPay, ISVAliPay
 from alipay.utils import AliPayConfig
@@ -27,9 +26,9 @@ alipay = AliPay(
     app_private_key_string=app_private_key_string,
     # alipay public key, do not use your own public key!
     alipay_public_key_string=alipay_public_key_string,
-    sign_type="RSA2", # RSA or RSA2
+    sign_type="RSA2",  # RSA or RSA2
     debug=False,  # False by default
-    verbose=False, # useful for debugging
+    verbose=False,  # useful for debugging
     config=AliPayConfig(timeout=15)  # optional, request timeout
 )
 
@@ -52,8 +51,8 @@ isv_alipay = ISVAliPay(
     app_private_key_string="",
     # alipay public key, do not use your own public key!
     alipay_public_key_string=alipay_public_key_string,
-    sign_type="RSA" # RSA or RSA2
-    debug=False  # False by default,
+    sign_type="RSA",  # RSA or RSA2
+    debug=False,  # False by default
     app_auth_code=None,
     app_auth_token=None
 )
@@ -86,7 +85,7 @@ app = Flask(__name__)
 @app.route('/', methods=["GET", "POST"])
 def hello_world():
     data = request.form.to_dict()
-    # sign must be poped out
+    # sign must be popped out
     signature = data.pop("sign")
 
     print(json.dumps(data))
@@ -94,25 +93,25 @@ def hello_world():
 
     # verify
     success = alipay.verify(data, signature)
-    if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED" ):
+    if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED"):
         print("trade succeed")
     return 'Hello, World!'
 ```
 
-And also an example for Django
+And also an example for Django:
 ```python
-
 def hello_world(request):
     # for django users
     data = request.dict()
     # for rest_framework users
     data = request.data
 
+    # sign must be popped out
     signature = data.pop("sign")
 
     # verification
     success = alipay.verify(data, signature)
-    if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED" ):
+    if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED"):
         print("trade succeed")
     return 'Hello, World!'
 ```
@@ -146,9 +145,11 @@ data = {
      "invoice_amount": "0.01",
      "sign": "xxx"
 }
+
+# sign must be popped out
 signature = data.pop("sign")
 success = alipay.verify(data, signature)
-if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED" ):
+if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED"):
     print("trade succeed")
 ```
 
@@ -157,7 +158,7 @@ if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED" ):
 Go through [the details](https://docs.open.alipay.com/common/105193) before you do anything, or it may pains.
 
 #### alipay.open.auth.token.app
-```
+```python
 isv_alipay = ISVAliPay(
     ...
     app_auth_code="app_auth_code"
@@ -172,6 +173,6 @@ response = {
     "auth_app_id": "appid",
     "expires_in": 31536000,
     "re_expires_in": 32140800,
-    "user_id": "2088xxxxx
+    "user_id": "2088xxxxx",
 }
-`
+```
