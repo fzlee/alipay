@@ -3,7 +3,6 @@
 """
     setup.py
     ~~~~~~~~~~
-
 """
 from setuptools import setup
 import unittest

@@ -41,5 +41,4 @@ alipay.server_api(
     "refund_amount": 12.34
   }
 )
-
 ```

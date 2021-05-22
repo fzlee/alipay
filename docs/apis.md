@@ -89,7 +89,7 @@ app = Flask(__name__)
 @app.route('/', methods=["GET", "POST"])
 def hello_world():
     data = request.form.to_dict()
-    # sign must be poped out
+    # sign must be popped out
     signature = data.pop("sign")
 
     print(json.dumps(data))
@@ -284,7 +284,7 @@ result = dc_alipay.api_alipay_fund_trans_uni_transfer(
     identity_type="ALIPAY_LOGON_ID/ALIPAY_LOGON_ID",
     identity="egdjny5218@sandbox.com",
     trans_amount=82.32,
-    name="沙箱环境"
+    name="sandbox env"
 )
 result = {'code': '10000', 'msg': 'Success', 'order_id': '', 'out_biz_no': '', 'status': 'SUCCESS'}
 ```
@@ -311,7 +311,7 @@ print(result)
 Go through [the details](https://docs.open.alipay.com/common/105193) before you do anything, or it may pains.
 
 #### alipay.open.auth.token.app
-```
+```python
 isv_alipay = ISVAliPay(
     ...
     app_auth_code="app_auth_code"
@@ -331,6 +331,6 @@ response = {
 ```
 
 #### alipay.open.auth.token.app.query
-```
+```python
 response = isv_alipay.alipay_open_auth_token_app_query()
 ```

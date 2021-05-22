@@ -89,10 +89,10 @@ ENV/
 # Rope project settings
 .ropeproject
 
-
 # OSX stuff
 .DS_Store
 
-
 # local project folder
 localtest/
+.idea
+.vscode

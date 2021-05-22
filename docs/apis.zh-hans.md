@@ -21,42 +21,42 @@
 #### <a name="alipay.trade.page.pay"></a>电脑网站支付 [alipay.trade.page.pay](https://docs.open.alipay.com/270/105900/)
 
 ```python
-# 如果你是Python 2用户（考虑考虑升级到Python 3吧），请确保非ascii的字符串为utf8编码：
+# 如果你是 Python2 用户（考虑考虑升级到 Python3 吧），请确保非 ascii 的字符串为 utf8 编码：
 subject = u"测试订单".encode("utf8")
-# 如果你是 Python 3的用户，使用默认的字符串即可
+# 如果你是 Python3 的用户，使用默认的字符串即可
 subject = "测试订单"
 
-# 电脑网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
+# 电脑网站支付，需要跳转到：https://openapi.alipay.com/gateway.do? + order_string
 order_string = alipay.api_alipay_trade_page_pay(
     out_trade_no="20161112",
     total_amount=0.01,
     subject=subject,
     return_url="https://example.com",
-    notify_url="https://example.com/notify" # 可选, 不填则使用默认notify url
+    notify_url="https://example.com/notify" # 可选，不填则使用默认 notify url
 )
 ```
 
 #### <a name="alipay.trade.wap.pay"></a>手机网站支付 [alipay.trade.wap.pay](https://docs.open.alipay.com/60/104790)
 
 ```python
-# 手机网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
+# 手机网站支付，需要跳转到：https://openapi.alipay.com/gateway.do? + order_string
 order_string = alipay.api_alipay_trade_wap_pay(
     out_trade_no="20161112",
     total_amount=0.01,
     subject=subject,
     return_url="https://example.com",
-    notify_url="https://example.com/notify" # 可选, 不填则使用默认notify url
+    notify_url="https://example.com/notify" # 可选，不填则使用默认 notify url
 )
 ```
 
 #### <a name="alipay.trade.app.pay"></a>App支付 [alipay.trade.app.pay](https://docs.open.alipay.com/204/105465)
 ```python
-# App支付，将order_string返回给app即可
+# App 支付，将 order_string 返回给 app 即可
 order_string = alipay.api_alipay_trade_app_pay(
     out_trade_no="20161112",
     total_amount=0.01,
     subject=subject,
-    notify_url="https://example.com/notify" # 可选, 不填则使用默认notify url
+    notify_url="https://example.com/notify" # 可选，不填则使用默认 notify url
 )
 ```
 
@@ -74,7 +74,7 @@ alipay.api_alipay_trade_create(
 
 
 #### <a name="verification"></a>[通知验证](https://docs.open.alipay.com/58/103596/)
-这里有一个简单的基于flask的验证：
+这里有一个简单的基于 flask 的验证：
 ```python
 from flask import Flask
 from flask import request
@@ -95,9 +95,8 @@ def hello_world():
         print("trade succeed")
 ```
 
-Django版的
+Django 版的
 ```python
-
 def hello_world(request):
     # for django users
     data = request.dict()
@@ -117,7 +116,7 @@ def hello_world(request):
 
 一般而言，可以这样验证回调通知
 ```python
-# 验证alipay的异步通知，data来自支付宝回调POST 给你的data，字典格式.
+# 验证 alipay 的异步通知，data 来自支付宝回调 POST 给你的 data，字典格式。
 data = {
      "subject": "测试订单",
      "gmt_payment": "2016-11-16 11:42:19",
@@ -163,7 +162,7 @@ result = alipay.api_alipay_trade_pay(
     subject="subject",
     discountable_amount=10,
     total_amount=20,
-    notify_url="https://example.com/notify" # 可选, 不填则使用默认notify url
+    notify_url="https://example.com/notify" # 可选，不填则使用默认notify url
 )
 
 if  result["code"] == "10000":
@@ -238,7 +237,6 @@ result = alipay.api_alipay_trade_order_settle(
 #### <a name="alipay.trade.close"></a>[统一收单交易关闭接口](https://docs.open.alipay.com/api_1/alipay.trade.close)
 
 ```python
-
 result = alipay.api_alipay_trade_close(
     trace_no="xxx",
     out_trade_no="xxx",
@@ -302,7 +300,7 @@ print(result)
 在开始前，请务必阅读[官方文档](https://docs.open.alipay.com/common/105193)
 
 #### <a name="alipay.open.auth.token.app"></a> 生成app_auth_code []()
-```
+```python
 isv_alipay = ISVAliPay(
     ...
     app_auth_code="app_auth_code"
@@ -322,6 +320,6 @@ response = {
 ```
 
 #### <a name="alipay.open.auth.token.app.query"></a> 查询授权产品 []()
-```
-    response = isv_alipay.alipay_open_auth_token_app_query()
+```python
+response = isv_alipay.alipay_open_auth_token_app_query()
 ```

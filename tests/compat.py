@@ -3,6 +3,5 @@
 """
     compat.py
     ~~~~~~~~~~
-
 """
 from unittest import mock
