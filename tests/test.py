@@ -108,6 +108,20 @@ class AliPaySignTestCase(AliPayTestCase):
         # 签名失败
         self.assertFalse(alipay._verify(raw_content[:-1], signature))
 
+    def test_empty_return_url(self):
+        alipay = self.get_client(sign_type="RSA2")
+        alipay.api_alipay_trade_page_pay(
+            out_trade_no="out_trade_no",
+            total_amount=100,
+            subject="test",
+            return_url=""
+        )
+        alipay.api_alipay_trade_page_pay(
+            out_trade_no="out_trade_no",
+            total_amount=100,
+            subject="test",
+        )
+
     def test_encodnig(self):
         """编码测试"""
         subject = "中文测试"
