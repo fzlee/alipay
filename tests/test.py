@@ -48,7 +48,7 @@ class AliPayTestCase(unittest.TestCase):
             sign_type=sign_type
         )
     
-    def get_empty_return_url(self, sign_type):
+    def get_empty_notify_url_client(self, sign_type):
         with open(self._app_private_key_path) as fp:
             app_private_key_string = fp.read()
 
@@ -123,7 +123,7 @@ class AliPaySignTestCase(AliPayTestCase):
         self.assertFalse(alipay._verify(raw_content[:-1], signature))
 
     def test_empty_return_url(self):
-        alipay = self.get_empty_client(sign_type="RSA2")
+        alipay = self.get_empty_notify_url_client(sign_type="RSA2")
         alipay.api_alipay_trade_page_pay(
             out_trade_no="out_trade_no",
             total_amount=100,

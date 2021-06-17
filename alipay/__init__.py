@@ -54,7 +54,7 @@ class BaseAliPay:
     def __init__(
         self,
         appid,
-        app_notify_url,
+        app_notify_url=None,
         app_private_key_string=None,
         alipay_public_key_string=None,
         sign_type="RSA2",
@@ -634,11 +634,11 @@ class DCAliPay(BaseAliPay):
     def __init__(
         self,
         appid,
-        app_notify_url,
         app_private_key_string,
         app_public_key_cert_string,
         alipay_public_key_cert_string,
         alipay_root_cert_string,
+        app_notify_url=None,
         sign_type="RSA2",
         debug=False,
         verbose=False
@@ -782,7 +782,7 @@ class ISVAliPay(BaseAliPay):
     def __init__(
         self,
         appid,
-        app_notify_url,
+        app_notify_url=None,
         app_private_key_string=None,
         alipay_public_key_string=None,
         sign_type="RSA2",
