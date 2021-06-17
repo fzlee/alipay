@@ -47,6 +47,20 @@ class AliPayTestCase(unittest.TestCase):
             alipay_public_key_string=app_public_key_string,
             sign_type=sign_type
         )
+    
+    def get_empty_return_url(self, sign_type):
+        with open(self._app_private_key_path) as fp:
+            app_private_key_string = fp.read()
+
+        with open(self._app_public_key_path) as fp:
+            app_public_key_string = fp.read()
+
+        return AliPay(
+            appid="appid",
+            app_private_key_string=app_private_key_string,
+            alipay_public_key_string=app_public_key_string,
+            sign_type=sign_type
+        )
 
     def _prepare_sync_response(self, alipay, response_type):
         """sign data with private key so we can validate with our public key later"""
@@ -109,7 +123,7 @@ class AliPaySignTestCase(AliPayTestCase):
         self.assertFalse(alipay._verify(raw_content[:-1], signature))
 
     def test_empty_return_url(self):
-        alipay = self.get_client(sign_type="RSA2")
+        alipay = self.get_empty_client(sign_type="RSA2")
         alipay.api_alipay_trade_page_pay(
             out_trade_no="out_trade_no",
             total_amount=100,
