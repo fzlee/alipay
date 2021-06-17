@@ -155,6 +155,12 @@ class BaseAliPay:
         ) and not data.get("notify_url") and self._app_notify_url:
             data["notify_url"] = self._app_notify_url
 
+        # the following keys are optional, and should be removed if it's empty
+        keys = ("notify_url", "return_url")
+        for key in keys:
+            if key in data and not data.get(key, None):
+                data.pop(key, None)
+
         if self._verbose:
             logger.debug("data to be signed")
             logger.debug(data)
@@ -634,7 +640,8 @@ class DCAliPay(BaseAliPay):
         alipay_public_key_cert_string,
         alipay_root_cert_string,
         sign_type="RSA2",
-        debug=False
+        debug=False,
+        verbose=False
     ):
         """
         初始化
@@ -657,7 +664,8 @@ class DCAliPay(BaseAliPay):
             app_private_key_string=app_private_key_string,
             alipay_public_key_string=alipay_public_key_string,
             sign_type=sign_type,
-            debug=debug
+            debug=debug,
+            verbose=verbose
         )
 
     def api_alipay_open_app_alipaycert_download(self, alipay_cert_sn):
@@ -779,6 +787,7 @@ class ISVAliPay(BaseAliPay):
         alipay_public_key_string=None,
         sign_type="RSA2",
         debug=False,
+        verbose=False,
         app_auth_token=None,
         app_auth_code=None
     ):
@@ -793,7 +802,8 @@ class ISVAliPay(BaseAliPay):
             app_private_key_string=app_private_key_string,
             alipay_public_key_string=alipay_public_key_string,
             sign_type=sign_type,
-            debug=debug
+            debug=debug,
+            verbose=verbose
         )
 
     @property
