@@ -4,7 +4,7 @@
 
 ## 非官方支付宝 Python SDK
 
-关于签名的详细实现细节参看[这篇教程](https://ifconfiger.com/page/python-alipay-sdk)。如果你不希望深入了解技术实现的细节，你可以直接阅读下面的使用教程。
+关于签名的详细实现细节参看[这篇教程](https://ifconfiger.com/articles/python-alipay-sdk)。如果你不希望深入了解技术实现的细节，你可以直接阅读下面的使用教程。
 
 ## 使用教程
 * [准备](./docs/preparation.zh-hans.md)

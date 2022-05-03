@@ -4,7 +4,7 @@
 
 ## Unofficial AliPay Python SDK
 
-Taking a look at [this guide](https://ifconfiger.com/page/python-alipay-sdk) if you are interested at the details on signing your order requests.
+Taking a look at [this guide](https://ifconfiger.com/articles/python-alipay-sdk) if you are interested at the details on signing your order requests.
 
 ## GUIDES
 * [Preparation](./docs/preparation.md)
