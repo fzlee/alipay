@@ -136,7 +136,10 @@ class BaseAliPay:
                 data[k] = json.dumps(v, separators=(',', ':'))
         return sorted(data.items())
 
-    def build_body(self, method, biz_content, **kwargs):
+    def build_body(self, method, biz_content=None, **kwargs):
+        if not biz_content:
+            biz_content = {}
+            
         data = {
             "app_id": self._appid,
             "method": method,
@@ -201,17 +204,23 @@ class BaseAliPay:
         message = "&".join(u"{}={}".format(k, v) for k, v in unsigned_items)
         return self._verify(message, signature)
 
-    def client_api(self, api_name, biz_content, **kwargs):
+    def client_api(self, api_name, biz_content=None, **kwargs):
         """
         alipay api without http request
         """
+        if not biz_content:
+            biz_content = {}
+            
         data = self.build_body(api_name, biz_content, **kwargs)
         return self.sign_data(data)
 
-    def server_api(self, api_name, biz_content, **kwargs):
+    def server_api(self, api_name, biz_content=None, **kwargs):
         """
         alipay api with http request
         """
+        if not biz_content:
+            biz_content = {}
+
         data = self.build_body(api_name, biz_content, **kwargs)
         # alipay.trade.query => alipay_trade_query_response
         response_type = api_name.replace(".", "_") + "_response"
