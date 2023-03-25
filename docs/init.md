@@ -1,24 +1,13 @@
 ## Initialization
+
 ```python
 from alipay import AliPay, DCAliPay, ISVAliPay
 from alipay.utils import AliPayConfig
 
 # Making sure your key file is adhered to standards.
 # you may find examples at tests/certs/ali/ali_private_key.pem
-app_private_key_string = open("/path/to/your/private/key.pem").read()
-alipay_public_key_string = open("/path/to/alipay/public/key.pem").read()
-
-app_private_key_string = """
-    -----BEGIN RSA PRIVATE KEY-----
-    base64 encoded content
-    -----END RSA PRIVATE KEY-----
-"""
-
-alipay_public_key_string = """
-    -----BEGIN PUBLIC KEY-----
-    base64 encoded content
-    -----END PUBLIC KEY-----
-"""
+app_private_key_string = open("yourPrivateKey.key").read()
+alipay_public_key_string = open("alipayPublicCert.crt").read()
 
 alipay = AliPay(
     appid="",
@@ -31,6 +20,12 @@ alipay = AliPay(
     verbose=False,  # useful for debugging
     config=AliPayConfig(timeout=15)  # optional, request timeout
 )
+
+
+app_private_key_string = open("yourPrivateKey.key").read()
+app_public_key_cert_string = open("yourPrivateCert.crt").read()
+alipay_public_key_cert_string = open("alipayPublicCert.crt").read()
+alipay_root_cert_string = open("alipayRootCert.crt").read()
 
 
 dc_alipay = DCAliPay(
@@ -58,16 +53,13 @@ isv_alipay = ISVAliPay(
 )
 ```
 
-
 ### Differences among AliPay, DCAliPay, and ISVAliPay
-* AliPay: sign request with your private key, several alipay apis are not available
-* DCAliPay: sign request with cert
-* ISVAliPay: used when you need to host multiple alipay services
 
+- AliPay: sign request with your private key, several alipay apis are not available
+- DCAliPay: sign request with cert
+- ISVAliPay: used when you need to host multiple alipay services
 
 DCAlipay is a must for certain [Alipay APIs](https://opensupport.alipay.com/support/knowledge/20069/201602429395?ant_source=zsearch)
-
-
 
 ## <a name="verification"></a>[Notification Validation](https://docs.open.alipay.com/58/103596/)
 
@@ -76,6 +68,7 @@ DCAlipay is a must for certain [Alipay APIs](https://opensupport.alipay.com/supp
 Once an order is paid, a POST request will be sent to tell you the information
 
 Here is a simple example for flask web server:
+
 ```python
 import json
 from flask import Flask
@@ -99,6 +92,7 @@ def hello_world():
 ```
 
 And also an example for Django:
+
 ```python
 def hello_world(request):
     # for django users
@@ -117,6 +111,7 @@ def hello_world(request):
 ```
 
 Here is a more general example for verification
+
 ```python
 # gathering all parameters sent from alipay server, and put them into a dictionary called data
 data = {
@@ -158,6 +153,7 @@ if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED"):
 Go through [the details](https://docs.open.alipay.com/common/105193) before you do anything, or it may pains.
 
 #### alipay.open.auth.token.app
+
 ```python
 isv_alipay = ISVAliPay(
     ...

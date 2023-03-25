@@ -1,22 +1,13 @@
 ## 初始化
+
 ```python
 from alipay import AliPay, DCAliPay, ISVAliPay
 from alipay.utils import AliPayConfig
 
-app_private_key_string = open("/path/to/your/private/key.pem").read()
-alipay_public_key_string = open("/path/to/alipay/public/key.pem").read()
-
-app_private_key_string == """
-    -----BEGIN RSA PRIVATE KEY-----
-    base64 encoded content
-    -----END RSA PRIVATE KEY-----
-"""
-
-alipay_public_key_string == """
-    -----BEGIN PUBLIC KEY-----
-    base64 encoded content
-    -----END PUBLIC KEY-----
-"""
+# 支付宝网页下载的证书不能直接被使用，需要加上头尾
+# 你可以在此处找到例子： tests/certs/ali/ali_private_key.pem
+app_private_key_string = open("yourPrivateKey.key").read()
+alipay_public_key_string = open("alipayPublicCert.crt").read()
 
 alipay = AliPay(
     appid="",
@@ -30,6 +21,11 @@ alipay = AliPay(
     config=AliPayConfig(timeout=15)  # 可选，请求超时时间
 )
 
+
+app_private_key_string = open("yourPrivateKey.key").read()
+app_public_key_cert_string = open("yourPrivateCert.crt").read()
+alipay_public_key_cert_string = open("alipayPublicCert.crt").read()
+alipay_root_cert_string = open("alipayRootCert.crt").read()
 dc_alipay = DCAliPay(
     appid="appid",
     app_notify_url="http://example.com/app_notify_url",
@@ -54,9 +50,10 @@ isv_alipay = ISVAliPay(
 )
 ```
 
-### AliPay, DCAliPay, ISVAliPay的区别
-* AliPay: 使用应用公钥进行报文验签
-* DCAliPay: 使用公钥证书进行验签
-* ISVAliPay: 托管多个支付宝应用使用
+### AliPay, DCAliPay, ISVAliPay 的区别
 
-[部分接口](https://opensupport.alipay.com/support/knowledge/20069/201602429395?ant_source=zsearch)必须使用DCAlipay
+- AliPay: 使用应用公钥进行报文验签
+- DCAliPay: 使用公钥证书进行验签
+- ISVAliPay: 托管多个支付宝应用使用
+
+[部分接口](https://opensupport.alipay.com/support/knowledge/20069/201602429395?ant_source=zsearch)必须使用 DCAlipay
