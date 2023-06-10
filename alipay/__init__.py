@@ -85,7 +85,8 @@ class BaseAliPay:
         self._sign_type = sign_type
 
         if debug:
-            self._gateway = "https://openapi.alipaydev.com/gateway.do"
+            # self._gateway = "https://openapi.alipaydev.com/gateway.do"
+            self._gateway = "https://openapi-sandbox.dl.alipaydev.com/gateway.do"
         else:
             self._gateway = "https://openapi.alipay.com/gateway.do"
 
