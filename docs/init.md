@@ -7,7 +7,7 @@ from alipay.utils import AliPayConfig
 # Making sure your key file is adhered to standards.
 # you may find examples at tests/certs/ali/ali_private_key.pem
 app_private_key_string = open("yourPrivateKey.key").read()
-alipay_public_key_string = open("alipayPublicCert.crt").read()
+alipay_public_key_string = open("alipayPublicCert.pem").read()
 
 alipay = AliPay(
     appid="",
