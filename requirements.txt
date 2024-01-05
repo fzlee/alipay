@@ -3,4 +3,4 @@ codecov
 setuptools-rust
 mock==2.0.0
 pyOpenSSL==23.0.0
-pycryptodomex==3.17.0
+pycryptodomex==3.19.1
