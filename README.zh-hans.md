@@ -26,3 +26,29 @@ python -m unittest discover
 ```python
 alipay = AliPay(..., debug=True)
 ```
+
+## 常见问题及解决方案
+
+### 使用支付宝开发平台密钥根据生成的公私钥出现验签出错
+报错内容：
+```text
+验签出错，建议检查签名字符串或签名私钥与应用公钥是否匹配，网关生成的验签字符串为XX
+```
+解决方案： 尝试使用DCAliPay方案
+```python
+pp_private_key_string = open("yourPrivateKey.key").read()
+app_public_key_cert_string = open("yourPrivateCert.crt").read()
+alipay_public_key_cert_string = open("alipayPublicCert.crt").read()
+alipay_root_cert_string = open("alipayRootCert.crt").read()
+dc_alipay = DCAliPay(
+    appid="appid",
+    app_notify_url="http://example.com/app_notify_url",
+    app_private_key_string=app_private_key_string,
+    app_public_key_cert_string=app_public_key_cert_string,
+    alipay_public_key_cert_string=alipay_public_key_cert_string,
+    alipay_root_cert_string=alipay_root_cert_string
+)
+```
+
+
+
