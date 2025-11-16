@@ -16,7 +16,7 @@ def alipay_test_suite():
 
 setup(
     name="python-alipay-sdk",
-    version="3.4.0",
+    version="3.4.2",
     author="fzlee",
     author_email="hi@ifconfiger.com",
     description="Python SDK for AliPay, RSA is the only sign method we support",
