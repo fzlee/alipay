@@ -1,4 +1,5 @@
 ## 安装
+
 ```bash
 # 安装 python-alipay-sdk
 pip install python-alipay-sdk --upgrade
@@ -6,6 +7,7 @@ pip install python-alipay-sdk --upgrade
 ```
 
 ## 生成密钥文件
+
 ```bash
 openssl
 OpenSSL> genrsa -out app_private_key.pem   2048  # 私钥
@@ -13,7 +15,8 @@ OpenSSL> rsa -in app_private_key.pem -pubout -out app_public_key.pem # 导出公
 OpenSSL> exit
 ```
 
-在支付宝上下载的公钥是一个字符串，你需要在文本的首尾添加标记位：
+在支付宝上下载的公钥是一个字符串，你需要在文本的首尾添加标记位并做相应处理， 参见https://github.com/fzlee/alipay/issues/166：
+
 ```
 -----BEGIN PUBLIC KEY----- 和 -----END PUBLIC KEY-----
 ```

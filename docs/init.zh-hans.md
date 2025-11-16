@@ -5,6 +5,7 @@ from alipay import AliPay, DCAliPay, ISVAliPay
 from alipay.utils import AliPayConfig
 
 # 支付宝网页下载的证书不能直接被使用，需要加上头尾
+# 参见https://github.com/fzlee/alipay/issues/166
 # 你可以在此处找到例子： tests/certs/ali/ali_private_key.pem
 app_private_key_string = open("yourPrivateKey.key").read()
 alipay_public_key_string = open("alipayPublicCert.pem").read()
