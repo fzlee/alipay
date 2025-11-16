@@ -589,10 +589,22 @@ class BaseAliPay:
                 "msg": "Invalid Arguments"
             }
         }
+        or
+        {
+            "error_response": {
+                "msg": "Invalid Arguments",
+                "code": "40002",
+                "sub_msg": "授权码code无效",
+                "sub_code": "isv.code-invalid"
+            },
+            "alipay_cert_sn": "a5b59edf65dcda9ca26e071ab6f5a0a7",
+            "sign": ""
+        } 
+
         """
         response = json.loads(raw_string)
-        if "sign" not in response.keys():
-            result = response[response_type]
+        if "sign" not in response.keys() or "error_response" in response.keys():
+            result = response.get(response_type, None) or response.get("error_response")
             raise AliPayException(
                 code=result.get("code", "0"),
                 message=raw_string

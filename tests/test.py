@@ -136,6 +136,24 @@ class AliPaySignTestCase(AliPayTestCase):
             subject="test",
         )
 
+    def test_no_raise_exception(self):
+        alipay = self.get_client("RSA2")
+        raw_string = """
+        {
+            "error_response": {
+                "msg": "Invalid Arguments",
+                "code": "40002",
+                "sub_msg": "授权码code无效",
+                "sub_code": "isv.code-invalid"
+            },
+            "alipay_cert_sn": "a5b59edf65dcda9ca26e071ab6f5a0a7",
+            "sign": ""
+        }"""
+        response_type = "abc_def"
+        with self.assertRaises(AliPayException):
+            alipay._verify_and_return_sync_response(raw_string, response_type)
+
+
     def test_encodnig(self):
         """编码测试"""
         subject = "中文测试"

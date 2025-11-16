@@ -16,7 +16,7 @@ def alipay_test_suite():
 
 setup(
     name="python-alipay-sdk",
-    version="3.3.0",
+    version="3.4.0",
     author="fzlee",
     author_email="hi@ifconfiger.com",
     description="Python SDK for AliPay, RSA is the only sign method we support",
@@ -28,12 +28,11 @@ setup(
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
         "License :: OSI Approved :: BSD License",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
     install_requires=["pycryptodomex>=3.15.0", "pyOpenSSL>=22.0.0"],
     test_suite="setup.alipay_test_suite"

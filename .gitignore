@@ -93,6 +93,6 @@ ENV/
 .DS_Store
 
 # local project folder
-localtest/
+localtest/*
 .idea
 .vscode
